@@ -13,6 +13,7 @@ include("funktionen.php");
 </head>
 
 <body onload="DatenLaden();">
+  <div class="Hintergrund"></div>
 
   <div class="Überschrift">
     <p>Spieler gegen Spieler</p>
@@ -91,158 +92,160 @@ include("funktionen.php");
     <button id="kampfstartenbutton" onclick="KampfStarten(SpielerDatenLaden(),SpielerGegnerDatenLaden())">
       <img src="Bilder/Kampf.png"></button>
   </div>
-  <script type="text/javascript">
-    function DatenLaden() {
-      //json_encode($str, JSON_UNESCAPED_SLASHES)
-      const spielerdaten = <?php json_encode($newClass->JSONStringSpieler($connection, $_SESSION["Spieler"]), JSON_UNESCAPED_SLASHES); ?>;
-      const spielergegnerdaten = <?php json_encode($newClass->JSONStringSpieler($connection, $_POST["spielergegner"]), JSON_UNESCAPED_SLASHES); ?>;
 
-      //Spieler Daten in Frontend laden
-      let spieler1ruestungswert = spielerdaten[0]["ruestungswert"];
-      let spieler1ruestungsbildpfad = spielerdaten[0]["ruestungsbildpfad"];
-      let spieler1leben = spielerdaten[0]["leben"];
-      let spieler1maxleben = spielerdaten[0]["maxleben"];
-      let spieler1schaden = spielerdaten[0]["angriff"] + spielerdaten[0]["waffenwert"];
-      let spieler1waffenbild = spielerdaten[0]["waffenbildpfad"];
-      let spieler1bild = spielerdaten[0]["spielerbildpfad"];
-      let spieler1name = spielerdaten[0]["spielername"];
+</body>
+<script type="text/javascript">
+  function DatenLaden() {
+    //json_encode($str, JSON_UNESCAPED_SLASHES)
+    const spielerdaten = <?php json_encode($newClass->JSONStringSpieler($connection, $_SESSION["Spieler"]), JSON_UNESCAPED_SLASHES); ?>;
+    const spielergegnerdaten = <?php json_encode($newClass->JSONStringSpieler($connection, $_POST["spielergegner"]), JSON_UNESCAPED_SLASHES); ?>;
 
-      let uispieler1ruestungswert = document.getElementById('spieler1ruestungswert');
-      let uispieler1ruestungsbild = document.getElementById('spieler1ruestungsbild');
-      let uispieler1leben = document.getElementById('spieler1leben');
-      let uispieler1maxleben = document.getElementById('spieler1maxleben');
-      let uispieler1angriff = document.getElementById('spieler1angriff');
-      let uispieler1waffenbild = document.getElementById('spieler1waffenbild');
-      let uispieler1bild = document.getElementById('spieler1bild');
-      let uispieler1name = document.getElementById('spieler1name');
+    //Spieler Daten in Frontend laden
+    let spieler1ruestungswert = spielerdaten[0]["ruestungswert"];
+    let spieler1ruestungsbildpfad = spielerdaten[0]["ruestungsbildpfad"];
+    let spieler1leben = spielerdaten[0]["leben"];
+    let spieler1maxleben = spielerdaten[0]["maxleben"];
+    let spieler1schaden = spielerdaten[0]["angriff"] + spielerdaten[0]["waffenwert"];
+    let spieler1waffenbild = spielerdaten[0]["waffenbildpfad"];
+    let spieler1bild = spielerdaten[0]["spielerbildpfad"];
+    let spieler1name = spielerdaten[0]["spielername"];
 
-      uispieler1ruestungswert.innerText = spieler1ruestungswert;
-      uispieler1ruestungsbild.src = spieler1ruestungsbildpfad;
-      uispieler1leben.innerText = spieler1leben;
-      uispieler1maxleben.innerText = spieler1maxleben;
-      uispieler1angriff.innerText = spieler1schaden;
-      uispieler1waffenbild.src = spieler1waffenbild;
-      uispieler1bild.src = spieler1bild;
-      uispieler1name.innerText = spieler1name;
+    let uispieler1ruestungswert = document.getElementById('spieler1ruestungswert');
+    let uispieler1ruestungsbild = document.getElementById('spieler1ruestungsbild');
+    let uispieler1leben = document.getElementById('spieler1leben');
+    let uispieler1maxleben = document.getElementById('spieler1maxleben');
+    let uispieler1angriff = document.getElementById('spieler1angriff');
+    let uispieler1waffenbild = document.getElementById('spieler1waffenbild');
+    let uispieler1bild = document.getElementById('spieler1bild');
+    let uispieler1name = document.getElementById('spieler1name');
 
-      // SpielerGegner in Frontend laden
+    uispieler1ruestungswert.innerText = spieler1ruestungswert;
+    uispieler1ruestungsbild.src = spieler1ruestungsbildpfad;
+    uispieler1leben.innerText = spieler1leben;
+    uispieler1maxleben.innerText = spieler1maxleben;
+    uispieler1angriff.innerText = spieler1schaden;
+    uispieler1waffenbild.src = spieler1waffenbild;
+    uispieler1bild.src = spieler1bild;
+    uispieler1name.innerText = spieler1name;
 
-      let spieler2ruestungswert = spielergegnerdaten[0]["ruestungswert"];
-      let spieler2ruestungsbildpfad = spielergegnerdaten[0]["ruestungsbildpfad"];
-      let spieler2leben = spielergegnerdaten[0]["leben"];
-      let spieler2maxleben = spielergegnerdaten[0]["maxleben"];
-      let spieler2schaden = spielergegnerdaten[0]["angriff"] + spielergegnerdaten[0]["waffenwert"];
-      let spieler2waffenbild = spielergegnerdaten[0]["waffenbildpfad"];
-      let spieler2bild = spielergegnerdaten[0]["spielerbildpfad"];
-      let spieler2name = spielergegnerdaten[0]["spielername"];
+    // SpielerGegner in Frontend laden
 
-      let uispieler2ruestungswert = document.getElementById('spieler2ruestungswert');
-      let uispieler2ruestungsbild = document.getElementById('spieler2ruestungsbild');
-      let uispieler2leben = document.getElementById('spieler2leben');
-      let uispieler2maxleben = document.getElementById('spieler2maxleben');
-      let uispieler2angriff = document.getElementById('spieler2angriff');
-      let uispieler2waffenbild = document.getElementById('spieler2waffenbild');
-      let uispieler2bild = document.getElementById('spieler2bild');
-      let uispieler2name = document.getElementById('spieler2name');
+    let spieler2ruestungswert = spielergegnerdaten[0]["ruestungswert"];
+    let spieler2ruestungsbildpfad = spielergegnerdaten[0]["ruestungsbildpfad"];
+    let spieler2leben = spielergegnerdaten[0]["leben"];
+    let spieler2maxleben = spielergegnerdaten[0]["maxleben"];
+    let spieler2schaden = spielergegnerdaten[0]["angriff"] + spielergegnerdaten[0]["waffenwert"];
+    let spieler2waffenbild = spielergegnerdaten[0]["waffenbildpfad"];
+    let spieler2bild = spielergegnerdaten[0]["spielerbildpfad"];
+    let spieler2name = spielergegnerdaten[0]["spielername"];
 
-      uispieler2ruestungswert.innerText = spieler2ruestungswert;
-      uispieler2ruestungsbild.src = spieler2ruestungsbildpfad;
-      uispieler2leben.innerText = spieler2leben;
-      uispieler2maxleben.innerText = spieler2maxleben;
-      uispieler2angriff.innerText = spieler2schaden;
-      uispieler2waffenbild.src = spieler2waffenbild;
-      uispieler2bild.src = spieler2bild;
-      uispieler2name.innerText = spieler2name;
+    let uispieler2ruestungswert = document.getElementById('spieler2ruestungswert');
+    let uispieler2ruestungsbild = document.getElementById('spieler2ruestungsbild');
+    let uispieler2leben = document.getElementById('spieler2leben');
+    let uispieler2maxleben = document.getElementById('spieler2maxleben');
+    let uispieler2angriff = document.getElementById('spieler2angriff');
+    let uispieler2waffenbild = document.getElementById('spieler2waffenbild');
+    let uispieler2bild = document.getElementById('spieler2bild');
+    let uispieler2name = document.getElementById('spieler2name');
 
-    }
+    uispieler2ruestungswert.innerText = spieler2ruestungswert;
+    uispieler2ruestungsbild.src = spieler2ruestungsbildpfad;
+    uispieler2leben.innerText = spieler2leben;
+    uispieler2maxleben.innerText = spieler2maxleben;
+    uispieler2angriff.innerText = spieler2schaden;
+    uispieler2waffenbild.src = spieler2waffenbild;
+    uispieler2bild.src = spieler2bild;
+    uispieler2name.innerText = spieler2name;
 
-    function SpielerDatenLaden() {
-      const spielerdaten = <?php json_encode($newClass->JSONStringSpieler($connection, $_SESSION["Spieler"]), JSON_UNESCAPED_SLASHES); ?>;
-      let spielerlvl = spielerdaten[0]["lvl"];
-      let spielererfahrung = spielerdaten[0]["erfahrung"];
-      let spielerruestungswert = spielerdaten[0]["ruestungswert"];
-      let spielerruestungsbildpfad = spielerdaten[0]["ruestungsbildpfad"];
-      let spielerleben = spielerdaten[0]["leben"];
-      let uispielerruestungswert = document.getElementById('spieler1ruestungswert');
-      let uispielerleben = document.getElementById('spieler1leben');
-      let spielermaxleben = spielerdaten[0]["maxleben"];
-      let spielerschaden = spielerdaten[0]["angriff"] + spielerdaten[0]["waffenwert"];
-      let spielerangriffswert = spielerdaten[0]["angriff"];
-      let spielerwaffenbild = spielerdaten[0]["waffenbildpfad"];
-      let spielerbild = spielerdaten[0]["spielerbildpfad"];
-      let spielername = spielerdaten[0]["spielername"];
-      let spielergeld = spielerdaten[0]["geld"];
-      let Spieler = new Avatar(spielername, spielerlvl, spielerschaden, spielerruestungswert, spielerleben, uispielerruestungswert, uispielerleben, "links", spielergeld, SpielerErfahrungBerechnen(spielerlvl, spielermaxleben, spielerschaden, spielerruestungswert), spielererfahrung, spielerangriffswert, spielermaxleben);
-      return Spieler;
-    }
+  }
 
-    function SpielerGegnerDatenLaden() {
-      const spielerdaten = <?php json_encode($newClass->JSONStringSpieler($connection, $_POST["spielergegner"]), JSON_UNESCAPED_SLASHES); ?>;
-      let spielerlvl = spielerdaten[0]["lvl"];
-      let spielererfahrung = spielerdaten[0]["erfahrung"];
-      let spielerruestungswert = spielerdaten[0]["ruestungswert"];
-      let spielerruestungsbildpfad = spielerdaten[0]["ruestungsbildpfad"];
-      let spielerleben = spielerdaten[0]["leben"];
-      let uispielerruestungswert = document.getElementById('spieler2ruestungswert');
-      let uispielerleben = document.getElementById('spieler2leben');
-      let spielermaxleben = spielerdaten[0]["maxleben"];
-      let spielerschaden = spielerdaten[0]["angriff"] + spielerdaten[0]["waffenwert"];
-      let spielerangriffswert = spielerdaten[0]["angriff"];
-      let spielerwaffenbild = spielerdaten[0]["waffenbildpfad"];
-      let spielerbild = spielerdaten[0]["spielerbildpfad"];
-      let spielername = spielerdaten[0]["spielername"];
-      let spielergeld = spielerdaten[0]["geld"];
-      let SpielerGegner = new Avatar(spielername, spielerlvl, spielerschaden, spielerruestungswert, spielerleben, uispielerruestungswert, uispielerleben, "rechts", spielergeld, SpielerErfahrungBerechnen(spielerlvl, spielerleben, spielerschaden, spielerruestungswert), spielererfahrung, spielerangriffswert, spielermaxleben);
-      return SpielerGegner;
-    }
+  function SpielerDatenLaden() {
+    const spielerdaten = <?php json_encode($newClass->JSONStringSpieler($connection, $_SESSION["Spieler"]), JSON_UNESCAPED_SLASHES); ?>;
+    let spielerlvl = spielerdaten[0]["lvl"];
+    let spielererfahrung = spielerdaten[0]["erfahrung"];
+    let spielerruestungswert = spielerdaten[0]["ruestungswert"];
+    let spielerruestungsbildpfad = spielerdaten[0]["ruestungsbildpfad"];
+    let spielerleben = spielerdaten[0]["leben"];
+    let uispielerruestungswert = document.getElementById('spieler1ruestungswert');
+    let uispielerleben = document.getElementById('spieler1leben');
+    let spielermaxleben = spielerdaten[0]["maxleben"];
+    let spielerschaden = spielerdaten[0]["angriff"] + spielerdaten[0]["waffenwert"];
+    let spielerangriffswert = spielerdaten[0]["angriff"];
+    let spielerwaffenbild = spielerdaten[0]["waffenbildpfad"];
+    let spielerbild = spielerdaten[0]["spielerbildpfad"];
+    let spielername = spielerdaten[0]["spielername"];
+    let spielergeld = spielerdaten[0]["geld"];
+    let Spieler = new Avatar(spielername, spielerlvl, spielerschaden, spielerruestungswert, spielerleben, uispielerruestungswert, uispielerleben, "links", spielergeld, SpielerErfahrungBerechnen(spielerlvl, spielermaxleben, spielerschaden, spielerruestungswert), spielererfahrung, spielerangriffswert, spielermaxleben);
+    return Spieler;
+  }
 
-    function VersendenVorbereiten(Spieler, Gegner) {
-      const spielerdaten = <?php json_encode($newClass->JSONStringSpieler($connection, $_SESSION["Spieler"]), JSON_UNESCAPED_SLASHES); ?>;
-      const spielergegnerdaten = <?php json_encode($newClass->JSONStringSpieler($connection, $_POST["spielergegner"]), JSON_UNESCAPED_SLASHES); ?>;
+  function SpielerGegnerDatenLaden() {
+    const spielerdaten = <?php json_encode($newClass->JSONStringSpieler($connection, $_POST["spielergegner"]), JSON_UNESCAPED_SLASHES); ?>;
+    let spielerlvl = spielerdaten[0]["lvl"];
+    let spielererfahrung = spielerdaten[0]["erfahrung"];
+    let spielerruestungswert = spielerdaten[0]["ruestungswert"];
+    let spielerruestungsbildpfad = spielerdaten[0]["ruestungsbildpfad"];
+    let spielerleben = spielerdaten[0]["leben"];
+    let uispielerruestungswert = document.getElementById('spieler2ruestungswert');
+    let uispielerleben = document.getElementById('spieler2leben');
+    let spielermaxleben = spielerdaten[0]["maxleben"];
+    let spielerschaden = spielerdaten[0]["angriff"] + spielerdaten[0]["waffenwert"];
+    let spielerangriffswert = spielerdaten[0]["angriff"];
+    let spielerwaffenbild = spielerdaten[0]["waffenbildpfad"];
+    let spielerbild = spielerdaten[0]["spielerbildpfad"];
+    let spielername = spielerdaten[0]["spielername"];
+    let spielergeld = spielerdaten[0]["geld"];
+    let SpielerGegner = new Avatar(spielername, spielerlvl, spielerschaden, spielerruestungswert, spielerleben, uispielerruestungswert, uispielerleben, "rechts", spielergeld, SpielerErfahrungBerechnen(spielerlvl, spielerleben, spielerschaden, spielerruestungswert), spielererfahrung, spielerangriffswert, spielermaxleben);
+    return SpielerGegner;
+  }
 
-      spielerdaten[0]["leben"] = Spieler.leben;
-      spielerdaten[0]["erfahrung"] = Spieler.erfahrungdb;
-      spielerdaten[0]["geld"] = Spieler.geld;
-      spielerdaten[0]["lvl"] = Spieler.lvl;
-      spielerdaten[0]["angriff"] = Spieler.angriffswert;
-      spielerdaten[0]["maxleben"] = Spieler.maxleben;
+  function VersendenVorbereiten(Spieler, Gegner) {
+    const spielerdaten = <?php json_encode($newClass->JSONStringSpieler($connection, $_SESSION["Spieler"]), JSON_UNESCAPED_SLASHES); ?>;
+    const spielergegnerdaten = <?php json_encode($newClass->JSONStringSpieler($connection, $_POST["spielergegner"]), JSON_UNESCAPED_SLASHES); ?>;
 
-      spielergegnerdaten[0]["leben"] = Gegner.leben;
-      spielergegnerdaten[0]["erfahrung"] = Gegner.erfahrungdb;
-      spielergegnerdaten[0]["geld"] = Gegner.geld;
-      spielergegnerdaten[0]["lvl"] = Gegner.lvl;
-      spielergegnerdaten[0]["angriff"] = Gegner.angriffswert;
-      spielergegnerdaten[0]["maxleben"] = Gegner.maxleben;
-      const spielerdatennachkampf = JSON.stringify(spielerdaten);
-      const spielergegnerdatennachkampf = JSON.stringify(spielergegnerdaten);
+    spielerdaten[0]["leben"] = Spieler.leben;
+    spielerdaten[0]["erfahrung"] = Spieler.erfahrungdb;
+    spielerdaten[0]["geld"] = Spieler.geld;
+    spielerdaten[0]["lvl"] = Spieler.lvl;
+    spielerdaten[0]["angriff"] = Spieler.angriffswert;
+    spielerdaten[0]["maxleben"] = Spieler.maxleben;
 
-      KampfergebnisseSenden(spielerdatennachkampf, spielergegnerdatennachkampf);
-    }
+    spielergegnerdaten[0]["leben"] = Gegner.leben;
+    spielergegnerdaten[0]["erfahrung"] = Gegner.erfahrungdb;
+    spielergegnerdaten[0]["geld"] = Gegner.geld;
+    spielergegnerdaten[0]["lvl"] = Gegner.lvl;
+    spielergegnerdaten[0]["angriff"] = Gegner.angriffswert;
+    spielergegnerdaten[0]["maxleben"] = Gegner.maxleben;
+    const spielerdatennachkampf = JSON.stringify(spielerdaten);
+    const spielergegnerdatennachkampf = JSON.stringify(spielergegnerdaten);
+
+    KampfergebnisseSenden(spielerdatennachkampf, spielergegnerdatennachkampf);
+  }
 
 
 
-    // Annahme in Funktion prüfen
-    // Spieler und Gegner für den Kampf sperren
-    function SpielerSperren() {
-      const spielerdaten = <?php json_encode($newClass->JSONStringSpieler($connection, $_SESSION["Spieler"]), JSON_UNESCAPED_SLASHES); ?>;
-      const spielergegnerdaten = <?php json_encode($newClass->JSONStringGegner($connection, $_POST["spielergegner"]), JSON_UNESCAPED_SLASHES); ?>;
-      const spielersperre = JSON.stringify(spielerdaten);
-      const spielergegnersperre = JSON.stringify(spielergegnerdaten);
+  // Annahme in Funktion prüfen
+  // Spieler und Gegner für den Kampf sperren
+  function SpielerSperren() {
+    const spielerdaten = <?php json_encode($newClass->JSONStringSpieler($connection, $_SESSION["Spieler"]), JSON_UNESCAPED_SLASHES); ?>;
+    const spielergegnerdaten = <?php json_encode($newClass->JSONStringGegner($connection, $_POST["spielergegner"]), JSON_UNESCAPED_SLASHES); ?>;
+    const spielersperre = JSON.stringify(spielerdaten);
+    const spielergegnersperre = JSON.stringify(spielergegnerdaten);
 
-      var xhttp = new XMLHttpRequest();
-      xhttp.open("POST", "pve.php", true);
-      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      xhttp.send("spielersperren=" + spielersperre + "&spielergegnersperren=" + spielergegnersperre + "");
-    }
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "pve.php", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("spielersperren=" + spielersperre + "&spielergegnersperren=" + spielergegnersperre + "");
+  }
 
-    // Annahme in Funktion prüfen
-    //Für die Rückgabe nach dem Kampf  
-    function KampfergebnisseSenden(spielerdatennachkampf, spielergegnerdatennachkampf) {
-      var xhttp = new XMLHttpRequest();
-      xhttp.open("POST", "pvp.php", true);
-      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      xhttp.send("spielerdaten=" + spielerdatennachkampf + "&spielergegnerdaten=" + spielergegnerdatennachkampf + "");
-    }
-  </script>
+  // Annahme in Funktion prüfen
+  //Für die Rückgabe nach dem Kampf  
+  function KampfergebnisseSenden(spielerdatennachkampf, spielergegnerdatennachkampf) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "pvp.php", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("spielerdaten=" + spielerdatennachkampf + "&spielergegnerdaten=" + spielergegnerdatennachkampf + "");
+  }
+</script>
 
 </html>

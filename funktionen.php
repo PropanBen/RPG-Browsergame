@@ -21,7 +21,7 @@ if (!isset($_SESSION["Spieler"])) {
 			$_SESSION["Spieler"] = $player;
 			$newClass->Spielersperren($connection, 0, $player);
 		} else {
-			header('location: rpglogin.php');
+			header('location: index.php');
 		}
 
 		$login->close();
@@ -61,7 +61,6 @@ if (isset($_POST["action"]) && $_POST["action"] == "Registrieren") {
 		$insertspieler->execute();
 		$insertspieler->close();
 		$_SESSION["Spieler"] = $_POST["bname"];
-		//header('location: rpglogin.php');
 	} else {
 		//Userausgabe Benutzer bereits vorhanden 
 		echo "Benutzer bereits vorhanden";
@@ -69,7 +68,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "Registrieren") {
 }
 
 if (!isset($_SESSION["Spieler"])) {
-	header('location: rpglogin.php');
+	header('location: index.php');
 	die();
 }
 
@@ -77,7 +76,7 @@ if (!isset($_SESSION["Spieler"])) {
 
 if (isset($_POST["action"]) && $_POST["action"] == "Ausloggen") {
 	session_destroy();
-	header('location: rpglogin.php');
+	header('location: index.php');
 	die();
 }
 
@@ -670,7 +669,7 @@ class DBAktionen
 	function ThemenGegnerAnzeigen($connection, $themenname)
 	{
 		$sperre = 0;
-		$select2 = $connection->prepare("SELECT gegnername,gegnerid, lvl FROM gegner WHERE thema=? AND leben >0 AND gesperrt=?");
+		$select2 = $connection->prepare("SELECT gegnername,gegnerid,gegnerbildpfad, lvl FROM gegner WHERE thema=? AND leben >0 AND gesperrt=?");
 		$select2->bind_param("si", $themenname, $sperre);
 		$select2->execute();
 		$result2 = $select2->get_result();
@@ -678,6 +677,7 @@ class DBAktionen
 			echo
 				"
 				<div class=GegenstandEinzeln>
+				<img src=" . $row2["gegnerbildpfad"] . " width=100 height=100>
 				<p>" . $row2["gegnername"] . "</p><p>Level : " . $row2["lvl"] . "</p>
 				<form action=\"/pve.php\" method=\"POST\">
 				   <input type=\"hidden\" name=\"gegnerid\" value=\"" . $row2['gegnerid'] . "\" />

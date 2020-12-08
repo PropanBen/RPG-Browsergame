@@ -18,10 +18,12 @@
 
     <div class="LoginContainer">
       <form action="/rpg.php" method="POST">
-        <label>Benutzername : <input type="text" id="bname" name="bname"></label><br>
-        <label>Passwort : <input type="password" id="pname" name="pw"></label><br>
+        <label>Benutzername : </label><br>
+        <input type="text" id="bname" name="bname"><br>
+        <label>Passwort : <br>
+          <input type="password" id="pname" name="pw"></label><br>
         <div class="LoginButtons">
-          <input name="action" value="Einloggen" type="image" src="/Bilder/HolzTextButtonEinloggen.png">
+          <button type="submit" name="action" value="Einloggen" style="border: 0; background: transparent"><img src="/Bilder/HolzTextButtonEinloggen.png"></button>
           <button type="reset" value="Zurücksetzen" style="border: 0; background: transparent"><img src="/Bilder/HolzTextButtonEntfernen.png"></button>
         </div>
       </form>

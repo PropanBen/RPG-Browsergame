@@ -12,6 +12,7 @@ include("funktionen.php");
 </head>
 
 <body onload="DatenLaden();">
+  <div class="Hintergrund"></div>
 
   <div class="Überschrift">
     <p>Spieler gegen Gegner</p>
@@ -221,5 +222,6 @@ include("funktionen.php");
     }
   </script>
 
+</body>
 
 </html>
