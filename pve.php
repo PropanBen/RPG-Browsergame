@@ -31,7 +31,6 @@ include("funktionen.php");
           </div>
         </div>
         <div id="LebenRahmenMitte">
-          <img class="LebensBild" src="/Bilder/Grau.png">
           <div class="lebentext1">
             <p id="spielerleben" class="leben1">10</p>
             <p class="von">&nbspvon&nbsp</p>

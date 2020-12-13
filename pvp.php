@@ -32,7 +32,6 @@ include("funktionen.php");
           </div>
         </div>
         <div id="LebenRahmenMitte">
-          <img class="LebensBild" src="/Bilder/Grau.png">
           <div class="lebentext1">
             <p id="spieler1leben" class="leben1">10</p>
             <p class="von">&nbspvon&nbsp</p>
@@ -59,8 +58,7 @@ include("funktionen.php");
             <p id="spieler2ruestungswert">10</p>
           </div>
         </div>
-        <div id="LebenRahmenMitte">
-          <img class="LebensBild" src="/Bilder/Grau.png">
+        <div id="LebenRahmenMitte2" class="Le">
           <div class="lebentext2">
             <p id="spieler2leben" class="leben2">5</p>
             <p class="von">&nbspvon&nbsp</p>

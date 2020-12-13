@@ -16,28 +16,33 @@ function KampfRunde(Kampfbeginner, Kampfnichtbeginner) {
     async function sleep(ms) {
       return new Promise((resolve) => setTimeout(resolve, ms));
     }
-    //Beginner
+
     if (Kampfnichtbeginner.leben > 0) {
       await sleep(1000);
       SkalierenGroß(AngriffsID(Kampfbeginner));
       await sleep(1000);
+      AngriffSound();
       SkalierenKlein(AngriffsID(Kampfbeginner));
       SkalierenGroß(LebenID(Kampfnichtbeginner));
-      Kampfbeginner.Angreifen(Kampfnichtbeginner);//Angriff
       await sleep(1000);
       SkalierenKlein(LebenID(Kampfnichtbeginner));
+      SchadenSound(Kampfnichtbeginner);
+      Kampfbeginner.Angreifen(Kampfnichtbeginner);//Angriff
+      await sleep(100);
     }
 
     if (Kampfbeginner.leben > 0) {
-      //Nicht Beginner
       await sleep(1000);
       SkalierenGroß(AngriffsID(Kampfnichtbeginner));
       await sleep(1000);
+      AngriffSound();
       SkalierenKlein(AngriffsID(Kampfnichtbeginner));
       SkalierenGroß(LebenID(Kampfbeginner));
-      Kampfnichtbeginner.Angreifen(Kampfbeginner); //Angriff
       await sleep(1000);
       SkalierenKlein(LebenID(Kampfbeginner));
+      SchadenSound(Kampfbeginner);
+      Kampfnichtbeginner.Angreifen(Kampfbeginner); //Angriff
+      await sleep(100);
     }
 
     if (Kampfbeginner.leben > 0 && Kampfnichtbeginner.leben > 0) {
@@ -171,9 +176,28 @@ function AngriffsID(Avatar) {
   if (Avatar.seite === "links") { return "AngriffRahmenLinks"; }
   else { return "AngriffRahmenGegnerLinks"; }
 }
+
+function AngriffSound() {
+  var audio = new Audio('/Audio/schwertschwung.wav');
+  audio.play();
+}
+function SchadenSound(Avatar) {
+  if (Avatar.ruestungswert === 0) {
+    var audio = new Audio('/Audio/menschschmerz.wav');
+    audio.play();
+  }
+  else {
+    var audio = new Audio('/Audio/schwerttreffer.wav');
+    audio.play();
+  }
+}
 //X
 function LebenID(Avatar) {
-  if (Avatar.seite === "links") { return "RuestungRahmenLinks"; }
+  if (Avatar.seite === "links") {
+    if (Avatar.ruestungswert === 0)
+      return "LebenRahmenMitte"
+    else { return "RuestungRahmenLinks"; }
+  }
   else { return "LebenRahmenRechts"; }
 }
 //X
@@ -187,16 +211,18 @@ function Beginner(Spieler, Gegner) {
 function SkalierenGroß(id) {
   let element = document.getElementById(id)
   let test = document.getElementById("test");
-  element.style.width = element.offsetWidth * 1.03;
-  element.style.height = element.offsetHeight * 1.03;
-  test.src = "/Bilder/Rot.png";
+
+  element.style.transform = "translate(+0%, +0%) scale(1.05)";
+  element.style.backgroundColor = "red";
 }
 function SkalierenKlein(id) {
   let element = document.getElementById(id);
   let test = document.getElementById("test");
-  element.style.width = element.offsetWidth * 0.95;
-  element.style.height = element.offsetHeight * 0.95;
-  test.src = "/Bilder/Kampf.png";
+
+  element.style.transform = "translate(+0%, +0%) scale(1.0)";
+  element.style.backgroundColor = "transparent";
+  if (element.id === "LebenRahmenMitte")
+    element.style.backgroundColor = "grey";
 }
 
 function PopUp() {
