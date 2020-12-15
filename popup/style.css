@@ -1,0 +1,48 @@
+body
+{
+	width:100%;
+	height:auto;
+	margin:0;
+}
+
+
+#btn
+{
+    width:50px;
+	height:auto;
+	margin-top:50px;
+	margin-left:50%;
+	margin-right:auto;
+}
+#Boxunten
+{
+	width:60%;
+	height:60%;
+	background-color:red;
+	position: absolute;
+	left:20%;
+	top:20%;
+	opacity:1; 
+	border: 5px solid black;
+	border-radius:20px;
+}
+
+#Box
+{
+	width:50%;
+	height:50%;
+	background-color:black;
+	color:white;
+	position: absolute;
+	left:25%;
+	top:25%;
+	opacity:0;
+	transform: translate(+0%, +0%) scale(0);
+	transition: opacity 2s, transform 2s;	
+	border: 5px solid black;
+	border-radius:20px;
+}
+#Box p
+{
+	text-align:center;
+}

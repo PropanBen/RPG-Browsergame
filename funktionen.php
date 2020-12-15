@@ -20,10 +20,10 @@ if (!isset($_SESSION["Spieler"])) {
 			//echo "Benutzer eingeloggt";
 			$_SESSION["Spieler"] = $player;
 			$newClass->Spielersperren($connection, 0, $player);
+			$newClass->Logging($connection, "Eingeloggt");
 		} else {
 			header('location: index.php');
 		}
-
 		$login->close();
 	}
 }
@@ -61,6 +61,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "Registrieren") {
 		$insertspieler->execute();
 		$insertspieler->close();
 		$_SESSION["Spieler"] = $_POST["bname"];
+		$newClass->Logging($connection, "Registriert");
 	} else {
 		//Userausgabe Benutzer bereits vorhanden 
 		echo "Benutzer bereits vorhanden";
@@ -76,6 +77,7 @@ if (!isset($_SESSION["Spieler"])) {
 
 if (isset($_POST["action"]) && $_POST["action"] == "Ausloggen") {
 	session_destroy();
+	$_SESSION = array();
 	header('location: index.php');
 	die();
 }
@@ -85,6 +87,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "Ausloggen") {
 if (isset($_FILES["bildhochladen"]) && $_FILES["bildhochladen"]["size"] > 0) {
 	$uploaddir = './Spieleravatare/';
 	$filename = $_SESSION["Spieler"];
+	$filename = str_replace(" ", "", $filename);
 	$fileextension = ".png";
 	move_uploaded_file($_FILES["bildhochladen"]['tmp_name'], $uploaddir . $filename . $fileextension);
 
@@ -220,11 +223,13 @@ if (isset($_POST["themaspeichern"])) {
 	$insert = $connection->prepare("INSERT INTO themen (themenname, themenbildpfad) VALUES (?,?)");
 	$insert->bind_param("ss", $thema, $themenbildpfad);
 	$thema = $_POST["thema"];
-	$themenbildpfad = "/Themenbilder/" . $thema . date("Ymd") . time() . ".png";
+	$thematrim = str_replace(" ", "", $thema);
+	$themenbildpfad = "/Themenbilder/" . $thematrim  . date("Ymd") . time() . ".png";
 	$insert->execute();
 	$insert->close();
 	$uploaddir = './Themenbilder/';
 	$filename = $thema . date("Ymd") . time();
+	$filename = str_replace(" ", "", $filename);
 	$fileextension = ".png";
 	move_uploaded_file($_FILES["themabildhochladen"]['tmp_name'], $uploaddir . $filename . $fileextension);
 }
@@ -237,13 +242,15 @@ if (isset($_POST["gegnerhochladen"])) {
 	$leben = $_POST["leben"];
 	$angriff = $_POST["angriff"];
 	$geld = $_POST["geld"];
-	$pfad = "/Gegneravatare/" . $gegnername . "" . date("Ymd") . time() . ".png";
+	$gegnernametrim = str_replace(" ", "", $gegnername);
+	$pfad = "/Gegneravatare/" . $gegnernametrim . "" . date("Ymd") . time() . ".png";
 	$thema = $_POST["thema"];
 	$sperre = 0;
 	$insert->execute();
 	$insert->close();
 	$uploaddir = './Gegneravatare/';
 	$filename = $gegnername . date("Ymd") . time();
+	$filename = str_replace(" ", "", $filename);
 	$fileextension = ".png";
 	move_uploaded_file($_FILES["gegnerbildhochladen"]['tmp_name'], $uploaddir . $filename . $fileextension);
 }
@@ -254,11 +261,13 @@ if (isset($_POST["waffenhochladen"])) {
 	$waffenname = $_POST["waffenname"];
 	$waffenwert = $_POST["waffenwert"];
 	$geldwert = $_POST["waffengeldwert"];
-	$pfad = "/Waffenbilder/" . $waffenname . "" . date("Ymd") . time() . ".png";
+	$waffennametrim = str_replace(" ", "", $waffenname);
+	$pfad = "/Waffenbilder/" . $waffennametrim . "" . date("Ymd") . time() . ".png";
 	$insert->execute();
 	$insert->close();
 	$uploaddir = './Waffenbilder/';
 	$filename = $waffenname . date("Ymd") . time();
+	$filename = str_replace(" ", "", $filename);
 	$fileextension = ".png";
 	move_uploaded_file($_FILES["waffenbildhochladen"]['tmp_name'], $uploaddir . $filename . $fileextension);
 }
@@ -269,11 +278,13 @@ if (isset($_POST["ruestunghochladen"])) {
 	$ruestungsname = $_POST["ruestungsname"];
 	$ruestungswert = $_POST["ruestungswert"];
 	$geldwert = $_POST["ruestungsgeldwert"];
-	$pfad = "/Ruestungsbilder/" . $ruestungsname . "" . date("Ymd") . time() . ".png";
+	$ruestungsnametrim = str_replace(" ", "", $ruestungsname);
+	$pfad = "/Ruestungsbilder/" . $ruestungsnametrim . "" . date("Ymd") . time() . ".png";
 	$insert->execute();
 	$insert->close();
 	$uploaddir = './Ruestungsbilder/';
 	$filename = $ruestungsname . date("Ymd") . time();
+	$filename = str_replace(" ", "", $filename);
 	$fileextension = ".png";
 	move_uploaded_file($_FILES["ruestungsbildhochladen"]['tmp_name'], $uploaddir . $filename . $fileextension);
 }
@@ -285,11 +296,13 @@ if (isset($_POST["trankhochladen"])) {
 	$trankwert = $_POST["trankwert"];
 	$trankwertpermanent = $_POST["trankwertpermanent"];
 	$geldwert = $_POST["trankgeldwert"];
-	$pfad = "/Traenkebilder/" . $trankname . "" . date("Ymd") . time() . ".png";
+	$tranknametrim = str_replace(" ", "", $trankname);
+	$pfad = "/Traenkebilder/" . $tranknametrim  . "" . date("Ymd") . time() . ".png";
 	$insert->execute();
 	$insert->close();
 	$uploaddir = './Traenkebilder/';
 	$filename = $trankname . date("Ymd") . time();
+	$filename = str_replace(" ", "", $filename);
 	$fileextension = ".png";
 	move_uploaded_file($_FILES["trankbildhochladen"]['tmp_name'], $uploaddir . $filename . $fileextension);
 }
@@ -509,12 +522,20 @@ class DBAktionen
 	function Kaufen($connection, $tabelle, $typid, $id)
 	{
 		$geld = $this->SpielerLesen($connection, "geld", $_SESSION["Spieler"]);
-		$select = $connection->prepare("SELECT geldwert FROM " . $tabelle . " WHERE " . $typid . " =?");
+		$select = $connection->prepare("SELECT * FROM " . $tabelle . " WHERE " . $typid . " =?");
 		$select->bind_param("i", $id);
 		$select->execute();
 		$result = $select->get_result();
 		$row = $result->fetch_assoc();
 		$kosten = $row["geldwert"];
+		if ($tabelle === "waffen") {
+			$waffenname = $row["waffenname"];
+			$this->Logging($connection, "" . $waffenname . " fuer " . $kosten . " Geld gekauft");
+		}
+		if ($tabelle === "ruestung") {
+			$ruestungsname = $row["ruestungsname"];
+			$this->Logging($connection, "" . $ruestungsname . " fuer " . $kosten . " Geld  gekauft");
+		}
 
 		if ($geld >= $kosten) {
 			$neuesguthaben = $geld - $kosten;
@@ -528,13 +549,14 @@ class DBAktionen
 	function TränkeKaufen($connection, $id)
 	{
 		$geld = $this->SpielerLesen($connection, "geld", $_SESSION["Spieler"]);
-		$select = $connection->prepare("SELECT geldwert,trankwert,trankwertpermanent FROM traenke WHERE trankid =?");
+		$select = $connection->prepare("SELECT geldwert,trankname,trankwert,trankwertpermanent FROM traenke WHERE trankid =?");
 		$select->bind_param("i", $id);
 		$select->execute();
 		$result = $select->get_result();
 		$row = $result->fetch_assoc();
 		$kosten = $row["geldwert"];
 		$trankwert = $row["trankwert"];
+		$trankname = $row["trankname"];
 		$trankwertpermanent = $row["trankwertpermanent"];
 
 		$leben = $this->SpielerLesen($connection, "leben", $_SESSION["Spieler"]);
@@ -550,6 +572,7 @@ class DBAktionen
 			$update->bind_param("iiis", $leben, $trankwertpermanent, $neuesguthaben, $_SESSION["Spieler"]);
 			$update->execute();
 		}
+		$this->Logging($connection, "" . $trankname . " fuer " . $kosten . " Geld gekauft");
 	}
 	//WaffenContainer  ---------------------------------------------------------------------------------------------
 	function AlleWaffenLesen($connection)
@@ -685,5 +708,14 @@ class DBAktionen
 				   </form></p>
 				   </div>";
 		}
+	}
+
+	// Logging
+	function Logging($connection, $ereignis)
+	{
+		$insert = $connection->prepare("INSERT INTO `log` (ereignis, spieler) VALUES (?,?)");
+		$insert->bind_param("ss", $ereignis, $_SESSION["Spieler"]);
+		$insert->execute();
+		$insert->close();
 	}
 }
