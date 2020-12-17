@@ -69,6 +69,7 @@ include("funktionen.php");
                     <form action="/index.php" method="POST">
                         <input type="image" src="/Bilder/Ausloggen.png" name="action" value="Ausloggen" />
                     </form>
+                    <a class="Einstellungen" href="/einstellungen.php"><img src="/Bilder/Einstellungen.png"></a>
                 </div>
             </div>
         </div>
@@ -78,9 +79,8 @@ include("funktionen.php");
             <div class="Spielerliste">
                 <p><?php $newClass->AlleSpielerLesen($connection) ?></p>
             </div>
-            <?php $newClass->AdminEinblenden($connection, $_SESSION["Spieler"]); ?><br>
+            <div class="admin"> <?php $newClass->AdminEinblenden($connection); ?> <?php $newClass->LogEinblenden($connection); ?> </div>
         </div>
-
         <div class="MarktplatzContainer">
             <p class="Beschriftung">Marktplatz</p>
             <div class="Aktionsbilder">

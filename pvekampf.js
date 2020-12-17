@@ -118,9 +118,11 @@ function Kampfende(Angreifer, Gegner) {
   kampfgeld.innerHTML = `${Gewinner.name} bekommt ${verdienst} Geld !`;
   kampferfahrung.innerHTML = `${Gewinner.name} bekommt ${erfahrung} Erfahrung !`;
   kampfverlierer.innerHTML = `${Verlierer.name} verliert ${verlust} Geld !`;
+  KampfergebnisseLoggen(Gewinner.name, Verlierer.name, verdienst, verlust, erfahrung);
   if (lvlupbool === true) {
     let lvlup = document.getElementById("lvlup");
     lvlup.innerHTML = `${Gewinner.name} ist jetzt Level ${Gewinner.lvl}!`;
+    KampfergebnisseLoggenLvLUp(Gewinner.name, Gewinner.lvl);
   }
   // Zurück in die Datenbank
   VersendenVorbereiten(SpielerLinks, GegnerRechts);

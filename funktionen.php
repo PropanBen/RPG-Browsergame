@@ -76,8 +76,9 @@ if (!isset($_SESSION["Spieler"])) {
 // Ausloggen ---------------------------------------------------------------------------------------------
 
 if (isset($_POST["action"]) && $_POST["action"] == "Ausloggen") {
-	session_destroy();
 	$_SESSION = array();
+	$_SESSION["Spieler"] = null;
+	session_destroy();
 	header('location: index.php');
 	die();
 }
@@ -307,15 +308,50 @@ if (isset($_POST["trankhochladen"])) {
 	move_uploaded_file($_FILES["trankbildhochladen"]['tmp_name'], $uploaddir . $filename . $fileextension);
 }
 
+// Logging Kampf
+if (
+	isset($_POST["gewinner"]) && isset($_POST["verlierer"]) && isset($_POST["verdienst"])
+	&& isset($_POST["verlust"]) && isset($_POST["erfahrung"])
+) {
+	$ereignis = "" . $_POST["gewinner"] . " gewinnt gegen " . $_POST["verlierer"] . "";
+	$newClass->Logging($connection, $ereignis);
+	$ereignis = "" . $_POST["gewinner"] . " bekommt " . $_POST["verdienst"] . " Geld";
+	$newClass->Logging($connection, $ereignis);
+	$ereignis = "" . $_POST["gewinner"] . " bekommt " . $_POST["erfahrung"] . " Erfahrung";
+	$newClass->Logging($connection, $ereignis);
+	$ereignis = "" . $_POST["verlierer"] . " verliert " . $_POST["verlust"] . " Geld";
+	$newClass->Logging($connection, $ereignis);
+}
+// Logging Kampf LvL Up
+if (isset($_POST["gewinner"]) && isset($_POST["lvl"])) {
+	$ereignis = "" . $_POST["gewinner"] . " ist jetzt LvL " . $_POST["lvl"] . "";
+	$newClass->Logging($connection, $ereignis);
+}
+
 class DBAktionen
 {
 
+	function IstAdmin($connection)
+	{
+		$admin = $this->SpielerLesen($connection, "Rechte", $_SESSION["Spieler"]);
+		if ($admin == "Admin")
+			return true;
+		else return false;
+	}
+
 	// Admin Link einblenden
-	function AdminEinblenden($connection, $player)
+	function AdminEinblenden($connection)
 	{
 		$admin = $this->SpielerLesen($connection, "Rechte", $_SESSION["Spieler"]);
 		if ($admin == "Admin") {
 			echo '<a href="admin.php"><button>Admin</button></a>';
+		}
+	}
+	function LogEinblenden($connection)
+	{
+		$admin = $this->SpielerLesen($connection, "Rechte", $_SESSION["Spieler"]);
+		if ($admin == "Admin") {
+			echo '<a href="log.php"><button>Log</button></a>';
 		}
 	}
 	// JSON String des Spielers zurückgeben
@@ -717,5 +753,23 @@ class DBAktionen
 		$insert->bind_param("ss", $ereignis, $_SESSION["Spieler"]);
 		$insert->execute();
 		$insert->close();
+	}
+
+	//Logübersicht  ---------------------------------------------------------------------------------------------
+	function AlleLogsLesen($connection)
+	{
+		$select = $connection->prepare("SELECT * FROM log ORDER BY datum DESC");
+		$select->execute();
+		$result = $select->get_result();
+		while ($row = $result->fetch_array()) {
+			echo "<table>
+			      <tr>
+				  <td>" . $row['id'] . "</td>
+				  <td>" . $row['datum'] . "</td>
+				  <td>" . $row['ereignis'] . "</td>
+				  <td>" . $row['spieler'] . "</td>
+				  </tr>
+				  </table>";
+		}
 	}
 }

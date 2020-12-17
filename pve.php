@@ -219,6 +219,22 @@ include("funktionen.php");
       xhttp.send("spielerdaten=" + spielerdatennachkampf + "&gegnerdaten=" + gegnerdatennachkampf + "");
       // window.location.href = '/themen.php';
     }
+
+    //Kampfergebnisse loggen
+    function KampfergebnisseLoggen(gewinner, verlierer, verdienst, verlust, erfahrung) {
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("POST", "pve.php", true);
+      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhttp.send("gewinner=" + gewinner + "&verlierer=" + verlierer + "&verdienst=" + verdienst + "&verlust=" + verlust + "&erfahrung=" + erfahrung + "");
+    }
+
+    //LvL loggen
+    function KampfergebnisseLoggenLvLUp(gewinner, lvl) {
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("POST", "pve.php", true);
+      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhttp.send("gewinner=" + gewinner + "&lvl=" + lvl + "");
+    }
   </script>
 
 </body>

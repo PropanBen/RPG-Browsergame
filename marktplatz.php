@@ -82,6 +82,7 @@ if (!isset($_SESSION["Spieler"])) {
                     <form action="/rpglogin.php" method="POST">
                         <input type="image" src="/Bilder/Ausloggen.png" name="action" value="Ausloggen" />
                     </form>
+                    <a class="Einstellungen" href="/einstellungen.php"><img src="/Bilder/Einstellungen.png"></a>
                 </div>
             </div>
         </div>

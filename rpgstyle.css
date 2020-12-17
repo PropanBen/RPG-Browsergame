@@ -369,6 +369,11 @@ align-items: center;
 	width: 20px;
 	height: 20px;
 }
+.form a
+{
+	left: -10px;
+	position: absolute;
+} 
 
 .SpielerlisteContainer
 {
@@ -386,11 +391,11 @@ align-items: center;
 {
 	margin-left: 10px;
 }
-.SpielerlisteContainer a
-{
-	margin-left: auto;
+.admin 
+{	margin-left: auto;
 	margin-right: auto;
 	margin-bottom: 5px;
+	display: inline;
 }
 .SpielerlisteContainer img
 {
@@ -981,7 +986,6 @@ z-index:3;
 
 /*  Start pve.php */
 
-/*  Ende pve.php */
 #LebenRahmenRechts
 {
 	width:30%;
@@ -1021,3 +1025,13 @@ z-index:3;
 {
 	text-align: center;
 }
+/*  Ende pve.php */
+/* Start log.php */
+.Logliste table, td
+{
+	width: 10%;
+	border: 1px solid black;
+	text-align: left;
+	padding: 3px;
+}
+/* Ende log.php */

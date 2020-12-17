@@ -1,5 +1,8 @@
 <?php
 include("funktionen.php");
+$admin = $newClass->IstAdmin($connection);
+if ($admin === false)
+	header('location: rpg.php');
 ?>
 
 <html>
