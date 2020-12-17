@@ -4,6 +4,38 @@ include("dbconnect.php");
 session_start();
 $newClass = new DBAktionen();
 
+if (isset($_POST["benutzername"])) {
+
+	$select = $connection->prepare("SELECT benutzername FROM konto WHERE benutzername = ? ");
+	$select->bind_param("s", $_POST["benutzername"]);
+	$select->execute();
+	$result = $select->get_result();
+	$row = mysqli_fetch_row($result);
+	if ($result->num_rows == 1) {
+		echo 1;
+	}
+}
+if (isset($_POST["email"])) {
+
+	$select = $connection->prepare("SELECT email FROM konto WHERE email = ? ");
+	$select->bind_param("s", $_POST["email"]);
+	$select->execute();
+	$result = $select->get_result();
+	$row = mysqli_fetch_row($result);
+	if ($result->num_rows == 1) {
+		echo 1;
+	}
+}
+
+// Ausloggen ---------------------------------------------------------------------------------------------
+
+if (isset($_POST["action"]) && $_POST["action"] === "Ausloggen") {
+	$_SESSION = array();
+	$_SESSION["Spieler"] = null;
+	session_destroy();
+	header('location: index.php');
+	die();
+}
 
 if (!isset($_SESSION["Spieler"])) {
 	// Einloggen---------------------------------------------------------------------------------------------
@@ -16,8 +48,11 @@ if (!isset($_SESSION["Spieler"])) {
 		$result = $login->get_result();
 		$row = mysqli_fetch_row($result);
 
-		if ($player == $row[0] && password_verify($passwort, $row[1])) {
-			//echo "Benutzer eingeloggt";
+		if (
+			preg_match("^[a-zA-Z]{3,16}^", $player)
+			&& preg_match("^(?=(.*\d){1})(?=.*[a-zA-Z])(?=.*[!@#$%])[0-9a-zA-Z!@#$%]{8,}^", $passwort)
+			&& $player == $row[0] && password_verify($passwort, $row[1])
+		) {
 			$_SESSION["Spieler"] = $player;
 			$newClass->Spielersperren($connection, 0, $player);
 			$newClass->Logging($connection, "Eingeloggt");
@@ -32,14 +67,19 @@ if (!isset($_SESSION["Spieler"])) {
 
 if (isset($_POST["action"]) && $_POST["action"] == "Registrieren") {
 	$passworthash = password_hash($_POST["pw"], PASSWORD_DEFAULT);
-	$select = $connection->prepare("SELECT benutzername FROM konto WHERE benutzername = ?");
-	$select->bind_param("s", $_POST["bname"]);
+	$select = $connection->prepare("SELECT benutzername, email FROM konto WHERE benutzername = ? OR email = ? ");
+	$select->bind_param("ss", $_POST["bname"], $_POST["email"]);
 	$select->execute();
 	$result = $select->get_result();
-	if ($result->num_rows == 0) {
+	if (
+		$result->num_rows == 0 &&
+		preg_match("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$^", $_POST["email"])
+		&& preg_match("^[a-zA-Z]{3,16}^", $_POST["bname"]) &&
+		preg_match("^(?=(.*\d){1})(?=.*[a-zA-Z])(?=.*[!@#$%])[0-9a-zA-Z!@#$%]{8,}^", $_POST["pw"])
+	) {
 		// Konto anlegen
-		$insert = $connection->prepare("INSERT INTO konto (benutzername, passwort) VALUES (?, ?)");
-		$insert->bind_param("ss", $_POST["bname"], $passworthash);
+		$insert = $connection->prepare("INSERT INTO konto (benutzername, passwort,email) VALUES (?,?,?)");
+		$insert->bind_param("sss", $_POST["bname"], $passworthash, $_POST["email"]);
 		$insert->execute();
 		$insert->close();
 		//Spieler anlegen
@@ -65,24 +105,13 @@ if (isset($_POST["action"]) && $_POST["action"] == "Registrieren") {
 	} else {
 		//Userausgabe Benutzer bereits vorhanden 
 		echo "Benutzer bereits vorhanden";
+		header('location: register.php');
 	};
 }
 
 if (!isset($_SESSION["Spieler"])) {
 	header('location: index.php');
-	die();
 }
-
-// Ausloggen ---------------------------------------------------------------------------------------------
-
-if (isset($_POST["action"]) && $_POST["action"] == "Ausloggen") {
-	$_SESSION = array();
-	$_SESSION["Spieler"] = null;
-	session_destroy();
-	header('location: index.php');
-	die();
-}
-
 
 //Bild hochladen
 if (isset($_FILES["bildhochladen"]) && $_FILES["bildhochladen"]["size"] > 0) {

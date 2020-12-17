@@ -252,7 +252,6 @@ include("funktionen.php");
     xhttp.open("POST", "pve.php", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send("gewinner=" + gewinner + "&verlierer=" + verlierer + "&verdienst=" + verdienst + "&verlust=" + verlust + "&erfahrung=" + erfahrung + "");
-    console.log("Ergebnisse abgeschickt");
   }
 
   //LvL loggen
@@ -261,7 +260,6 @@ include("funktionen.php");
     xhttp.open("POST", "pvp.php", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send("gewinner=" + gewinner + "&lvl=" + lvl + "");
-    console.log("Ergebnisse abgeschickt");
   }
 </script>
 

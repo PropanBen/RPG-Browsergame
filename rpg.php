@@ -66,8 +66,9 @@ include("funktionen.php");
                     <img src="Bilder/Geld.png">
                 </div>
                 <div class="form">
-                    <form action="/index.php" method="POST">
-                        <input type="image" src="/Bilder/Ausloggen.png" name="action" value="Ausloggen" />
+                    <form action="/funktionen.php" method="POST">
+                        <input type="image" src="/Bilder/Ausloggen.png" />
+                        <input type="submit" name="action" value="Ausloggen" />
                     </form>
                     <a class="Einstellungen" href="/einstellungen.php"><img src="/Bilder/Einstellungen.png"></a>
                 </div>

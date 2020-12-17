@@ -19,9 +19,9 @@
     <div class="LoginContainer">
       <form action="/rpg.php" method="POST">
         <label>Benutzername : </label><br>
-        <input type="text" id="bname" name="bname"><br>
-        <label>Passwort : <br>
-          <input type="password" id="pname" name="pw"></label><br>
+        <input type="text" id="bname" name="bname" pattern="[a-zA-Z]{3,16}" title="3 bis 16 Zeichen^" required><br>
+        <label>Passwort : </label><br>
+        <input type="password" id="pname" name="pw" pattern="(?=(.*\d){1})(?=.*[a-zA-Z])(?=.*[!@#$%])[0-9a-zA-Z!@#$%]{8,}" title="min 2 Zeichen,Buchstaben,min 1 Sonderzeichen, min 8 Zeichen" required><br>
         <div class="LoginButtons">
           <button type="submit" name="action" value="Einloggen" style="border: 0; background: transparent"><img src="/Bilder/HolzTextButtonEinloggen.png"></button>
           <button type="reset" value="Zurücksetzen" style="border: 0; background: transparent"><img src="/Bilder/HolzTextButtonEntfernen.png"></button>
