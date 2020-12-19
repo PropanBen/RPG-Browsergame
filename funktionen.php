@@ -130,11 +130,11 @@ if (isset($_POST["spielerdaten"]) && isset($_POST["gegnerdaten"])) {
 	$gegnerid =  json_encode($gegner[0]["gegnerid"]);
 	$gegnerleben = json_encode($gegner[0]["leben"]);
 	$gegnergeld =  json_encode($gegner[0]["geld"]);
-	//if($gegnerleben > 0)
-	{
+	if ($gegnerleben > 0) {
 		$newClass->GegnerStatsSchreiben($connection, $gegnerleben, $gegnergeld, $gegnerid);
+	} else {
+		$newClass->Gegnerloeschen($connection, $gegnerid);
 	}
-	// else {$newClass->Gegnerloeschen($connection,$gegnerid);}
 
 	//Spieler und Gegner entsperren
 	$newClass->Spielersperren($connection, $sperre, $spielername);

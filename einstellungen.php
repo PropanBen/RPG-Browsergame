@@ -35,6 +35,13 @@ include("funktionen.php");
                         <button type="reset" value="Zurücksetzen" style="border: 0; background: transparent"><img src="/Bilder/HolzTextButtonEntfernen.png"></button>
                     </div>
                 </form>
+
+                <p style="color:red">Konto Entfernen</p>
+                <form action="/login.php" method="POST">
+                    <div class="LoginButtons">
+                        <button id="Absenden" name="konto" value="loeschen" style="border: 0; background: transparent"><img src="/Bilder/HolzTextButtonLöschen.png"></button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -88,7 +95,7 @@ include("funktionen.php");
                 }
                 xhttp.open("POST", "login.php", true);
                 xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhttp.send("pw=" + passwort.value + "&pw2=" + passwort2.value + "");
+                xhttp.send("aendern=true &pw=" + passwort.value + "&pw2=" + passwort2.value + "");
             }
         }
     </script>

@@ -48,6 +48,14 @@ body
 {
 	border-color:green;
 }
+input:invalid
+{
+	border-color:red;
+}
+input:valid
+{
+	border-color:green;
+}
 
 .Inhalt
 {

@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (isset($_SESSION["Erfolg"])) {
+  $_SESSION["Erfolg"] = null;
+}
+
+?>
 <!DOCTYPE html>
 <html>
 
@@ -25,6 +32,7 @@
         <div class="LoginButtons">
           <button type="submit" name="action" value="Einloggen" style="border: 0; background: transparent"><img src="/Bilder/HolzTextButtonEinloggen.png"></button>
           <button type="reset" value="Zurücksetzen" style="border: 0; background: transparent"><img src="/Bilder/HolzTextButtonEntfernen.png"></button>
+          <a href="/passwortvergessen.php" title="Passwort vergessen">Passwort vergessen</a>
         </div>
       </form>
     </div>

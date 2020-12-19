@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Propania</title>
+    <title>Registrieren</title>
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="rpgstyle.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,12 +19,12 @@
         <div class="LoginContainer">
             <form action="/login.php" method="POST">
                 <label>E-Mail Adresse :</label>
-                <input type="text" id="email" name="email" title="Beispiel example@example.com" required><br>
+                <input type="text" id="email" name="email" pattern="[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$" title="Beispiel example@example.com" required><br>
                 <label>Benutzername :</label>
-                <input type="text" id="bname" name="bname" title="3 bis 16 Zeichen" required><br>
+                <input type="text" id="bname" name="bname" pattern="[a-zA-Z]{3,16}" title="3 bis 16 Zeichen" required><br>
                 <label>Passwort : </label>
-                <input type="password" id="pname" name="pw" pattern="(?=(.*\d){1})(?=.*[a-zA-Z])(?=.*[!@#$%])[0-9a-zA-Z!@#$%]{8,}" title="min 8 Zeichen,Buchstaben,Zahlen,min 1 Sonderzeichen" required><br>
-                <label id="fehler"></label>
+                <input type="password" id="pname" name="pw" pattern="(?=(.*\d){2})(?=.*[a-zA-Z])(?=.*[!@#$%])[0-9a-zA-Z!@#$%]{8,}" title="min 8 Zeichen,Buchstaben,Zahlen,min 1 Sonderzeichen" required><br>
+                <p id="fehler"></p>
                 <div class="LoginButtons">
                     <button type="submit" name="action" value="Registrieren" style="border: 0; background: transparent"><img src="/Bilder/HolzTextButtonRegistrieren.png"></button>
                     <button type="reset" value="Zurücksetzen" style="border: 0; background: transparent"><img src="/Bilder/HolzTextButtonEntfernen.png"></button>
@@ -46,8 +46,6 @@
         let fehler = document.getElementById("fehler");
         email.addEventListener('input', EmailVorhanden);
         benutzername.addEventListener('input', BenutzerVorhanden);
-        passwort.addEventListener('input', PasswortValidieren);
-
 
         function BenutzerVorhanden() {
 
@@ -58,15 +56,8 @@
                 if (this.readyState == 4 && this.status == 200) {
                     if (this.responseText == 1) {
                         fehler.innerHTML = "Bereits vorhanden";
-                        benutzername.classList.remove('inputvalid');
-                        benutzername.classList.add('inputinvalid');
-                    } else if (regex.test(benutzername.value)) {
-                        benutzername.classList.remove('inputinvalid');
-                        benutzername.classList.add('inputvalid');
                     } else {
                         fehler.innerHTML = "";
-                        benutzername.classList.remove('inputvalid');
-                        benutzername.classList.add('inputinvalid');
                     }
 
                 }
@@ -78,39 +69,20 @@
 
         function EmailVorhanden() {
 
-            const regex = RegExp("(?=(.*\d){1})(?=.*[a-zA-Z])(?=.*[!@#$%])[0-9a-zA-Z!@#$%]{8,}");
+            const regex = RegExp("[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$");
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
                     if (this.responseText == 1) {
                         fehler.innerHTML = "Bereits vorhanden";
-                        email.classList.remove('inputvalid');
-                        email.classList.add('inputinvalid');
-                    } else if (regex.test(email.value)) {
-                        email.classList.remove('inputinvalid');
-                        email.classList.add('inputvalid');
                     } else {
                         fehler.innerHTML = "";
-                        email.classList.remove('inputvalid');
-                        email.classList.add('inputinvalid');
                     }
                 }
             }
             xhttp.open("POST", "login.php", true);
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             xhttp.send("email=" + email.value + "");
-        }
-
-        function PasswortValidieren() {
-            const regex = RegExp("(?=(.*\d){1})(?=.*[a-zA-Z])(?=.*[!@#$%])[0-9a-zA-Z!@#$%]{8,}");
-            if (regex.test(passwort.value)) {
-                passwort.classList.remove('inputinvalid');
-                passwort.classList.add('inputvalid');
-            } else {
-                fehler.innerHTML = "";
-                passwort.classList.remove('inputvalid');
-                passwort.classList.add('inputinvalid');
-            }
         }
     </script>
 
