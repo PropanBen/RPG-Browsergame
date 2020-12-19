@@ -71,12 +71,13 @@ include("funktionen.php");
                     <img src="Bilder/Geld.png">
                 </div>
                 <div class="form">
-                    <form action="/rpglogin.php" method="POST">
-                        <input type="image" src="/Bilder/Ausloggen.png" name="action" value="Ausloggen" />
+                    <form action="/login.php" method="POST">
+                        <input type="hidden" name="action" value="Ausloggen" />
+                        <input type="submit" class="Auslogbutton" value="" />
                     </form>
-                    <a class="Einstellungen" href="/einstellungen.php"><img src="/Bilder/Einstellungen.png"></a>
                 </div>
             </div>
+            <a class="Einstellungen" href="/einstellungen.php"><img src="/Bilder/Einstellungen.png"></a>
         </div>
     </div>
 

@@ -48,14 +48,6 @@ body
 {
 	border-color:green;
 }
-input:invalid
-{
-	border-color:red;
-}
-input:required:valid
-{
-	border-color: green;
-}
 
 .Inhalt
 {
@@ -133,6 +125,7 @@ h1
    background-color: burlywood;
    padding:10px;
    border-radius:10px;
+   border: 5px solid rgb(0, 0, 0);
 }
 .RegistrierungsContainer
 {
@@ -313,6 +306,28 @@ footer
 	display: flex;
 	flex-direction: column;
 }
+.Auslogbutton
+{
+	width: 40px;
+	height: 40px;
+	background: url('/Bilder/Ausloggen.png') ;
+	border: 0;
+	top : 5px;
+	right:5px;
+	position: absolute;
+}
+.Auslogbutton:hover
+{
+	cursor: pointer;
+}
+.Einstellungen img
+{
+	width: 40px;
+	height: 40px;
+	top : 60px;
+	right:10px;
+	position: absolute;
+}
 
 .ruestungswert
 {
@@ -387,11 +402,6 @@ align-items: center;
 	top: 5px;
 	right:5px;
 	position: absolute;
-}
-.form input
-{
-	width: 20px;
-	height: 20px;
 }
 .form a
 {
@@ -1059,3 +1069,14 @@ z-index:3;
 	padding: 3px;
 }
 /* Ende log.php */
+/* Start einstellungen.php */
+.PasswortContainer
+{
+	width: 100%;
+	margin-left:auto;
+	margin-right:auto;
+	display: grid;
+	place-items: center;
+}
+
+/* Ende einstellungen.php */
