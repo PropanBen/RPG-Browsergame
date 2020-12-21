@@ -8,6 +8,7 @@ include("funktionen.php");
   <title>PVP</title>
   <meta charset="utf-8" />
   <link rel="stylesheet" type="text/css" href="rpgstyle.css" />
+  <link rel="stylesheet" type="text/css" href="mobilerpgstyle.css" />
   <script type="text/javascript" src="pvpkampf.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -34,7 +35,7 @@ include("funktionen.php");
         <div id="LebenRahmenMitte">
           <div class="lebentext1">
             <p id="spieler1leben" class="leben1">10</p>
-            <p class="von">&nbspvon&nbsp</p>
+            <p class="von">/</p>
             <p id="spieler1maxleben" class="maxleben1">100</p>
           </div>
         </div>
@@ -61,7 +62,7 @@ include("funktionen.php");
         <div id="LebenRahmenMitte2" class="Le">
           <div class="lebentext2">
             <p id="spieler2leben" class="leben2">5</p>
-            <p class="von">&nbspvon&nbsp</p>
+            <p class="von">/</p>
             <p id="spieler2maxleben" class="maxleben2">80</p>
           </div>
         </div>
@@ -203,14 +204,22 @@ include("funktionen.php");
 
     spielerdaten[0]["leben"] = Spieler.leben;
     spielerdaten[0]["erfahrung"] = Spieler.erfahrungdb;
-    spielerdaten[0]["geld"] = Spieler.geld;
+    if (Spieler.geld < 0) {
+      spielerdaten[0]["geld"] = 0;
+    } else {
+      spielerdaten[0]["geld"] = Spieler.geld;
+    }
     spielerdaten[0]["lvl"] = Spieler.lvl;
     spielerdaten[0]["angriff"] = Spieler.angriffswert;
     spielerdaten[0]["maxleben"] = Spieler.maxleben;
 
     spielergegnerdaten[0]["leben"] = Gegner.leben;
     spielergegnerdaten[0]["erfahrung"] = Gegner.erfahrungdb;
-    spielergegnerdaten[0]["geld"] = Gegner.geld;
+    if (Gegner.geld < 0) {
+      spielergegnerdaten[0]["geld"] = 0;
+    } else {
+      spielergegnerdaten[0]["geld"] = Gegner.geld;
+    }
     spielergegnerdaten[0]["lvl"] = Gegner.lvl;
     spielergegnerdaten[0]["angriff"] = Gegner.angriffswert;
     spielergegnerdaten[0]["maxleben"] = Gegner.maxleben;

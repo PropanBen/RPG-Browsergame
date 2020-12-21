@@ -65,9 +65,13 @@ function Kampfende(Angreifer, Gegner) {
   erfahrung = null;
   verlust = null;
   lvlupbool = false;
+  gewinngergeldvorher = false;
+  verlierergeldvorher = false;
   if (SpielerLinks.leben > 0 && GegnerRechts.leben <= 0) {
     Gewinner = SpielerLinks;
     Verlierer = GegnerRechts;
+    gewinnergeldvorher = SpielerLinks.geld;
+    verlierergeldvorher = GegnerRechts.geld;
     Gewinner.geld += Verlierer.geld;
     erfahrungvorher = Gewinner.erfahrung;
     Gewinner.erfahrung += GegnerRechts.erfahrung;
@@ -86,20 +90,22 @@ function Kampfende(Angreifer, Gegner) {
   else {
     Gewinner = GegnerRechts;
     Verlierer = SpielerLinks;
+    gewinnergeldvorher = GegnerRechts.geld;
+    verlierergeldvorher = SpielerLinks.geld;
     differenz = 0;
 
     if (Verlierer.geld > 0 && Gewinner.geld > Verlierer.geld) {
       differenz = Math.round(Verlierer.geld / 2);
       verdienst = differenz;
       Gewinner.geld += differenz;
-      verlust = Verlierer.geld - differenz;
+      verlust = differenz;
       Verlierer.geld = differenz;
     }
     else {
       verlust = Gewinner.geld;
-      Verlierer.geld -= Gewinner.geld;
-      Gewinner.geld = Gewinner.geld * 2;
-      verdienst = Gewinner.geld;
+      Verlierer.geld -= verlust;
+      verdienst = Gewinner.geld * 2;
+      Gewinner.geld += verdienst;
     }
 
     erfahrung = 0;
@@ -113,11 +119,17 @@ function Kampfende(Angreifer, Gegner) {
   let kampferfahrung = document.getElementById("kampferfahrung");
   let kampfverlierer = document.getElementById("kampfgeldverlust");
 
+
   kampfergebnisse.style.display = "block";
   kampfgewinner.innerHTML = `${Gewinner.name} hat gegen ${Verlierer.name} gewonnen !`;
   kampfgeld.innerHTML = `${Gewinner.name} bekommt ${verdienst} Geld !`;
-  kampferfahrung.innerHTML = `${Gewinner.name} bekommt ${erfahrung} Erfahrung !`;
-  kampfverlierer.innerHTML = `${Verlierer.name} verliert ${verlust} Geld !`;
+  if (Gewinner.seite === "rechts") { kampferfahrung.innerHTML = ""; }
+  else { kampferfahrung.innerHTML = `${Gewinner.name}&nbsp; ${Gewinner.seite}bekommt ${erfahrung} Erfahrung !`; }
+  if (verlierergeldvorher <= verlust) {
+    kampfverlierer.innerHTML = `${Verlierer.name} verliert ${verlierergeldvorher} Geld !`;
+  }
+  else { kampfverlierer.innerHTML = `${Verlierer.name} verliert ${verlust} Geld !`; }
+
   KampfergebnisseLoggen(Gewinner.name, Verlierer.name, verdienst, verlust, erfahrung);
   if (lvlupbool === true) {
     let lvlup = document.getElementById("lvlup");

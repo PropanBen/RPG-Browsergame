@@ -60,9 +60,8 @@ if (isset($_SESSION["Erfolg"])) {
         Waffen und Rüstungen ausgeben.
       </p>
     </div>
-
+    <div class="Platzhalter"></div>
   </div>
-  <div class="Platzhalter"></div>
   <footer>
     <p>© 2020 PropanBen. Alle Rechte vorbehalten.</p>
   </footer>

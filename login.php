@@ -41,36 +41,37 @@ if (isset($_POST["action"]) && $_POST["action"] === "Ausloggen") {
 }
 
 // Einloggen---------------------------------------------------------------------------------------------
-if (!isset($_SESSION["Spieler"])) {
-    if (isset($_POST["action"]) && $_POST["action"] == "Einloggen") {
-        $player = $_POST["bname"];
-        $passwort = $_POST["pw"];
-        $login = $connection->prepare("SELECT benutzername, passwort FROM konto WHERE benutzername = ?");
-        $login->bind_param("s", $player);
-        $login->execute();
-        $result = $login->get_result();
-        $row = mysqli_fetch_row($result);
-        if (
-            preg_match("^[a-zA-Z]{3,16}^", $player)
-            && preg_match("^(?=(.*\d){1})(?=.*[a-zA-Z])(?=.*[!@#$%])[0-9a-zA-Z!@#$%]{8,}^", $passwort)
-            && $player == $row[0] && password_verify($passwort, $row[1])
-        ) {
-            $_SESSION["Spieler"] = $player;
-            // Spieler entsperren
-            $sperre = 0;
-            $update = $connection->prepare("UPDATE spieler SET gesperrt=? WHERE spielername=?");
-            $update->bind_param("is", $sperre, $player);
-            $update->execute();
-            $update->close();
-            //Logging
-            $newLoginClass->Logging($connection, "Eingeloggt");
-            header('location: rpg.php');
-        } else {
-            header('location: index.php');
-        }
-        $login->close();
+
+if (isset($_POST["action"]) && $_POST["action"] == "Einloggen") {
+    echo "Vor Passwortprüfung";
+    $player = $_POST["bname"];
+    $passwort = $_POST["pw"];
+    $login = $connection->prepare("SELECT benutzername, passwort FROM konto WHERE benutzername = ?");
+    $login->bind_param("s", $player);
+    $login->execute();
+    $result = $login->get_result();
+    $row = mysqli_fetch_row($result);
+    if (
+        preg_match("^[a-zA-Z]{3,16}^", $player)
+        && preg_match("^(?=(.*\d){1})(?=.*[a-zA-Z])(?=.*[!@#$%])[0-9a-zA-Z!@#$%]{8,}^", $passwort)
+        && $player == $row[0] && password_verify($passwort, $row[1])
+    ) {
+        $_SESSION["Spieler"] = $player;
+        // Spieler entsperren
+        $sperre = 0;
+        $update = $connection->prepare("UPDATE spieler SET gesperrt=? WHERE spielername=?");
+        $update->bind_param("is", $sperre, $player);
+        $update->execute();
+        $update->close();
+        //Logging
+        $newLoginClass->Logging($connection, "Eingeloggt");
+        header('location: rpg.php');
+    } else {
+        header('location: index.php');
     }
+    $login->close();
 }
+
 
 // Registrieren---------------------------------------------------------------------------------------------
 
@@ -99,7 +100,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "Registrieren") {
         $player = $_POST["bname"];
         $lvl = 1;
         $erfahrung = 0;
-        $geld = 0;
+        $geld = 6;
         $leben = 3;
         $maxleben = 3;
         $angriff = 1;
@@ -122,7 +123,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "Registrieren") {
 }
 
 // Passwort ändern
-if (isset($_POST["aendern"]) && isset($_POST["pw"]) && isset($_POST["pw2"])) {
+if (isset($_POST["aendern"]) && $_POST["aendern"] == true && isset($_POST["pw"]) && isset($_POST["pw2"])) {
 
     if (
         preg_match("^(?=(.*\d){1})(?=.*[a-zA-Z])(?=.*[!@#$%])[0-9a-zA-Z!@#$%]{8,}^", $_POST["pw"]) &&
@@ -142,7 +143,7 @@ if (isset($_POST["aendern"]) && isset($_POST["pw"]) && isset($_POST["pw2"])) {
 }
 
 // Passwort vergessen
-if (isset($_POST["action"]) && isset($_POST["email"])) {
+if (isset($_POST["action"]) && $_POST["action"] === "vergessen" && isset($_POST["email"])) {
 
     if (preg_match("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$^", $_POST["email"])) {
 

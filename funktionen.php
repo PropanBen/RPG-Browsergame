@@ -133,7 +133,7 @@ if (isset($_POST["spielerdaten"]) && isset($_POST["gegnerdaten"])) {
 	if ($gegnerleben > 0) {
 		$newClass->GegnerStatsSchreiben($connection, $gegnerleben, $gegnergeld, $gegnerid);
 	} else {
-		$newClass->Gegnerloeschen($connection, $gegnerid);
+		//	$newClass->Gegnerloeschen($connection, $gegnerid);
 	}
 
 	//Spieler und Gegner entsperren
@@ -543,13 +543,13 @@ class DBAktionen
 		while ($row = $result->fetch_array()) {
 			echo ("
 			<div class=\"GegenstandEinzeln\">
-			<img src=" . ($row['waffenbildpfad']) . "" . " width=\"100\" height=\"100\"> &nbsp
+			<img src=" . ($row['waffenbildpfad']) . "" . "> &nbsp
 			<p>
 			" . $row['waffenname'] . "</p>&nbsp <p>Angriff: &nbsp" . $row['waffenwert'] . "</p>
-			 &nbsp <p>Kostet: &nbsp " . $row['geldwert'] . "<img src=\"Bilder/Geld.png\" width=\"30\" height=\"30\"></p>
+			 &nbsp <p>Kostet: &nbsp " . $row['geldwert'] . "<img  id=\"geld\" src=\"Bilder/Geld.png\" width=\"30\" height=\"30\"></p>
 			 <form action=\"marktplatz.php\" method=\"POST\">
 			 <input type=\"hidden\" name=\"waffenid\" value=\"" . $row['waffenid'] . "\" />
-			 <input type=\"image\" src=\"/Bilder/Geldsack.png\" width=\"60\" height=\"60\">
+			 <input type=\"image\" src=\"/Bilder/Geldsack.png\" >
 			 </form>
 			 </div><br><br>");
 		}
@@ -563,13 +563,13 @@ class DBAktionen
 		while ($row = $result->fetch_array()) {
 			echo ("
 			<div class=\"GegenstandEinzeln\">
-			<img src=" . ($row['ruestungsbildpfad']) . "" . " width=\"100\" height=\"100\"> &nbsp
+			<img src=" . ($row['ruestungsbildpfad']) . "" . "> &nbsp
 			<p>
 			 " . $row['ruestungsname'] . "</p>&nbsp <p>Verteidigung: &nbsp" . $row['ruestungswert'] . "</p>
-			 &nbsp <p>Kostet: &nbsp " . $row['geldwert'] . "<img src=\"Bilder/Geld.png\" width=\"30\" height=\"30\"></p>
+			 &nbsp <p>Kostet: &nbsp " . $row['geldwert'] . "<img  id=\"geld\" src=\"Bilder/Geld.png\" width=\"30\" height=\"30\"></p>
 			 <form action=\"marktplatz.php\" method=\"POST\">
 			 <input type=\"hidden\" name=\"ruestungsid\" value=\"" . $row['ruestungsid'] . "\" />
-			 <input type=\"image\" src=\"/Bilder/Geldsack.png\" width=\"60\" height=\"60\">
+			 <input type=\"image\" src=\"/Bilder/Geldsack.png\">
 			 </form>
 			 </div><br><br>");
 		}
@@ -593,14 +593,14 @@ class DBAktionen
 
 			echo ("
 			<div class=\"GegenstandEinzeln\">
-			<img src=" . ($row['trankbildpfad']) . "" . " width=\"100\" height=\"100\">&nbsp
+			<img src=" . ($row['trankbildpfad']) . "" . ">&nbsp
 			<p>
 			" . $row['trankname'] . "</p>
 			 <p>" . $typ . " &nbsp" . $value . "</p>
-			 <p>Kostet: &nbsp " . $row['geldwert'] . "<img src=\"Bilder/Geld.png\" width=\"30\" height=\"30\"></p>
+			 <p>Kostet: &nbsp " . $row['geldwert'] . "<img id=\"geld\" src=\"Bilder/Geld.png\"></p>
 			 <form action=\"marktplatz.php\" method=\"POST\">
 			 <input type=\"hidden\" name=\"trankid\" value=\"" . $row['trankid'] . "\" />
-			 <input type=\"image\" src=\"/Bilder/Geldsack.png\" width=\"60\" height=\"60\">
+			 <input type=\"image\" src=\"/Bilder/Geldsack.png\">
 			 </form>
 			 </div><br><br>");
 		}

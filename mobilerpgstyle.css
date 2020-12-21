@@ -1,0 +1,296 @@
+/*     Global          */
+
+/*----------------------------------------*/
+@media only screen and (min-width: 1080px)
+/*----------------------------------------*/ 
+{
+/* Start marktplatz.php    */
+.GegenstandEinzeln
+{
+    padding-left:0;
+    flex-direction: row;
+    align-items: center;
+     justify-content: center;
+     padding-bottom: 100px;
+    border-bottom:1px solid rgb(149, 80, 15);
+}
+.GegenstandEinzeln img
+{
+    width: 100px;
+	height: 100px;
+}
+
+.GegenstandEinzeln input
+{
+   margin-top: 0px;
+}
+/* Ende marktplatz.php    */
+/* Start pve.php    */
+.RahmenContainer
+{
+    font-size:14px;
+}
+.Überschrift
+{
+    width:450px;
+}
+.SpielerRahmenLinks
+{
+    width:400px;
+    height: 425px;
+}
+.SpielerRahmenrechts
+{
+    width:400px;
+    height: 425px;
+}
+.spielername1
+{
+    width:400px;
+}
+.spielername2
+{
+    width:400px;
+}
+/* Ende pve.php    */
+}
+
+
+
+/*----------------------------------------*/
+@media only screen and (max-width: 1079px)
+/*----------------------------------------*/ 
+{
+/* Start rpg.php    */
+.Navigation 
+{
+    margin-left:auto;
+    margin-right:auto;
+    
+}  
+.Szenencontainer
+{
+    display: none;
+}
+/* Ende rpg.php    */
+
+
+/* Start marktplatz.php*/
+.GegenstandEinzeln
+{
+    padding-left:0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 100px;
+    border-bottom:1px solid rgb(149, 80, 15);
+}
+.GegenstandEinzeln img
+{
+    width: 100px;
+	height: 100px;
+}
+
+/*Ende marktplatz.php*/
+
+/*Start pve.php */
+.Überschrift 
+{
+    width:250px;
+    font-size: 16px;
+    border: 2px solid rgb(0, 0, 0);
+}
+.RahmenContainer
+{
+    font-size:12px;
+}
+.SpielerRahmenLinks
+{
+    width: 200px;
+    height: 250px;
+}
+.spielername1
+{
+    width: 200px;
+    font-size: 14px;
+}
+.SpielerRahmenRechts
+{
+    width: 200px;
+    height: 250px;
+}
+.spielername2
+{
+    width: 200px;
+    font-size: 14px;
+}
+
+/* Ende pve.php*/
+}
+
+/*----------------------------------------*/
+@media only screen and (max-width: 500px) {
+/*----------------------------------------*/
+/* Start rpg.php    */ 
+.Content
+{
+    font-size:10px;
+}   
+.Navigation 
+{
+    max-width: 95%;
+    margin-left:auto;
+	margin-right:auto;
+
+}
+.PVEKampfContainer
+{
+    height:17%;
+}
+
+.Ausruestung
+{
+    width: 140px;
+}
+.Stats p
+{
+    margin-left: 10px;
+}
+.LvL
+{
+    bottom:-25px;
+	left:15px; 
+}
+.ruestungswert
+{
+    bottom:105px;
+    left:41px;   
+}
+.waffenwert
+{
+    bottom:47px;
+    left:41px;
+}
+#leben
+{
+    left:100px;
+    font-size:10px;
+    bottom: 14px;
+}
+#erfahrung
+{
+    left:100px;
+    font-size:10px; 
+    bottom: -10px;
+}
+#geldcontainer
+{
+   right:10px;
+}
+.Beschriftung
+{
+    font-size: 16px;
+}
+/* Ende rpg.php    */
+
+/* Start Marktplatz.php    */
+.NavigationMarktplatz
+{
+    max-width: 95%;
+    margin-left:auto;
+    margin-right:auto;
+    font-size:10px;
+}
+.Überschrift 
+{
+    width:250px;
+    font-size: 16px;
+    border: 2px solid rgb(0, 0, 0);
+}
+.GegenstandEinzeln
+{
+    padding-left:0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 50px;
+    border-bottom:1px solid rgb(149, 80, 15);
+}
+.GegenstandEinzeln img
+{
+    width: 100px;
+	height: 100px;
+	margin-top:10px;
+	margin-left:0;
+	display: inline;
+}
+.GegenstandEinzeln p
+{
+    width:250px;
+    height: 30px;	
+    font-size:16px;
+}
+.GegenstandEinzeln input
+{
+	width: 20px;
+	height: 20px;
+}
+.GegenstandEinzeln input
+{
+    width: 40px;
+	height: 40px;
+    margin-top:0;
+}
+#geld
+{
+    width: 20px;
+    height: 20px;
+    margin-left:5px;
+}
+/* Ende Marktplatz.php    */
+
+/* Start pve.php */
+.RahmenContainer
+{
+    font-size:10px;
+}
+.SpielerRahmenLinks
+{
+    width: 140px;
+    height: 200px;
+}
+.spielername1
+{
+    width: 140px;
+    font-size: 8px;
+}
+.SpielerRahmenRechts
+{
+    width: 140px;
+    height: 200px; 
+}
+.spielername2
+{
+    width: 140px;
+    font-size: 8px;
+}
+.Plakette
+{
+    width: 30px; 
+    height: 30px;
+}
+
+/* Ende pve.php*/
+
+/* Ende log.php*/
+.Logliste table, td
+{
+    width:auto;
+    font-size:8px;
+}
+
+/* Ende log.php*/
+
+}
+
+

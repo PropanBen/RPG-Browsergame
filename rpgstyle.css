@@ -151,6 +151,8 @@ h1
 {
 	width: 100%;
 	height: 100px;
+	position: relative;
+	bottom:0;
 }
 
 footer
@@ -177,23 +179,24 @@ footer
 	height: 100%;
 	display: flex;
 	flex-direction: row;
-	background-color: rgb(182, 146, 98);
+	margin:0px;
 }
 .Navigation
 {
-	min-width: 500px;
-	max-width: 500px;
-	height: 96%;
+    max-width: 500px;
+	height: auto;
 	margin-left:1%;
-	margin-top: 10px;
+	margin-top: 1%;
 	flex:1;
+	border: 3px solid rgb(0, 0, 0);
+	border-radius:10px;
 }
 .SzenenContainer
 {
-	width: calc(100% - 560px);
-	height: 95%;
+	width: calc(100% - 560px);	
+	height: 97%;
 	border: 1px outset rgb(0, 0, 0);
-	margin-top: 10px;
+	margin-top: 1%;
 	margin-left:10px;
 	margin-right:10px;
 	flex:1;
@@ -207,13 +210,14 @@ footer
 .SpielerInfoContainer
 {
 	width: 100%;
-	height:auto;
+	height: auto;
 	margin-left:0;
 	margin-right:auto;
 	display:flex;	
 	position: relative;
+	border-top-left-radius :7px ;
+	border-top-right-radius :7px ;
 	flex-direction:column;
-	border: 1px outset grey;
 	background-color: burlywood;
 }
 .Avatarbild
@@ -391,14 +395,14 @@ align-items: center;
 #leben
 {
 	left:155px;
-	bottom: 8px;
+	bottom: 10px;
 	position: absolute;
 	font-size: 14px;
 }
 #erfahrung
 {
 	left:155px;
-	bottom: -18px;
+	bottom: -15px;
 	position: absolute;
 	font-size: 14px;
 }
@@ -420,13 +424,12 @@ align-items: center;
 .SpielerlisteContainer
 {
 	width: 100%;
-	height: 30%;
+	height: 40%;
 	margin-left:0;
 	margin-right:auto;
 	display:flex;	
 	position: relative;
 	flex-direction:column;
-	border: 1px outset grey;
 	background-color: burlywood;
 }
 .SpielerlisteContainer p
@@ -441,8 +444,8 @@ align-items: center;
 }
 .SpielerlisteContainer img
 {
-	width: 20px;
-	height: 20px;
+	width: 50px;
+	height: 50px;
 	margin-left: 10px;
 }
 .Spielerliste
@@ -459,7 +462,6 @@ align-items: center;
 	display:flex;	
 	position: relative;
 	align-items:center;
-	border: 1px outset grey;
 	background-color: burlywood;
 }
 .Aktionsbilder 
@@ -484,26 +486,26 @@ font-size: 24;
 .PVPKampfContainer
 {
 	width: 100%;
+	height: 7%;
+	margin-left:auto;
+	margin-right:auto;
+	display:flex;	
+	position: relative;
+	align-items:center;
+	background-color: burlywood;
+}
+.PVEKampfContainer
+{
+	width: 100%;
 	height: 15%;
 	margin-left:auto;
 	margin-right:auto;
 	display:flex;	
 	position: relative;
 	align-items:center;
-	border: 1px outset grey;
-	background-color: burlywood;
-}
-.PVEKampfContainer
-{
-	width: 100%;
-	height: 18%;
-	margin-left:auto;
-	margin-right:auto;
-	display:flex;	
-	position: relative;
-	align-items:center;
 	flex-direction:row;
-	border: 1px outset grey;
+	border-bottom-left-radius :7px ;
+	border-bottom-right-radius :7px ;
 	background-color: burlywood;
 }
 /*  Ende rpg.php  */
@@ -511,9 +513,8 @@ font-size: 24;
 /*  Start Marktplatz marktplatz.php  */
 .NavigationMarktplatz
 {
-	min-width: 500px;
 	max-width: 500px;
-	height: 200px;
+	height: auto;
 	margin-left:auto;
 	margin-right: auto;
 	margin-top: 10px;
@@ -521,7 +522,7 @@ font-size: 24;
 }
 .Überschrift 
 {
-	width:300px;
+	width:290px;
 	height:auto;
 	margin-left:auto;
 	margin-right:auto;
@@ -530,6 +531,7 @@ font-size: 24;
 	text-align: center;
 	border: 5px solid rgb(0, 0, 0);
 	background-color: rgb(255, 217, 167);	
+	background-color:burlywood;
 	border-radius: 10px;
 }
 .WaffenContainer
@@ -544,20 +546,22 @@ font-size: 24;
 	align-items:center;
 	justify-content:center;
 	flex-direction:column;
-	border: 5px outset grey;
+	border-radius:10px;
 	background-color: rgb(255, 217, 167);
+	background-color:burlywood;
 }
 .Waffenliste
 {   
 	width: 100%;
 	height: 50%;
-	border: 5px outset grey;
+	border-radius:10px;
 	border-bottom: none;
 	font-size: 20px;
 	margin-bottom: 0;
 	display: flex;
 	flex-direction: column;	
 	background-color:burlywood;
+	background-color: rgb(255, 217, 167);
 }
 .GegenstandEinzeln
 {
@@ -572,6 +576,8 @@ font-size: 24;
 
 .GegenstandEinzeln img
 {
+	width: 80px;
+	height: 80px;
 	margin-top:10px;
 	margin-left:10px;
 	display: inline;
@@ -583,9 +589,16 @@ font-size: 24;
 }
 .GegenstandEinzeln input
 {
+	width: 60px;
+	height: 60px;
 	margin-top:30px;
 	position: absolute;
 	right:10%;
+}
+#geld
+{
+	width: 20px;
+	height: 20px;
 }
 .RuestungsContainer
 {
@@ -629,7 +642,7 @@ font-size: 24;
 
 .Themen
 {
-	width: 400px;
+	width: 280px;
 	height:auto;
 	margin-left:auto;
 	margin-right:auto;
@@ -644,7 +657,7 @@ font-size: 24;
 
 .Gegner
 {
-	width: 400px;
+	width: 280px;
 	height:auto;
 	margin-left:auto;
 	margin-right:auto;
@@ -673,7 +686,7 @@ font-size: 24;
 
 .Waffen
 {
-	width: 400px;
+	width: 280px;
 	height:auto;
 	margin-left:auto;
 	margin-right:auto;
@@ -687,7 +700,7 @@ font-size: 24;
 }
 .Ruestung
 {
-	width: 400px;
+	width: 280px;
 	height:auto;
 	margin-left:auto;
 	margin-right:auto;
@@ -701,7 +714,7 @@ font-size: 24;
 }
 .Tränke
 {
-	width: 400px;
+	width: 280px;
 	height:auto;
 	margin-left:auto;
 	margin-right:auto;
@@ -752,7 +765,7 @@ font-size: 24;
 }
 .RahmenContainer
 {
-	width: 80%;
+	width: 100%;
 	height: 60%;
 	margin-top:10px;
 	margin-left:auto;
@@ -769,7 +782,6 @@ font-size: 24;
 {
 	width:95%;
 	height:95%;
-	border: 1px outset grey;
 	border-radius: 10px;
 	margin-left:auto;
 	margin-right:auto;
@@ -925,7 +937,6 @@ font-size: 24;
 {
 	width:95%;
 	height:95%;
-	border: 1px outset grey;
 	border-radius: 10px;
 	margin-left:auto;
 	margin-right:auto;
@@ -1069,6 +1080,10 @@ z-index:3;
 }
 /*  Ende pve.php */
 /* Start log.php */
+.WaffenContainer
+{
+	justify-content: left;
+}
 .Logliste table, td
 {
 	width: 10%;

@@ -7,6 +7,7 @@ include("funktionen.php");
   <title>PVE</title>
   <meta charset="utf-8" />
   <link rel="stylesheet" type="text/css" href="rpgstyle.css" />
+  <link rel="stylesheet" type="text/css" href="mobilerpgstyle.css" />
   <script type="text/javascript" src="pvekampf.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -33,7 +34,7 @@ include("funktionen.php");
         <div id="LebenRahmenMitte">
           <div class="lebentext1">
             <p id="spielerleben" class="leben1">10</p>
-            <p class="von">&nbspvon&nbsp</p>
+            <p class="von">/</p>
             <p id="spielermaxleben" class="maxleben1">100</p>
           </div>
         </div>
@@ -182,7 +183,11 @@ include("funktionen.php");
 
       spielerdaten[0]["leben"] = Spieler.leben;
       spielerdaten[0]["erfahrung"] = Spieler.erfahrung;
-      spielerdaten[0]["geld"] = Spieler.geld;
+      if (Spieler.geld < 0) {
+        spielerdaten[0]["geld"] = 0;
+      } else {
+        spielerdaten[0]["geld"] = Spieler.geld;
+      }
       spielerdaten[0]["lvl"] = Spieler.lvl;
       spielerdaten[0]["angriff"] = Spieler.angriffswert;
       spielerdaten[0]["maxleben"] = Spieler.maxleben;
