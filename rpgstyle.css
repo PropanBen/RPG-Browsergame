@@ -190,6 +190,7 @@ footer
 	flex:1;
 	border: 3px solid rgb(0, 0, 0);
 	border-radius:10px;
+	background-color: burlywood;
 }
 .SzenenContainer
 {
@@ -592,8 +593,17 @@ font-size: 24;
 	width: 60px;
 	height: 60px;
 	margin-top:30px;
-	position: absolute;
-	right:10%;
+	position: relative;
+	right:0%;
+	bottom: -20px;
+}
+#GeldX
+{
+	width: 60px;
+	height: 60px;
+	margin-top:30px;
+	position: relative;
+	right:0%;
 }
 #geld
 {
@@ -1059,11 +1069,11 @@ z-index:3;
 }
 .KampfergebnisseContainer
 {
-	width:80%;
-	height:80%;
-	margin-left: 10%;
-	margin-right: 10%;
-	bottom:10%;
+	width:30%;
+	height:40%;
+	margin-left: 35%;
+	margin-right: 35%;
+	bottom:30%;
 	border: 5px solid grey;
 	border-radius: 10px;
 	display: block;

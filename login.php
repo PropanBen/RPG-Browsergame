@@ -53,7 +53,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "Einloggen") {
     $row = mysqli_fetch_row($result);
     if (
         preg_match("^[a-zA-Z]{3,16}^", $player)
-        && preg_match("^(?=(.*\d){1})(?=.*[a-zA-Z])(?=.*[!@#$%])[0-9a-zA-Z!@#$%]{8,}^", $passwort)
+        && preg_match("^(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%])[0-9a-zA-Z!@#$%]{8,}^", $passwort)
         && $player == $row[0] && password_verify($passwort, $row[1])
     ) {
         $_SESSION["Spieler"] = $player;
@@ -85,7 +85,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "Registrieren") {
         $result->num_rows == 0 &&
         preg_match("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$^", $_POST["email"])
         && preg_match("^[a-zA-Z]{3,16}^", $_POST["bname"]) &&
-        preg_match("^(?=(.*\d){1})(?=.*[a-zA-Z])(?=.*[!@#$%])[0-9a-zA-Z!@#$%]{8,}^", $_POST["pw"])
+        preg_match("^(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%])[0-9a-zA-Z!@#$%]{8,}^", $_POST["pw"])
     ) {
         // Konto anlegen
         $insert = $connection->prepare("INSERT INTO konto (benutzername, passwort,email) VALUES (?,?,?)");
@@ -112,6 +112,27 @@ if (isset($_POST["action"]) && $_POST["action"] == "Registrieren") {
         $insertspieler->close();
         $_SESSION["Spieler"] = $_POST["bname"];
 
+        // Email versenden
+        $recipient = $_POST["email"];
+        $subject = 'Propania Registrierung';
+        $sender = 'noreply@propanben.de';
+        $content =
+            'Willkommen in Propania,<br>
+             Vielen Herzlichen Dank für die Registrierung bei Propania.<br>
+             Ich wünsche dir viel Spaß und viel Erfolg beim Spielen.<br><br>
+
+             Jetz einloggen unter:<br><br>
+             https://propania.propanben.de <br><br>
+
+             Ich wünsche dir viel Spaß und viel Erfolg beim spielen.<br><br>
+
+             Viele Grüße<br>
+             Euer PropanBen<br>
+            ';
+        $headers = "MIME-Version: 1.0" . "\r\n";
+        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+        mail($recipient, $subject, $content, $headers, ' -f ' . $sender);
+
         //Logging
         $newLoginClass->Logging($connection, "Registriert");
         header('location: rpg.php');
@@ -126,7 +147,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "Registrieren") {
 if (isset($_POST["aendern"]) && $_POST["aendern"] == true && isset($_POST["pw"]) && isset($_POST["pw2"])) {
 
     if (
-        preg_match("^(?=(.*\d){1})(?=.*[a-zA-Z])(?=.*[!@#$%])[0-9a-zA-Z!@#$%]{8,}^", $_POST["pw"]) &&
+        preg_match("(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%])[0-9a-zA-Z!@#$%]{8,}^", $_POST["pw"]) &&
         $_POST["pw"] == $_POST["pw2"]
     ) {
 
@@ -197,7 +218,7 @@ if (isset($_POST["token"]) && isset($_POST["pw"]) && isset($_POST["pw2"])) {
     if ($result->num_rows == 1) {
 
         if (
-            preg_match("^(?=(.*\d){1})(?=.*[a-zA-Z])(?=.*[!@#$%])[0-9a-zA-Z!@#$%]{8,}^", $_POST["pw"]) &&
+            preg_match("(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%])[0-9a-zA-Z!@#$%]{8,}^", $_POST["pw"]) &&
             $_POST["pw"] == $_POST["pw2"]
         ) {
             echo "Nach Regex";

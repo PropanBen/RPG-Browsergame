@@ -77,7 +77,7 @@ include("funktionen.php");
     <p id="kampfgeldverlust"></p>
     <p id="lvlup"></p>
     <div class="Zurückbutton">
-      <a href="/themen.php"><img src="Bilder/Zurückbutton.png" width="100" height="100" /></a>
+      <a id="todesermittler" href="/themen.php"><img src="Bilder/Zurückbutton.png" width="100" height="100" /></a>
     </div>
   </div>
 
@@ -192,8 +192,21 @@ include("funktionen.php");
       spielerdaten[0]["angriff"] = Spieler.angriffswert;
       spielerdaten[0]["maxleben"] = Spieler.maxleben;
 
-      gegnerdaten[0]["leben"] = Gegner.leben;
-      gegnerdaten[0]["geld"] = Gegner.geld;
+      if (spielerdaten[0]["leben"] == 0 && spielerdaten[0]["geld"] == 0) {
+        document.getElementById("todesermittler").href = "/tot.php";
+        spielerdaten[0]["leben"] = 3;
+        spielerdaten[0]["erfahrung"] = 0;
+        spielerdaten[0]["geld"] = 6;
+        spielerdaten[0]["lvl"] = 1;
+        spielerdaten[0]["angriff"] = 1;
+        spielerdaten[0]["maxleben"] = 3;
+        spielerdaten[0]["waffenid"] = 0;
+        spielerdaten[0]["ruestungsid"] = 0;
+      }
+
+      // Gegner Stats nach Kampf temporär nicht zurückgesetzt
+      // gegnerdaten[0]["leben"] = Gegner.leben; 
+      gegnerdaten[0]["geld"] = gegnerdaten[0]["geld"];
 
       const spielerdatennachkampf = JSON.stringify(spielerdaten);
       const gegnerdatennachkampf = JSON.stringify(gegnerdaten);

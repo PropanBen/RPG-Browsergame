@@ -27,10 +27,10 @@ if (!isset($_SESSION["Erfolg"])) {
         <div class="LoginContainer">
             <form action="/login.php" method="POST">
                 <label>Passwort : </label><br>
-                <input type="password" id="pname" name="pw" pattern="(?=(.*\d){2})(?=.*[a-zA-Z])(?=.*[!@#$%])[0-9a-zA-Z!@#$%]{8,}" title="min 8 Zeichen,Buchstaben,Zahlen,min 1 Sonderzeichen" required><br>
+                <input type="password" id="pname" name="pw" pattern="(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%])[0-9a-zA-Z!@#$%]{8,}" title="min 8 Zeichen,Buchstaben,Zahlen,min 1 Sonderzeichen" required><br>
                 <label>Passwort </label><br>
                 <label>Wiederholen : </label><br>
-                <input type="password" id="pname2" name="pw2" pattern="(?=(.*\d){2})(?=.*[a-zA-Z])(?=.*[!@#$%])[0-9a-zA-Z!@#$%]{8,}" title="min 8 Zeichen,Buchstaben,Zahlen,min 1 Sonderzeichen" required><br>
+                <input type="password" id="pname2" name="pw2" pattern="(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%])[0-9a-zA-Z!@#$%]{8,}" title="min 8 Zeichen,Buchstaben,Zahlen,min 1 Sonderzeichen" required><br>
                 <p id="fehler"><?php echo $_SESSION["Erfolg"] ?></p>
                 <div class="LoginButtons">
                     <button type="submit" name="token" value="<?php echo $_GET["token"]; ?>" style="border: 0; background: transparent"><img src="/Bilder/HolzTextButtonAendern.png"></button>

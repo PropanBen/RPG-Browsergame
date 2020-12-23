@@ -17,6 +17,8 @@ if (isset($_FILES["bildhochladen"]) && $_FILES["bildhochladen"]["size"] > 0) {
 	move_uploaded_file($_FILES["bildhochladen"]['tmp_name'], $uploaddir . $filename . $fileextension);
 
 	$newClass->Bildaendern($connection, "/Spieleravatare/" . $filename . $fileextension, $_SESSION["Spieler"]);
+	// Logging
+	$newClass->Logging($connection, 'Bild ' . $filename . $fileextension . ' hochgeladen');
 	header('location: rpg.php');
 }
 
@@ -77,7 +79,7 @@ if (isset($_POST["spielersperren"]) && isset($_POST["spielergegnersperren"])) {
 	$newClass->Spielersperren($connection, $sperre, $spielergegnername);
 }
 
-//Spieler und SpielerGegnerdaten nach dem Kampf annhemen PVP
+//Spieler und SpielerGegnerdaten nach dem Kampf annehmen PVP
 if (isset($_POST["spielerdaten"]) && isset($_POST["spielergegnerdaten"])) {
 	$spieler = (json_decode($_POST["spielerdaten"], true));
 	$lvl = json_encode($spieler[0]["lvl"]);
@@ -88,8 +90,10 @@ if (isset($_POST["spielerdaten"]) && isset($_POST["spielergegnerdaten"])) {
 	$spielername = str_replace('"', "", $spielername);
 	$spielerangriff = json_encode($spieler[0]["angriff"]);
 	$spielermaxleben = json_encode($spieler[0]["maxleben"]);
+	$spielerwaffenid = json_encode($spieler[0]["waffenid"]);
+	$spielerruestungsid = json_encode($spieler[0]["ruestungsid"]);
 	$sperre = 0;
-	$newClass->SpielerStatsSchreiben($connection, $lvl, $erfahrung, $geld, $leben, $spielerangriff, $spielermaxleben, $spielername);
+	$newClass->SpielerStatsSchreiben($connection, $lvl, $erfahrung, $geld, $leben, $spielerangriff, $spielermaxleben, $spielerwaffenid, $spielerruestungsid, $spielername);
 
 	$spielergegner = (json_decode($_POST["spielergegnerdaten"], true));
 	$lvl = json_encode($spielergegner[0]["lvl"]);
@@ -100,8 +104,10 @@ if (isset($_POST["spielerdaten"]) && isset($_POST["spielergegnerdaten"])) {
 	$spielergegnername = str_replace('"', "", $spielergegnername);
 	$spielergegnerangriff = json_encode($spielergegner[0]["angriff"]);
 	$spielergegnermaxleben = json_encode($spielergegner[0]["maxleben"]);
+	$spielergegnerwaffenid = json_encode($spielergegner[0]["waffenid"]);
+	$spielergegnerruestungsid = json_encode($spielergegner[0]["ruestungsid"]);
 	$sperre = 0;
-	$newClass->SpielerStatsSchreiben($connection, $lvl, $erfahrung, $geld, $leben, $spielergegnerangriff, $spielergegnermaxleben, $spielergegnername);
+	$newClass->SpielerStatsSchreiben($connection, $lvl, $erfahrung, $geld, $leben, $spielergegnerangriff, $spielergegnermaxleben, $spielergegnerwaffenid, $spielergegnerruestungsid, $spielergegnername);
 
 	// Nach Kampf entsperren
 	$sperre = 0;
@@ -122,8 +128,14 @@ if (isset($_POST["spielerdaten"]) && isset($_POST["gegnerdaten"])) {
 	$spielername = str_replace('"', "", $spielername);
 	$spielerangriff = json_encode($spieler[0]["angriff"]);
 	$spielermaxleben = json_encode($spieler[0]["maxleben"]);
+	$spielerwaffenid = json_encode($spieler[0]["waffenid"]);
+	$spielerruestungsid = json_encode($spieler[0]["ruestungsid"]);
 	$sperre = 0;
-	$newClass->SpielerStatsSchreiben($connection, $lvl, $erfahrung, $geld, $leben, $spielerangriff, $spielermaxleben, $spielername);
+	$newClass->SpielerStatsSchreiben($connection, $lvl, $erfahrung, $geld, $leben, $spielerangriff, $spielermaxleben, $spielerwaffenid, $spielerruestungsid, $spielername);
+	if ($leben == 0 && $geld == 0) {
+		$_SESSION["tot"] = true;
+		header('location: tot.php');
+	}
 
 	//Gegner
 	$gegner = (json_decode($_POST["gegnerdaten"], true));
@@ -300,6 +312,8 @@ class DBAktionen
 			$row_array['ruestungswert'] = $this->SpielerRuestungsStatsLesen($connection, "ruestungswert", $row['ruestungsid']);
 			$row_array['ruestungsbildpfad'] = $this->SpielerRuestungsStatsLesen($connection, "ruestungsbildpfad", $row['ruestungsid']);
 			$row_array['spielerbildpfad'] = $row['spielerbildpfad'];
+			$row_array['waffenid'] = $row['waffenid'];
+			$row_array['ruestungsid'] = $row['ruestungsid'];
 			array_push($return_arr, $row_array);
 		}
 		echo json_encode($return_arr);
@@ -345,10 +359,10 @@ class DBAktionen
 	}
 
 	// Zurückgegebene Spieler Kampfstats in die DB schreiben
-	function SpielerStatsSchreiben($connection, $lvl, $erfahrung, $geld, $leben, $spielerangriff, $spielermaxleben, $spielername)
+	function SpielerStatsSchreiben($connection, $lvl, $erfahrung, $geld, $leben, $spielerangriff, $spielermaxleben, $waffenid, $ruestungsid, $spielername)
 	{
-		$update = $connection->prepare("UPDATE spieler SET lvl=?,erfahrung=?,geld=?,leben=?,angriff=?,maxleben=? WHERE spielername=?");
-		$update->bind_param("iiiiiis", $lvl, $erfahrung, $geld, $leben, $spielerangriff, $spielermaxleben, $spielername);
+		$update = $connection->prepare("UPDATE spieler SET lvl=?,erfahrung=?,geld=?,leben=?,angriff=?,maxleben=?,waffenid=?,ruestungsid=? WHERE spielername=?");
+		$update->bind_param("iiiiiiiis", $lvl, $erfahrung, $geld, $leben, $spielerangriff, $spielermaxleben, $waffenid, $ruestungsid, $spielername);
 		$update->execute();
 		$update->close();
 	}
@@ -454,16 +468,20 @@ class DBAktionen
 	//SpielerKampf PVP ---------------------------------------------------------------------------------------------
 	function AlleSpielerKampf($connection)
 	{
-		$lvl = $this->SpielerLesen($connection, "lvl", $_SESSION["Spieler"]);
-		$eigenerSpieler = $_SESSION["Spieler"];
-		$sperre = 0;
-		$leben = 0;
-		$select = $connection->prepare("SELECT spielerbildpfad, spielername, lvl FROM spieler WHERE gesperrt = ? AND lvl >=? AND spielername !=? AND leben >? ORDER BY lvl");
-		$select->bind_param("iisi", $sperre, $lvl, $eigenerSpieler, $leben);
-		$select->execute();
-		$result = $select->get_result();
-		while ($row = $result->fetch_array()) {
-			echo ("
+		if (
+			$this->SpielerLesen($connection, "leben", $_SESSION["Spieler"]) > 0
+			&& $this->SpielerLesen($connection, "gesperrt", $_SESSION["Spieler"]) === 0
+		) {
+			$lvl = $this->SpielerLesen($connection, "lvl", $_SESSION["Spieler"]);
+			$eigenerSpieler = $_SESSION["Spieler"];
+			$sperre = 0;
+			$leben = 0;
+			$select = $connection->prepare("SELECT spielerbildpfad, spielername, lvl FROM spieler WHERE gesperrt = ? AND lvl >=? AND spielername !=? AND leben >? ORDER BY lvl");
+			$select->bind_param("iisi", $sperre, $lvl, $eigenerSpieler, $leben);
+			$select->execute();
+			$result = $select->get_result();
+			while ($row = $result->fetch_array()) {
+				echo ("
 			    <div class=\"GegenstandEinzeln\">
 			    <img src=" . ($row['spielerbildpfad']) . "" . " width=\"100\" height=\"100\">			
 				<p>" . $row['spielername'] . "</p><p>Level : " . $row["lvl"] . "</p>
@@ -472,6 +490,19 @@ class DBAktionen
 				<input class=\"Kampfimg\" type=\"image\"src=\"/Bilder/Kampf.png\" width=\"80\" height=\"80\">
 				</form>
 				</div>");
+			} // lol
+		} else {
+			if ($this->SpielerLesen($connection, "gesperrt", $_SESSION["Spieler"]) === 1) {
+				echo '	<div class=GegenstandEinzeln>
+				<p>Du bist im Augenblick gesperrt !</p>
+				</div>s';
+			} else {
+				echo '
+			<div class=GegenstandEinzeln>
+			<p>Du bist verletzt und kannst nicht kämpfen !</p>
+			<img src="/Bilder/Leben.png" title="Du bist verletzt">
+			</div>';
+			}
 		}
 	}
 
@@ -537,11 +568,13 @@ class DBAktionen
 	//WaffenContainer  ---------------------------------------------------------------------------------------------
 	function AlleWaffenLesen($connection)
 	{
+		$geld = $this->SpielerLesen($connection, "geld", $_SESSION["Spieler"]);
 		$select = $connection->prepare("SELECT waffenbildpfad, waffenid, waffenname, waffenwert, geldwert FROM waffen WHERE waffenid !=0");
 		$select->execute();
 		$result = $select->get_result();
 		while ($row = $result->fetch_array()) {
-			echo ("
+			if ($geld >= $row['geldwert'])
+				echo ("
 			<div class=\"GegenstandEinzeln\">
 			<img src=" . ($row['waffenbildpfad']) . "" . "> &nbsp
 			<p>
@@ -552,16 +585,28 @@ class DBAktionen
 			 <input type=\"image\" src=\"/Bilder/Geldsack.png\" >
 			 </form>
 			 </div><br><br>");
+			else {
+				echo ("
+				<div class=\"GegenstandEinzeln\">
+				<img src=" . ($row['waffenbildpfad']) . "" . "> &nbsp
+				<p>
+				" . $row['waffenname'] . "</p>&nbsp <p>Angriff: &nbsp" . $row['waffenwert'] . "</p>
+				 &nbsp <p>Kostet: &nbsp " . $row['geldwert'] . "<img  id=\"geld\" src=\"Bilder/Geld.png\" width=\"30\" height=\"30\"></p>
+				 <img id=\"GeldX\" src=\"/Bilder/GeldsackX.png\" title=\"Zu wenig Geld\">
+				 </div>");
+			}
 		}
 	}
 	//RüstungsContainer  ---------------------------------------------------------------------------------------------
 	function AlleRüstungenLesen($connection)
 	{
+		$geld = $this->SpielerLesen($connection, "geld", $_SESSION["Spieler"]);
 		$select = $connection->prepare("SELECT ruestungsbildpfad, ruestungsid, ruestungsname, ruestungswert, geldwert FROM ruestung WHERE ruestungsid !=0");
 		$select->execute();
 		$result = $select->get_result();
 		while ($row = $result->fetch_array()) {
-			echo ("
+			if ($geld >= $row['geldwert']) {
+				echo ("
 			<div class=\"GegenstandEinzeln\">
 			<img src=" . ($row['ruestungsbildpfad']) . "" . "> &nbsp
 			<p>
@@ -571,13 +616,24 @@ class DBAktionen
 			 <input type=\"hidden\" name=\"ruestungsid\" value=\"" . $row['ruestungsid'] . "\" />
 			 <input type=\"image\" src=\"/Bilder/Geldsack.png\">
 			 </form>
-			 </div><br><br>");
+			 </div>");
+			} else {
+				echo ("
+				<div class=\"GegenstandEinzeln\">
+				<img src=" . ($row['ruestungsbildpfad']) . "" . "> &nbsp
+				<p>
+				 " . $row['ruestungsname'] . "</p>&nbsp <p>Verteidigung: &nbsp" . $row['ruestungswert'] . "</p>
+				 &nbsp <p>Kostet: &nbsp " . $row['geldwert'] . "<img  id=\"geld\" src=\"Bilder/Geld.png\" width=\"30\" height=\"30\"></p>
+				 <img id=\"GeldX\" src=\"/Bilder/GeldsackX.png\" title=\"Zu wenig Geld\">
+				 </div>");
+			}
 		}
 	}
 
 	//HeilstubenContainer  ---------------------------------------------------------------------------------------------
 	function AlleTraenkeLesen($connection)
 	{
+		$geld = $this->SpielerLesen($connection, "geld", $_SESSION["Spieler"]);
 		$select = $connection->prepare("SELECT trankbildpfad, trankid, trankname, trankwert,trankwertpermanent, geldwert FROM traenke");
 		$select->execute();
 		$result = $select->get_result();
@@ -591,7 +647,8 @@ class DBAktionen
 				$value = $row['trankwertpermanent'];
 			}
 
-			echo ("
+			if ($geld >= $row['geldwert']) {
+				echo ("
 			<div class=\"GegenstandEinzeln\">
 			<img src=" . ($row['trankbildpfad']) . "" . ">&nbsp
 			<p>
@@ -602,7 +659,18 @@ class DBAktionen
 			 <input type=\"hidden\" name=\"trankid\" value=\"" . $row['trankid'] . "\" />
 			 <input type=\"image\" src=\"/Bilder/Geldsack.png\">
 			 </form>
-			 </div><br><br>");
+			 </div>");
+			} else {
+				echo ("
+				<div class=\"GegenstandEinzeln\">
+				<img src=" . ($row['trankbildpfad']) . "" . ">&nbsp
+				<p>
+				" . $row['trankname'] . "</p>
+				 <p>" . $typ . " &nbsp" . $value . "</p>
+				 <p>Kostet: &nbsp " . $row['geldwert'] . "<img id=\"geld\" src=\"Bilder/Geld.png\"></p>
+                 <img id=\"GeldX\" src=\"/Bilder/GeldsackX.png\" title=\"Zu wenig Geld\">
+				 </div>");
+			}
 		}
 	}
 
@@ -651,14 +719,18 @@ class DBAktionen
 	}
 	function ThemenGegnerAnzeigen($connection, $themenname)
 	{
-		$sperre = 0;
-		$select2 = $connection->prepare("SELECT gegnername,gegnerid,gegnerbildpfad, lvl FROM gegner WHERE thema=? AND leben >0 AND gesperrt=?");
-		$select2->bind_param("si", $themenname, $sperre);
-		$select2->execute();
-		$result2 = $select2->get_result();
-		while ($row2 = $result2->fetch_array()) {
-			echo
-				"
+		if (
+			$this->SpielerLesen($connection, "leben", $_SESSION["Spieler"]) > 0
+			&& $this->SpielerLesen($connection, "gesperrt", $_SESSION["Spieler"]) === 0
+		) {
+			$sperre = 0;
+			$select2 = $connection->prepare("SELECT gegnername,gegnerid,gegnerbildpfad, lvl FROM gegner WHERE thema=? AND leben >0 AND gesperrt=?");
+			$select2->bind_param("si", $themenname, $sperre);
+			$select2->execute();
+			$result2 = $select2->get_result();
+			while ($row2 = $result2->fetch_array()) {
+				echo
+					"
 				<div class=GegenstandEinzeln>
 				<img src=" . $row2["gegnerbildpfad"] . " width=100 height=100>
 				<p>" . $row2["gegnername"] . "</p><p>Level : " . $row2["lvl"] . "</p>
@@ -667,6 +739,20 @@ class DBAktionen
 				   <input class=\"Kampfimg\" type=\"image\"src=\"/Bilder/Kampf.png\" width=\"60\" height=\"60\">
 				   </form></p>
 				   </div>";
+			}
+		} else {
+
+			if ($this->SpielerLesen($connection, "gesperrt", $_SESSION["Spieler"]) === 1) {
+				echo '	<div class=GegenstandEinzeln>
+				<p>Du bist im Augenblick gesperrt !</p>
+				</div>s';
+			} else {
+				echo '
+			<div class=GegenstandEinzeln>
+			<p>Du bist verletzt und kannst nicht kämpfen !</p>
+			<img src="/Bilder/Leben.png" title="Du bist verletzt">
+			</div>';
+			}
 		}
 	}
 

@@ -17,7 +17,7 @@ function KampfRunde(Kampfbeginner, Kampfnichtbeginner) {
       return new Promise((resolve) => setTimeout(resolve, ms));
     }
 
-    if (Kampfnichtbeginner.leben > 0) {
+    if (Kampfnichtbeginner.leben > 0 && Kampfbeginner.leben > 0) {
       await sleep(1000);
       SkalierenGroß(AngriffsID(Kampfbeginner));
       await sleep(1000);
@@ -31,7 +31,7 @@ function KampfRunde(Kampfbeginner, Kampfnichtbeginner) {
       await sleep(100);
     }
 
-    if (Kampfbeginner.leben > 0) {
+    if (Kampfbeginner.leben > 0 && Kampfnichtbeginner.leben > 0) {
       await sleep(1000);
       SkalierenGroß(AngriffsID(Kampfnichtbeginner));
       await sleep(1000);
@@ -95,11 +95,16 @@ function Kampfende(Angreifer, Gegner) {
     differenz = 0;
 
     if (Verlierer.geld > 0 && Gewinner.geld > Verlierer.geld) {
-      differenz = Math.round(Verlierer.geld / 2);
+
+      if (Verlierer.geld === 1) {
+        differenz = 1;
+      }
+      else { differenz = Math.round(Verlierer.geld / 2); }
+
       verdienst = differenz;
       Gewinner.geld += differenz;
       verlust = differenz;
-      Verlierer.geld = differenz;
+      Verlierer.geld -= verlust;
     }
     else {
       verlust = Gewinner.geld;
@@ -124,7 +129,10 @@ function Kampfende(Angreifer, Gegner) {
   kampfgewinner.innerHTML = `${Gewinner.name} hat gegen ${Verlierer.name} gewonnen !`;
   kampfgeld.innerHTML = `${Gewinner.name} bekommt ${verdienst} Geld !`;
   if (Gewinner.seite === "rechts") { kampferfahrung.innerHTML = ""; }
-  else { kampferfahrung.innerHTML = `${Gewinner.name}&nbsp; ${Gewinner.seite}bekommt ${erfahrung} Erfahrung !`; }
+  else {
+    kampfgeld.innerHTML = `${Gewinner.name} bekommt ${verdienst} Geld !`;
+    kampferfahrung.innerHTML = `${Gewinner.name} bekommt ${erfahrung} Erfahrung !`;
+  }
   if (verlierergeldvorher <= verlust) {
     kampfverlierer.innerHTML = `${Verlierer.name} verliert ${verlierergeldvorher} Geld !`;
   }

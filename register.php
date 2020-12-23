@@ -23,7 +23,7 @@
                 <label>Benutzername :</label>
                 <input type="text" id="bname" name="bname" pattern="[a-zA-Z]{3,16}" title="3 bis 16 Zeichen" required><br>
                 <label>Passwort : </label>
-                <input type="password" id="pname" name="pw" pattern="(?=(.*\d){2})(?=.*[a-zA-Z])(?=.*[!@#$%])[0-9a-zA-Z!@#$%]{8,}" title="min 8 Zeichen,Buchstaben,Zahlen,min 1 Sonderzeichen" required><br>
+                <input type="password" id="pname" name="pw" pattern="(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%])[0-9a-zA-Z!@#$%]{8,}" title="min 8 Zeichen,Buchstaben,Zahlen,min 1 Sonderzeichen" required><br>
                 <p id="fehler"></p>
                 <div class="LoginButtons">
                     <button type="submit" name="action" value="Registrieren" style="border: 0; background: transparent"><img src="/Bilder/HolzTextButtonRegistrieren.png"></button>

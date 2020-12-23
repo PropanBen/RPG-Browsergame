@@ -83,7 +83,7 @@ include("funktionen.php");
     <p id="kampfgeldverlust"></p>
     <p id="lvlup"></p>
     <div class="Zurückbutton">
-      <a href="/spielergegner.php"><img src="Bilder/Zurückbutton.png" width="100" height="100" /></a>
+      <a id="todesermittler" href="/spielergegner.php"><img src="Bilder/Zurückbutton.png" width="100" height="100" /></a>
     </div>
   </div>
 
@@ -213,6 +213,19 @@ include("funktionen.php");
     spielerdaten[0]["angriff"] = Spieler.angriffswert;
     spielerdaten[0]["maxleben"] = Spieler.maxleben;
 
+    if (spielerdaten[0]["leben"] == 0 && spielerdaten[0]["geld"] == 0) {
+      document.getElementById("todesermittler").href = "/tot.php";
+      spielerdaten[0]["leben"] = 3;
+      spielerdaten[0]["erfahrung"] = 0;
+      spielerdaten[0]["geld"] = 6;
+      spielerdaten[0]["lvl"] = 1;
+      spielerdaten[0]["angriff"] = 1;
+      spielerdaten[0]["maxleben"] = 3;
+      spielerdaten[0]["waffenid"] = 0;
+      spielerdaten[0]["ruestungsid"] = 0;
+    }
+
+
     spielergegnerdaten[0]["leben"] = Gegner.leben;
     spielergegnerdaten[0]["erfahrung"] = Gegner.erfahrungdb;
     if (Gegner.geld < 0) {
@@ -223,6 +236,18 @@ include("funktionen.php");
     spielergegnerdaten[0]["lvl"] = Gegner.lvl;
     spielergegnerdaten[0]["angriff"] = Gegner.angriffswert;
     spielergegnerdaten[0]["maxleben"] = Gegner.maxleben;
+
+    if (spielergegnerdaten[0]["leben"] == 0 && spielergegnerdaten[0]["geld"] == 0) {
+      document.getElementById("todesermittler").href = "/tot.php";
+      spielergegnerdaten[0]["leben"] = 3;
+      spielergegnerdaten[0]["erfahrung"] = 0;
+      spielergegnerdaten[0]["geld"] = 6;
+      spielergegnerdaten[0]["lvl"] = 1;
+      spielergegnerdaten[0]["angriff"] = 1;
+      spielergegnerdaten[0]["maxleben"] = 3;
+      spielergegnerdaten[0]["waffenid"] = 0;
+      spielergegnerdaten[0]["ruestungsid"] = 0;
+    }
     const spielerdatennachkampf = JSON.stringify(spielerdaten);
     const spielergegnerdatennachkampf = JSON.stringify(spielergegnerdaten);
 

@@ -17,7 +17,7 @@ function KampfRunde(Kampfbeginner, Kampfnichtbeginner) {
       return new Promise((resolve) => setTimeout(resolve, ms));
     }
     //Beginner
-    if (Kampfnichtbeginner.leben > 0) {
+    if (Kampfnichtbeginner.leben > 0 && Kampfbeginner.leben > 0) {
       await sleep(1000);
       SkalierenGroß(AngriffsID(Kampfbeginner));
       await sleep(1000);
@@ -31,7 +31,7 @@ function KampfRunde(Kampfbeginner, Kampfnichtbeginner) {
       await sleep(100);
     }
 
-    if (Kampfbeginner.leben > 0) {
+    if (Kampfbeginner.leben > 0 && Kampfnichtbeginner.leben > 0) {
       //Nicht Beginner
       await sleep(1000);
       SkalierenGroß(AngriffsID(Kampfnichtbeginner));

@@ -24,6 +24,10 @@
 {
    margin-top: 0px;
 }
+.GeldX
+{
+   margin-top: 0px;
+}
 /* Ende marktplatz.php    */
 /* Start pve.php    */
 .RahmenContainer
@@ -123,6 +127,23 @@
 {
     width: 200px;
     font-size: 14px;
+}
+.KampfergebnisseContainer
+{
+	width:50%;
+	height:50%;
+	margin-left: 25%;
+	margin-right: 25%;
+	bottom:25%;
+	border: 5px solid grey;
+	border-radius: 10px;
+	display: block;
+	background-color: burlywood;
+	position: absolute;
+	z-index: 5;
+	opacity:0;
+	transform: translate(+0%, +0%) scale(0);
+	transition: opacity 2s, transform 2s;
 }
 
 /* Ende pve.php*/
@@ -232,10 +253,12 @@
 }
 .GegenstandEinzeln input
 {
-	width: 20px;
-	height: 20px;
+    width: 40px;
+	height: 40px;
+    margin-top:0;
+
 }
-.GegenstandEinzeln input
+#GeldX
 {
     width: 40px;
 	height: 40px;
@@ -278,6 +301,23 @@
 {
     width: 30px; 
     height: 30px;
+}
+.KampfergebnisseContainer
+{
+	width:80%;
+	height:50%;
+	margin-left: 10%;
+	margin-right: 10%;
+	bottom:25%;
+	border: 5px solid grey;
+	border-radius: 10px;
+	display: block;
+	background-color: burlywood;
+	position: absolute;
+	z-index: 5;
+	opacity:0;
+	transform: translate(+0%, +0%) scale(0);
+	transition: opacity 2s, transform 2s;
 }
 
 /* Ende pve.php*/
