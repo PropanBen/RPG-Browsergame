@@ -83,7 +83,7 @@ include("funktionen.php");
     <p id="kampfgeldverlust"></p>
     <p id="lvlup"></p>
     <div class="Zurückbutton">
-      <a id="todesermittler" href="/spielergegner.php"><img src="Bilder/Zurückbutton.png" width="100" height="100" /></a>
+      <a id="todesermittler" href="/spielergegner.php" onclick="PlaySound();"><img src="Bilder/Zurückbutton.png" width="100" height="100" /></a>
     </div>
   </div>
 
@@ -94,6 +94,12 @@ include("funktionen.php");
 
 </body>
 <script type="text/javascript">
+  function PlaySound() {
+    //onclick="PlaySound();"
+    var audio = new Audio('/Audio/tap.wav');
+    audio.play();
+  }
+
   function DatenLaden() {
     //json_encode($str, JSON_UNESCAPED_SLASHES)
     const spielerdaten = <?php json_encode($newClass->JSONStringSpieler($connection, $_SESSION["Spieler"]), JSON_UNESCAPED_SLASHES); ?>;

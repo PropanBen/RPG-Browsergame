@@ -15,7 +15,7 @@ include("funktionen.php");
 <body>
     <div class="Hintergrund"></div>
     <div class="Zurückbutton">
-        <a href="/rpg.php"><img src="Bilder/Zurückbutton.png" /></a>
+        <a href="/rpg.php" onclick="PlaySound();"><img src="Bilder/Zurückbutton.png" /></a>
     </div>
     <div class="NavigationMarktplatz">
         <div class="SpielerInfoContainer">
@@ -32,9 +32,9 @@ include("funktionen.php");
                         <input type="hidden" name="MAX_FILE_SIZE" value="5000000" />
                         <label>Bild</label><br>
                         <label for="bild-hochladen" class="Angepasster-Input">Upload</label><br>
-                        <input id="bild-hochladen" type="file" name="bildhochladen" />
-                        <input id="subbtn" class="Avatarbutton" type="image" src="/Bilder/Haken.png" />
-                        <button type="reset" style="border: 0; background: transparent">
+                        <input id="bild-hochladen" type="file" name="bildhochladen" onclick="PlaySound();" />
+                        <input id="subbtn" class="Avatarbutton" type="image" src="/Bilder/Haken.png" onclick="PlaySound();" />
+                        <button type="reset" style="border: 0; background: transparent" onclick="PlaySound();">
                             <img class="Avatarbutton" src="/Bilder/X.png" />
                         </button>
                     </form>
@@ -53,7 +53,7 @@ include("funktionen.php");
                     <img class="Waffenbild" src="<?php $newClass->BildLesen($connection, "waffenbildpfad", "waffen", "waffenid", $_SESSION["Spieler"]); ?>" width="40" height="40">
                     <img id="RuestungsPlakette" class="Plakette" src="/Bilder/LvL_Plakette.png" />
                     <div class="waffenwert">
-                        <p><?php echo $newClass->SpielerWaffenStatsLesen($connection, "waffenwert", $newClass->SpielerLesen($connection, "waffenid", $_SESSION["Spieler"])) ?></p>
+                        <p><?php echo $newClass->SpielerWaffenStatsLesen($connection, "waffenwert", $newClass->SpielerLesen($connection, "waffenid", $_SESSION["Spieler"])) + $newClass->SpielerLesen($connection, "angriff", $_SESSION["Spieler"]) ?></p>
                     </div>
                     <div class="Waffenname"><?php $newClass->BildLesen($connection, "waffenname", "waffen", "waffenid", $_SESSION["Spieler"]); ?></div>
                 </div>
@@ -74,11 +74,11 @@ include("funktionen.php");
                 <div class="form">
                     <form action="/login.php" method="POST">
                         <input type="hidden" name="action" value="Ausloggen" />
-                        <input type="submit" class="Auslogbutton" value="" />
+                        <input type="submit" class="Auslogbutton" value="" onclick="PlaySound();" />
                     </form>
                 </div>
             </div>
-            <a class="Einstellungen" href="/einstellungen.php"><img src="/Bilder/Einstellungen.png"></a>
+            <a class="Einstellungen" href="/einstellungen.php" onclick="PlaySound();"><img src="/Bilder/Einstellungen.png"></a>
         </div>
     </div>
 
@@ -89,5 +89,13 @@ include("funktionen.php");
         </div>
     </div>
 </body>
+
+<script>
+    function PlaySound() {
+        //onclick="PlaySound();"
+        var audio = new Audio('/Audio/tap.wav');
+        audio.play();
+    }
+</script>
 
 </html>

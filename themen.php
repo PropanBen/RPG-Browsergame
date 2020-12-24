@@ -16,7 +16,7 @@ include("funktionen.php");
     <div class="Hintergrund"></div>
 
     <div class="Zurückbutton">
-        <a href="/rpg.php"><img src="Bilder/Zurückbutton.png" /></a>
+        <a href="/rpg.php" onclick="PlaySound();"><img src="Bilder/Zurückbutton.png" /></a>
     </div>
     <div class="WaffenContainer">
         <p class="Überschrift">Themenuebersicht</p>
@@ -26,5 +26,13 @@ include("funktionen.php");
     </div>
 
 </body>
+
+<script>
+    function PlaySound() {
+        //onclick="PlaySound();"
+        var audio = new Audio('/Audio/tap.wav');
+        audio.play();
+    }
+</script>
 
 </html>

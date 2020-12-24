@@ -1,5 +1,7 @@
 //X
 function KampfStarten(Spieler, Gegner) {
+  var audio = new Audio('/Audio/tap.wav');
+  audio.play();
   SpielerSperren();
   let kampfstartenbutton = document.getElementById("kampfstartenbutton");
   kampfstartenbutton.style.display = "none";
@@ -127,16 +129,21 @@ function Kampfende(Angreifer, Gegner) {
 
   kampfergebnisse.style.display = "block";
   kampfgewinner.innerHTML = `${Gewinner.name} hat gegen ${Verlierer.name} gewonnen !`;
-  kampfgeld.innerHTML = `${Gewinner.name} bekommt ${verdienst} Geld !`;
-  if (Gewinner.seite === "rechts") { kampferfahrung.innerHTML = ""; }
+  if (Gewinner.seite === "rechts") {
+    kampfgeld.innerHTML = "";
+    kampferfahrung.innerHTML = "";
+    kampfgewinner.style.color = "#ff0000";
+    setTimeout(function () { var audio = new Audio('/Audio/fail.wav'); audio.play(); }, 1000);
+  }
   else {
     kampfgeld.innerHTML = `${Gewinner.name} bekommt ${verdienst} Geld !`;
     kampferfahrung.innerHTML = `${Gewinner.name} bekommt ${erfahrung} Erfahrung !`;
+    kampfgewinner.style.color = "#006600";
+    setTimeout(function () { var audio = new Audio('/Audio/fanfare.wav'); audio.play(); }, 1000);
   }
-  if (verlierergeldvorher <= verlust) {
-    kampfverlierer.innerHTML = `${Verlierer.name} verliert ${verlierergeldvorher} Geld !`;
-  }
-  else { kampfverlierer.innerHTML = `${Verlierer.name} verliert ${verlust} Geld !`; }
+  if (Verlierer.seite === "links")
+    kampfverlierer.innerHTML = `${Verlierer.name} verliert ${verlust} Geld !`;
+  else { kampfverlierer.innerHTML = ""; }
 
   KampfergebnisseLoggen(Gewinner.name, Verlierer.name, verdienst, verlust, erfahrung);
   if (lvlupbool === true) {

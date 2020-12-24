@@ -26,13 +26,13 @@
                 <input type="password" id="pname" name="pw" pattern="(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%])[0-9a-zA-Z!@#$%]{8,}" title="min 8 Zeichen,Buchstaben,Zahlen,min 1 Sonderzeichen" required><br>
                 <p id="fehler"></p>
                 <div class="LoginButtons">
-                    <button type="submit" name="action" value="Registrieren" style="border: 0; background: transparent"><img src="/Bilder/HolzTextButtonRegistrieren.png"></button>
-                    <button type="reset" value="Zurücksetzen" style="border: 0; background: transparent"><img src="/Bilder/HolzTextButtonEntfernen.png"></button>
+                    <button type="submit" name="action" value="Registrieren" style="border: 0; background: transparent" onclick="PlaySound();"><img src="/Bilder/HolzTextButtonRegistrieren.png"></button>
+                    <button type="reset" value="Zurücksetzen" style="border: 0; background: transparent" onclick="PlaySound();"><img src="/Bilder/HolzTextButtonEntfernen.png"></button>
                 </div>
             </form>
         </div>
         <div class="Zurückbutton">
-            <a href="/index.php"><img src="Bilder/Zurückbutton.png" /></a>
+            <a href="/index.php" onclick="PlaySound();"><img src="Bilder/Zurückbutton.png" /></a>
         </div>
     </div>
     <footer>
@@ -40,6 +40,11 @@
     </footer>
 
     <script>
+        function PlaySound() {
+
+            var audio = new Audio('/Audio/tap.wav');
+            audio.play();
+        }
         let email = document.getElementById("email");
         let benutzername = document.getElementById("bname");
         let passwort = document.getElementById("pname");

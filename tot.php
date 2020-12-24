@@ -35,8 +35,16 @@ session_start();
             </form>
         </div>
         <div class="Zurückbutton">
-            <a href="/rpg.php"><img src="Bilder/Zurückbutton.png" /></a>
+            <a href="/rpg.php" onclick="PlaySound();"><img src="Bilder/Zurückbutton.png" /></a>
         </div>
 </body>
+
+<script>
+    function PlaySound() {
+        //onclick="PlaySound();"
+        var audio = new Audio('/Audio/tap.wav');
+        audio.play();
+    }
+</script>
 
 </html>

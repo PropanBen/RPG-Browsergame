@@ -30,16 +30,19 @@ if (isset($_SESSION["Erfolg"])) {
         <label>Passwort : </label><br>
         <input type="password" id="pname" name="pw" required><br>
         <div class="LoginButtons">
-          <button type="submit" name="action" value="Einloggen" style="border: 0; background: transparent"><img src="/Bilder/HolzTextButtonEinloggen.png"></button>
-          <button type="reset" value="Zurücksetzen" style="border: 0; background: transparent"><img src="/Bilder/HolzTextButtonEntfernen.png"></button>
-          <a href="/passwortvergessen.php" title="Passwort vergessen">Passwort vergessen</a>
+          <button type="submit" name="action" value="Einloggen" style="border: 0; background: transparent" onclick="PlaySound();"><img src="/Bilder/HolzTextButtonEinloggen.png"></button>
+          <button type="reset" value="Zurücksetzen" style="border: 0; background: transparent" onclick="PlaySound();"><img src="/Bilder/HolzTextButtonEntfernen.png"></button>
+          <a href="/passwortvergessen.php" title="Passwort vergessen" onclick="PlaySound();">Passwort vergessen</a>
         </div>
       </form>
     </div>
 
     <div class="RegistrierungsContainer">
-      <a href="/register.php"><img src="Bilder/HolzTextButtonRegistrieren.png" /></a>
+      <a href="/register.php" onclick="PlaySound();"><img src="Bilder/HolzTextButtonRegistrieren.png" /></a>
     </div>
+
+    <div class="Platzhalter"></div>
+    <a id="paypal" href="https://paypal.me/PropanBen" onclick="PlaySound();"><img src="/Bilder/paypal.png"></a>
 
     <div class="Spielbeschreibung">
       <p>Herzlich willkommen zu Propania ! <br>
@@ -67,5 +70,12 @@ if (isset($_SESSION["Erfolg"])) {
   </footer>
 
 </body>
+
+<script>
+  function PlaySound() {
+    var audio = new Audio('/Audio/tap.wav');
+    audio.play();
+  }
+</script>
 
 </html>

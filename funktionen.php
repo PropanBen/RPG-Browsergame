@@ -249,13 +249,8 @@ if (
 	isset($_POST["gewinner"]) && isset($_POST["verlierer"]) && isset($_POST["verdienst"])
 	&& isset($_POST["verlust"]) && isset($_POST["erfahrung"])
 ) {
-	$ereignis = "" . $_POST["gewinner"] . " gewinnt gegen " . $_POST["verlierer"] . "";
-	$newClass->Logging($connection, $ereignis);
-	$ereignis = "" . $_POST["gewinner"] . " bekommt " . $_POST["verdienst"] . " Geld";
-	$newClass->Logging($connection, $ereignis);
-	$ereignis = "" . $_POST["gewinner"] . " bekommt " . $_POST["erfahrung"] . " Erfahrung";
-	$newClass->Logging($connection, $ereignis);
-	$ereignis = "" . $_POST["verlierer"] . " verliert " . $_POST["verlust"] . " Geld";
+
+	$ereignis = "" . $_POST["gewinner"] . " gewinnt gegen " . $_POST["verlierer"] . " +" . $_POST["verdienst"] . " G +" . $_POST["erfahrung"] . " EXP ";
 	$newClass->Logging($connection, $ereignis);
 }
 // Logging Kampf LvL Up
@@ -634,7 +629,7 @@ class DBAktionen
 	function AlleTraenkeLesen($connection)
 	{
 		$geld = $this->SpielerLesen($connection, "geld", $_SESSION["Spieler"]);
-		$select = $connection->prepare("SELECT trankbildpfad, trankid, trankname, trankwert,trankwertpermanent, geldwert FROM traenke");
+		$select = $connection->prepare("SELECT trankbildpfad, trankid, trankname, trankwert,trankwertpermanent, geldwert FROM traenke ORDER BY geldwert ASC");
 		$select->execute();
 		$result = $select->get_result();
 		while ($row = $result->fetch_array()) {
@@ -657,7 +652,7 @@ class DBAktionen
 			 <p>Kostet: &nbsp " . $row['geldwert'] . "<img id=\"geld\" src=\"Bilder/Geld.png\"></p>
 			 <form action=\"marktplatz.php\" method=\"POST\">
 			 <input type=\"hidden\" name=\"trankid\" value=\"" . $row['trankid'] . "\" />
-			 <input type=\"image\" src=\"/Bilder/Geldsack.png\">
+			 <input id=\"audio\" type=\"image\" src=\"/Bilder/Geldsack.png\">
 			 </form>
 			 </div>");
 			} else {
@@ -690,7 +685,7 @@ class DBAktionen
 	// Themen anzeigen bei denen Gegner zugewiesen sind
 	function ThemenAnzeigen($connection)
 	{
-		$select = $connection->prepare("SELECT DISTINCT themenname, themenbildpfad from themen INNER JOIN gegner ON  gegner.thema = themen.themenname");
+		$select = $connection->prepare("SELECT DISTINCT themenname, themenbildpfad from themen INNER JOIN gegner ON  gegner.thema = themen.themenname ORDER BY id ASC");
 		$select->execute();
 		$result = $select->get_result();
 		while ($row = $result->fetch_array()) {
@@ -702,7 +697,7 @@ class DBAktionen
 			<p>' . $this->ThemenGegnerAnzahl($connection, $row["themenname"]) . '</p>
 			<form action="themengegner.php" method="POST">
 			<input type=hidden name="themenname" value="' . $row["themenname"] . '" />
-			<input type=image src="/Bilder/Schild.png" width=80 height=80>
+			<input type=image src="/Bilder/Schild.png" width=80 height=80 onclick="PlaySound();">
 			</form>
 		    </div>');
 		}
@@ -724,7 +719,7 @@ class DBAktionen
 			&& $this->SpielerLesen($connection, "gesperrt", $_SESSION["Spieler"]) === 0
 		) {
 			$sperre = 0;
-			$select2 = $connection->prepare("SELECT gegnername,gegnerid,gegnerbildpfad, lvl FROM gegner WHERE thema=? AND leben >0 AND gesperrt=?");
+			$select2 = $connection->prepare("SELECT gegnername,gegnerid,gegnerbildpfad, lvl FROM gegner WHERE thema=? AND leben >0 AND gesperrt=? ORDER BY lvl ASC");
 			$select2->bind_param("si", $themenname, $sperre);
 			$select2->execute();
 			$result2 = $select2->get_result();
@@ -736,7 +731,7 @@ class DBAktionen
 				<p>" . $row2["gegnername"] . "</p><p>Level : " . $row2["lvl"] . "</p>
 				<form action=\"/pve.php\" method=\"POST\">
 				   <input type=\"hidden\" name=\"gegnerid\" value=\"" . $row2['gegnerid'] . "\" />
-				   <input class=\"Kampfimg\" type=\"image\"src=\"/Bilder/Kampf.png\" width=\"60\" height=\"60\">
+				   <input class=\"Kampfimg\" type=\"image\"src=\"/Bilder/Kampf.png\" width=\"60\" height=\"60\" onclick=\"PlaySound();\">
 				   </form></p>
 				   </div>";
 			}
