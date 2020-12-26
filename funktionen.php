@@ -8,6 +8,35 @@ if (!isset($_SESSION["Spieler"])) {
 	header('location: index.php');
 }
 
+// PVP Kampf verloren Benachrichtigung
+if (isset($_POST["benachrichtigung"])) {
+
+	$spielerid = $newClass->SpielerIDNameLesen($connection, $_POST["verlierer"]);
+	$nachrichtentext = "Du hast gegen " . $_POST["gewinner"] . " im PVP verloren und verlierst " . $_POST["verlust"] . "";
+	$newClass->NachrichtenAnnehmen($connection, $id, $nachrichtentext, $_POST["gewinner"]);
+}
+
+// Nachricht löschen
+
+if (isset($_POST["nachrichtloeschen"]) && isset($_POST["id"])) {
+	$newClass->NachrichtLoeschen($connection, $_POST["id"]);
+}
+
+// Alle Nachrichten löschen
+{
+	if (isset($_POST["allenachrichtenloeschen"])) {
+		$newClass->AlleNachrichtLoeschen($connection);
+	}
+}
+
+//Nachrichten annehmen
+
+if (isset($_POST["id"]) && isset($_POST["nachrichtentext"]) && isset($_POST["absender"])) {
+	$newClass->NachrichtenAnnehmen($connection, $_POST["id"], $_POST["nachrichtentext"], $_POST["absender"]);
+	if ($_POST["id"] != "alle")
+		$newClass->NachrichtenAnnehmen($connection, $_SESSION["Spielerid"], $_POST["nachrichtentext"], "an " . $newClass->SpielernameIDLesen($connection, $_POST["id"]));
+}
+
 //Bild hochladen
 if (isset($_FILES["bildhochladen"]) && $_FILES["bildhochladen"]["size"] > 0) {
 	$uploaddir = './Spieleravatare/';
@@ -558,7 +587,7 @@ class DBAktionen
 			$update->bind_param("iiis", $leben, $trankwertpermanent, $neuesguthaben, $_SESSION["Spieler"]);
 			$update->execute();
 		}
-		$this->Logging($connection, "" . $trankname . " fuer " . $kosten . " Geld gekauft");
+		//$this->Logging($connection, "" . $trankname . " fuer " . $kosten . " Geld gekauft");
 	}
 	//WaffenContainer  ---------------------------------------------------------------------------------------------
 	function AlleWaffenLesen($connection)
@@ -776,5 +805,105 @@ class DBAktionen
 				  </tr>
 				  </table>";
 		}
+	}
+
+	// Nachrichten in DB schreiben
+	function NachrichtenAnnehmen($connection, $id, $nachrichtentext, $absender)
+	{
+		if ($id === "alle") {
+			$select = $connection->prepare("SELECT id FROM spieler");
+			$select->execute();
+			$result = $select->get_result();
+			while ($row = $result->fetch_array()) {
+				$id = $row['id'];
+				$insert = $connection->prepare("INSERT INTO `nachrichten` (spielerid,nachrichtentext,absender) VALUES (?,?,?)");
+				$insert->bind_param("sss", $id, $nachrichtentext, $absender);
+				$insert->execute();
+				$insert->close();
+			}
+		} else {
+			$insert = $connection->prepare("INSERT INTO `nachrichten` (spielerid,nachrichtentext,absender) VALUES (?,?,?)");
+			$insert->bind_param("sss", $id, $nachrichtentext, $absender);
+			$insert->execute();
+			$insert->close();
+		}
+	}
+
+
+	// Nachrichten ----------------------------------------------------------------------------------
+	function SpielerSendenAnLesen($connection)
+	{
+		$select = $connection->prepare("SELECT spielername,id from spieler");
+		$select->execute();
+		$result = $select->get_result();
+		while ($row = $result->fetch_array()) {
+			echo '<option value="' . $row["id"] . '">' . $row["spielername"] . '</option>';
+		}
+	}
+
+	// Nachrichten Anzeigen
+
+	function NachrichtenAnzeigen($connection)
+	{
+		$select = $connection->prepare("SELECT id,erstellt, nachrichtentext,absender FROM nachrichten WHERE spielerid =?");
+		$select->bind_param("i", $_SESSION["Spielerid"]);
+		$select->execute();
+		$result = $select->get_result();
+		while ($row = $result->fetch_array()) {
+			echo "
+			<p>" . $row["erstellt"] . " : " . $row["absender"] . " : " . $row["nachrichtentext"] . "
+			<img id=\"nachrichtloeschen\" src=/Bilder/Mülltonne.png onclick=\"NachrichtLoeschen(" . $row["id"] . ");\">
+			";
+		}
+	}
+
+	//Anzahl der Nachrichten auslesen
+	function AnzahlNachrichtenLesen($connection)
+	{
+		$select = $connection->prepare("SELECT COUNT(spielerid)AS anzahl FROM nachrichten WHERE spielerid=?");
+		$select->bind_param("i", $_SESSION["Spielerid"]);
+		$select->execute();
+		$result = $select->get_result();
+		$row = $result->fetch_assoc();
+		return $row["anzahl"];
+	}
+
+	// Nachricht löschen
+	function NachrichtLoeschen($connection, $id)
+	{
+		$delete = $connection->prepare("DELETE from nachrichten WHERE id =?");
+		$delete->bind_param("i", $id);
+		$delete->execute();
+		$delete->close();
+	}
+
+	// Alle Nachricht löschen
+	function AlleNachrichtLoeschen($connection)
+	{
+		$delete = $connection->prepare("DELETE from nachrichten WHERE spielerid =?");
+		$delete->bind_param("i", $_SESSION["Spielerid"]);
+		$delete->execute();
+		$delete->close();
+	}
+
+
+	// Spielername bei ID Übergabe zurückgeben
+	function SpielernameIDLesen($connection, $id)
+	{
+		$select = $connection->prepare("SELECT spielername from spieler WHERE id=?");
+		$select->bind_param("i", $id);
+		$select->execute();
+		$result = $select->get_result();
+		$row = $result->fetch_assoc();
+		return $row["spielername"];
+	}
+	function SpielerIDNameLesen($connection, $spielername)
+	{
+		$select = $connection->prepare("SELECT id from spieler WHERE spielername=?");
+		$select->bind_param("s", $spielername);
+		$select->execute();
+		$result = $select->get_result();
+		$row = $result->fetch_assoc();
+		return $row["id"];
 	}
 }

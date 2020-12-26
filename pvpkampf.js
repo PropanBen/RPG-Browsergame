@@ -105,6 +105,7 @@ function Kampfende(Angreifer, Gegner) {
   if (Gewinner.seite === "links") {
     kampfgewinner.style.color = "#006600";
     setTimeout(function () { var audio = new Audio('/Audio/fanfare.wav'); audio.play(); }, 1000);
+    KampfBenachrichtigung(Gewinner.name, Verlierer.name, verdienst, verlust, erfahrung);
   }
   else {
     kampfgewinner.style.color = "#ff0000";

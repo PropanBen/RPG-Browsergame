@@ -244,7 +244,7 @@ include("funktionen.php");
     spielergegnerdaten[0]["maxleben"] = Gegner.maxleben;
 
     if (spielergegnerdaten[0]["leben"] == 0 && spielergegnerdaten[0]["geld"] == 0) {
-      document.getElementById("todesermittler").href = "/tot.php";
+      //  document.getElementById("todesermittler").href = "/tot.php";
       spielergegnerdaten[0]["leben"] = 3;
       spielergegnerdaten[0]["erfahrung"] = 0;
       spielergegnerdaten[0]["geld"] = 6;
@@ -300,6 +300,14 @@ include("funktionen.php");
     xhttp.open("POST", "pvp.php", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send("gewinner=" + gewinner + "&lvl=" + lvl + "");
+  }
+
+  //Kampf verloren Benachrichtigung
+  function KampfBenachrichtigung(gewinner, verlierer, verdienst, verlust, erfahrung) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "funktionen.php", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("benachrichtigung=true?gewinner=" + gewinner + "&verlierer=" + verlierer + "&verdienst=" + verdienst + "&verlust=" + verlust + "&erfahrung=" + erfahrung + "");
   }
 </script>
 

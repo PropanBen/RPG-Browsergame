@@ -10,6 +10,7 @@ include("funktionen.php");
     <link rel="stylesheet" type="text/css" href="rpgstyle.css" />
     <link rel="stylesheet" type="text/css" href="mobilerpgstyle.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.0/jquery.min.js"></script>
 </head>
 
 <body>
@@ -54,6 +55,12 @@ include("funktionen.php");
                             <p><?php echo $newClass->SpielerWaffenStatsLesen($connection, "waffenwert", $newClass->SpielerLesen($connection, "waffenid", $_SESSION["Spieler"])) + $newClass->SpielerLesen($connection, "angriff", $_SESSION["Spieler"]) ?></p>
                         </div>
                         <div class="Waffenname"><?php $newClass->BildLesen($connection, "waffenname", "waffen", "waffenid", $_SESSION["Spieler"]); ?></div>
+                    </div>
+                </div>
+                <div id="Nachrichten">
+                    <img src="/Bilder/Schriftrolle.png">
+                    <div id="Schriftrolle" onclick="PopUp();">
+                        <p><?php echo $newClass->AnzahlNachrichtenLesen($connection) ?></p>
                     </div>
                 </div>
                 <div class="Stats">
@@ -110,14 +117,101 @@ include("funktionen.php");
             <img class="Szenenbild" src="Bilder/Szene.png">
         </div>
     </div>
+    <div id="Nachrichtenfenster">
+        <div class="Zurückbutton">
+            <img src="Bilder/Zurückbutton.png" onclick="PopDown();" />
+        </div>
+        <div id="NachrichtenContainer">
+            <div id="Nachricht">
+                <?php $newClass->NachrichtenAnzeigen($connection); ?>
+            </div>
+        </div>
+        <div class="NachrichtenSendeContainer">
+            <label>Empfaenger : </label>
+            <select id="spieler" name="empfaengerid">
+                <option value="alle">Alle</option>
+                <?php $newClass->SpielerSendenAnLesen($connection); ?>
+            </select><br><br>
+            <input id="absender" type="hidden" name="absender" value="<?php echo $_SESSION["Spieler"] ?>">
+            <textarea id="nachrichtentext" name="text"></textarea>
+            <img id="nachrichtsenden" src="/Bilder/HolzTextButtonSenden.png" onclick="NachrichtSenden();">
+            <p style="color:red">Alle Nachrichten löschen</p>
+            <img id="allenachrichtenloeschen" src="/Bilder/Mülltonne.png" onclick="AlleNachrichtLoeschen();">
+        </div>
+    </div>
 </body>
 
 <script>
+    let nachricht = document.getElementById('Nachricht');
+
     function PlaySound() {
         //onclick="PlaySound();"
 
         var audio = new Audio('/Audio/tap.wav');
         audio.play();
+    }
+
+    function PopUp() {
+        let popup
+        popup = document.querySelector("#Nachrichtenfenster")
+        if (popup !== null) {
+            popup.style.opacity = 1;
+            popup.style.transform = "translate(+0%, +0%) scale(1)";
+        }
+        var audio = new Audio('/Audio/tap.wav');
+        audio.play();
+    }
+
+    function PopDown() {
+        let popup
+        popup = document.querySelector("#Nachrichtenfenster")
+        if (popup !== null) {
+            popup.style.opacity = 0;
+            popup.style.transform = "translate(+0%, +0%) scale(0)";
+        }
+        var audio = new Audio('/Audio/tap.wav');
+        audio.play();
+        $("#Nachricht").load(location.href + "/einstellungen.php #Nachricht");
+        $("#Schriftrolle").load(location.href + "/einstellungen.php #Schriftrolle");
+    }
+
+    // Nachrichten Senden
+    function NachrichtSenden() {
+        var audio = new Audio('/Audio/tap.wav');
+        audio.play();
+
+        let empfaengerid = document.getElementById('spieler');
+        let nachrichtentext = document.getElementById('nachrichtentext');
+        let absender = document.getElementById('absender');
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "funktionen.php", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("id=" + empfaengerid.value + "&nachrichtentext=" + nachrichtentext.value + "&absender=" + absender.value + "");
+        nachrichtentext.value = "";
+        $("#Nachricht").load(location.href + "/einstellungen.php #Nachricht");
+    }
+
+    // Nachrichtloeschen
+
+    function NachrichtLoeschen(id) {
+        var audio = new Audio('/Audio/tap.wav');
+        audio.play();
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "funktionen.php", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("nachrichtloeschen=true&id=" + id);
+        $("#Nachricht").load(location.href + "/einstellungen.php #Nachricht");
+    }
+
+    function AlleNachrichtLoeschen() {
+        var audio = new Audio('/Audio/tap.wav');
+        audio.play();
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "funktionen.php", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("allenachrichtenloeschen=true");
+        $("#Nachricht").load(location.href + "/einstellungen.php #Nachricht");
     }
 </script>
 

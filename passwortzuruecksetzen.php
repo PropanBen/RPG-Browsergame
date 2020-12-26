@@ -1,10 +1,6 @@
 <?php
 session_start();
 
-
-if (!isset($_SESSION["Erfolg"])) {
-    $_SESSION["Erfolg"] = null;
-}
 ?>
 
 <!DOCTYPE html>

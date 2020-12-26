@@ -63,6 +63,7 @@ if (isset($_POST["Registrieren"]) && isset($_POST["email"])) {
 // Ausloggen ---------------------------------------------------------------------------------------------
 
 if (isset($_POST["action"]) && $_POST["action"] === "Ausloggen") {
+    $newLoginClass->Logging($connection, "Ausgeloggt");
     $_SESSION = array();
     $_SESSION["Spieler"] = null;
     session_destroy();
@@ -86,7 +87,15 @@ if (isset($_POST["action"]) && $_POST["action"] == "Einloggen") {
         && preg_match("^(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%])[0-9a-zA-Z!@#$%]{8,}^", $passwort)
         && $player == $row[0] && password_verify($passwort, $row[1])
     ) {
+        $select = $connection->prepare("SELECT id FROM konto WHERE benutzername = ? ");
+        $select->bind_param("s", $player);
+        $select->execute();
+        $result2 = $select->get_result();
+        $row2 = $result2->fetch_assoc();
+
+        $_SESSION["id"] = $row2["id"];
         $_SESSION["Spieler"] = $player;
+        $_SESSION["Spielerid"] = $newLoginClass->SpielerIDErmitteln($connection, $row2["id"]);
         // Spieler entsperren
         $sperre = 0;
         $update = $connection->prepare("UPDATE spieler SET gesperrt=? WHERE spielername=?");
@@ -129,6 +138,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "Registrieren" && isset($_POS
         $result = $select->get_result();
         $row = $result->fetch_assoc();
 
+        $_SESSION["id"] = $row["id"];
 
         //Spieler anlegen
         $insertspieler = $connection->prepare("INSERT INTO spieler (kontoid,spielername, lvl, erfahrung, 
@@ -149,6 +159,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "Registrieren" && isset($_POS
         $insertspieler->execute();
         $insertspieler->close();
         $_SESSION["Spieler"] = $_POST["bname"];
+        $_SESSION["Spielerid"] = $newLoginClass->SpielerIDErmitteln($connection, $row2["id"]);
 
         // Email versenden
         $recipient = $_POST["email"];
@@ -157,8 +168,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "Registrieren" && isset($_POS
         $content =
             'Willkommen in Propania,<br>
              Vielen Herzlichen Dank für die Registrierung bei Propania.<br>
-             Ich wünsche dir viel Spaß und viel Erfolg beim Spielen.<br><br>
-
+ 
              Jetz einloggen unter:<br><br>
              https://propania.propanben.de <br><br>
 
@@ -182,22 +192,23 @@ if (isset($_POST["action"]) && $_POST["action"] == "Registrieren" && isset($_POS
 }
 
 // Passwort ändern
-if (isset($_POST["aendern"]) && $_POST["aendern"] == true && isset($_POST["pw"]) && isset($_POST["pw2"])) {
+if (isset($_POST["action"]) && $_POST["action"] === "pwaendern" && isset($_POST["pw"]) && isset($_POST["pw2"])) {
 
     if (
-        preg_match("(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%])[0-9a-zA-Z!@#$%]{8,}^", $_POST["pw"]) &&
+        preg_match("^(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%])[0-9a-zA-Z!@#$%]{8,}^", $_POST["pw"]) &&
         $_POST["pw"] == $_POST["pw2"]
     ) {
 
         $passworthash = password_hash($_POST["pw"], PASSWORD_DEFAULT);
 
-        $update = $connection->prepare("UPDATE konto SET passwort=? WHERE benutzername=?");
-        $update->bind_param("ss", $passworthash, $_SESSION["Spieler"]);
+        $update = $connection->prepare("UPDATE konto SET passwort=? WHERE id=?");
+        $update->bind_param("ss", $passworthash, $_SESSION["id"]);
         $update->execute();
         $update->close();
-        echo 1;
         //Logging
         $newLoginClass->Logging($connection, "Passwortänderung");
+        $_SESSION["Erfolgpw"] = "Geändert";
+        header('location: einstellungen.php');
     }
 }
 
@@ -248,7 +259,6 @@ if (isset($_POST["action"]) && $_POST["action"] === "vergessen" && isset($_POST[
 // Passwort ändern Spieler mit Token
 if (isset($_POST["token"]) && isset($_POST["pw"]) && isset($_POST["pw2"])) {
 
-    echo "i'm in !";
     $select = $connection->prepare("SELECT token FROM konto WHERE token = ?");
     $select->bind_param("s", $_POST["token"]);
     $select->execute();
@@ -256,10 +266,9 @@ if (isset($_POST["token"]) && isset($_POST["pw"]) && isset($_POST["pw2"])) {
     if ($result->num_rows == 1) {
 
         if (
-            preg_match("(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%])[0-9a-zA-Z!@#$%]{8,}^", $_POST["pw"]) &&
+            preg_match("^(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%])[0-9a-zA-Z!@#$%]{8,}^", $_POST["pw"]) &&
             $_POST["pw"] == $_POST["pw2"]
         ) {
-            echo "Nach Regex";
 
             $passworthash = password_hash($_POST["pw"], PASSWORD_DEFAULT);
 
@@ -279,13 +288,15 @@ if (isset($_POST["token"]) && isset($_POST["pw"]) && isset($_POST["pw2"])) {
 // Konto löschen
 if (isset($_POST["konto"]) && $_POST["konto"] === "loeschen") {
 
-    $delete = $connection->prepare("DELETE from konto WHERE benutzername =?");
+
+    // Erst FK Tabelle löschen
+    $delete = $connection->prepare("DELETE from spieler WHERE spielername =?");
     $delete->bind_param("s", $_SESSION["Spieler"]);
     $delete->execute();
     $delete->close();
 
-    $delete = $connection->prepare("DELETE from spieler WHERE spielername =?");
-    $delete->bind_param("s", $_SESSION["Spieler"]);
+    $delete = $connection->prepare("DELETE from konto WHERE id =?");
+    $delete->bind_param("s", $_SESSION["id"]);
     $delete->execute();
     $delete->close();
 
@@ -308,5 +319,16 @@ class DBLoginAktionen
         $insert->bind_param("ss", $ereignis, $_SESSION["Spieler"]);
         $insert->execute();
         $insert->close();
+    }
+
+    // spielerid ermitteln
+    function SpielerIDErmitteln($connection, $id)
+    {
+        $select = $connection->prepare("SELECT id FROM spieler WHERE kontoid = ? ");
+        $select->bind_param("s", $id);
+        $select->execute();
+        $result = $select->get_result();
+        $row = $result->fetch_assoc();
+        return $row["id"];
     }
 }
