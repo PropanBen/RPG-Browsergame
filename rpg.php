@@ -10,7 +10,8 @@ include("funktionen.php");
     <link rel="stylesheet" type="text/css" href="rpgstyle.css" />
     <link rel="stylesheet" type="text/css" href="mobilerpgstyle.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.0/jquery.min.js"></script>
+    <!--  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.0/jquery.min.js"></script>-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -23,7 +24,7 @@ include("funktionen.php");
                     <img class="Spielerbild" src="<?php echo $newClass->SpielerLesen($connection, "spielerbildpfad", $_SESSION["Spieler"]) ?>">
                     <img id="LvLPlakette" class="Plakette" src="/Bilder/LvL_Plakette.png" />
                     <div class="LvL">
-                        <p><?php echo $newClass->SpielerLesen($connection, "lvl", $_SESSION["Spieler"]) ?></p>
+                        <p><?php echo $newClass->SpielerLesen($connection, "lvl", $_SESSION["Spieler"]) ?></p><br>
                     </div>
                     <div class="Bildupload">
                         <form id="inputform" action="./funktionen.php" method="POST" enctype="multipart/form-data">
@@ -38,6 +39,7 @@ include("funktionen.php");
                             </button>
                         </form>
                     </div>
+                    <p id="spielername"><?php echo $_SESSION["Spieler"]; ?></p>
                 </div>
                 <div class="Ausruestung">
                     <div class="RuestungContainer">
@@ -57,14 +59,8 @@ include("funktionen.php");
                         <div class="Waffenname"><?php $newClass->BildLesen($connection, "waffenname", "waffen", "waffenid", $_SESSION["Spieler"]); ?></div>
                     </div>
                 </div>
-                <div id="Nachrichten">
-                    <img src="/Bilder/Schriftrolle.png">
-                    <div id="Schriftrolle" onclick="PopUp();">
-                        <p><?php echo $newClass->AnzahlNachrichtenLesen($connection) ?></p>
-                    </div>
-                </div>
                 <div class="Stats">
-                    <p id="spielername"><?php echo $_SESSION["Spieler"]; ?></p><br>
+                    <p id="Titel">Kein Titel</p><br>
                     <img src="Bilder/Leben.png">
                     <label>Leben</label>
                     <p id="leben"><?php echo $newClass->SpielerLesen($connection, "leben", $_SESSION["Spieler"]) ?>&nbspvon&nbsp<?php echo $newClass->SpielerLesen($connection, "maxleben", $_SESSION["Spieler"]) ?> </p><br>
@@ -76,14 +72,30 @@ include("funktionen.php");
                         <p id="geld"><?php echo $newClass->SpielerLesen($connection, "geld", $_SESSION["Spieler"]) ?></p>
                         <img src="Bilder/Geld.png">
                     </div>
-                    <div class="form">
-                        <form action="/login.php" method="POST">
-                            <input type="hidden" name="action" value="Ausloggen" />
-                            <input type="submit" class="Auslogbutton" value="" onclick="PlaySound();" />
-                        </form>
+                </div>
+                <div class="Navigationsleiste">
+
+                    <div class="NavigationItem">
+                        <div id="Nachrichten">
+                            <img src="/Bilder/Schriftrolle.png">
+                            <div id="Schriftrolle" onclick="PopUp();">
+                                <p><?php echo $newClass->AnzahlNachrichtenLesen($connection) ?></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="NavigationItem">
+                        <a class="Einstellungen" href="/einstellungen.php" onclick="PlaySound();"><img src="/Bilder/Einstellungen.png"></a>
+                    </div>
+                    <div class="NavigationItem">
+                        <div class="form">
+                            <form action="/login.php" method="POST">
+                                <input type="hidden" name="action" value="Ausloggen" />
+                                <input type="submit" class="Auslogbutton" value="" onclick="PlaySound();" />
+                            </form>
+                        </div>
                     </div>
                 </div>
-                <a class="Einstellungen" href="/einstellungen.php" onclick="PlaySound();"><img src="/Bilder/Einstellungen.png"></a>
+
             </div>
 
             <div class="SpielerlisteContainer">

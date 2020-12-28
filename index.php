@@ -33,6 +33,8 @@ if (isset($_SESSION["Erfolg"])) {
           <button type="submit" name="action" value="Einloggen" style="border: 0; background: transparent" onclick="PlaySound();"><img src="/Bilder/HolzTextButtonEinloggen.png"></button>
           <button type="reset" value="Zurücksetzen" style="border: 0; background: transparent" onclick="PlaySound();"><img src="/Bilder/HolzTextButtonEntfernen.png"></button>
           <a href="/passwortvergessen.php" title="Passwort vergessen" onclick="PlaySound();">Passwort vergessen</a>
+          <p style="margin-top:10px">Support: E-Mail
+            <a href="mailto:info@propanben.de"><img src="/Bilder/Email.png" width=50 height=25></a></p>
         </div>
       </form>
     </div>
@@ -40,7 +42,6 @@ if (isset($_SESSION["Erfolg"])) {
     <div class="RegistrierungsContainer">
       <a href="/register.php" onclick="PlaySound();"><img src="Bilder/HolzTextButtonRegistrieren.png" /></a>
     </div>
-
     <div class="Platzhalter"></div>
     <a id="paypal" href="https://paypal.me/PropanBen" onclick="PlaySound();"><img src="/Bilder/paypal.png"></a>
 
@@ -66,7 +67,7 @@ if (isset($_SESSION["Erfolg"])) {
     <div class="Platzhalter"></div>
   </div>
   <footer>
-    <p>© 2020 PropanBen. Alle Rechte vorbehalten.</p>
+    <p>© 2020 PropanBen. Alle Rechte vorbehalten. <a href="/impressum.php">Impressum</a> <a href="/datenschutz.php">Datenschutz</a></p>
   </footer>
 
 </body>
