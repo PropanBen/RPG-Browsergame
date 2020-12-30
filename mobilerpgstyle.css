@@ -173,35 +173,62 @@ label
 	margin-right:auto;
 
 }
+.AusruestungItem p
+{
+    left:10px;
+}
+
+.AusruestungItem img
+{
+width: 25px;
+height:25px;
+}
+.verteidigung
+{
+    width: 30px;
+	height:30px;
+	bottom:72px;
+    left:13px; 
+    position: absolute;  
+}
+.angriff
+{
+    widows: 30px;
+	height:30px;
+	bottom:23px;
+    left:7px;  
+    position: absolute;  
+}
 .Stats p
 {
     margin-left: 10px;
 }
 #LvLPlakette
 {
-	position: absolute;
-	bottom:25px;
-	left:25px;
+	position: relative;
+	bottom:-60px;
+	left:0px;
 }
 .LvL
 {
-    bottom:20px;
-	left:21px; 
+    bottom:-25px;
+	left:0px; 
 }
 .ruestungswert
 {
-    bottom:105px;
-    left:41px;   
+    bottom:67px;
+    left:158px; 
+    position: absolute;   
 }
 .waffenwert
 {
-    bottom:37px;
-    left:41px;
-    position: relative;
+    bottom:17px;
+    left:158px; 
+    position: absolute;  
 }
 .Waffenname
 {
-    bottom:37px;
+    bottom:0px;
     left:0px;
     position: relative; 
 }

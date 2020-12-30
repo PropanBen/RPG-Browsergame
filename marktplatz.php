@@ -10,7 +10,7 @@ if (isset($_POST["trankid"]) || isset($_POST["waffenid"]) || isset($_POST["ruest
 
 include("funktionen.php");
 if (!isset($_SESSION["Spieler"])) {
-    header('location: rpglogin.php');
+    header('location: index.php');
 }
 ?>
 
@@ -36,6 +36,8 @@ if (!isset($_SESSION["Spieler"])) {
     </div>
     <div class="NavigationMarktplatz">
         <div class="SpielerInfoContainer">
+            <p id="spielername"><?php echo $_SESSION["Spieler"]; ?></p>
+            <p id="Titel">Kein Titel</p><br>
             <div class="Avatarbild">
                 <img class="Spielerbildrahmen" src="/Bilder/Rahmen.png" />
                 <img class="Spielerbild" src="<?php echo $newClass->SpielerLesen($connection, "spielerbildpfad", $_SESSION["Spieler"]) ?>">
@@ -43,41 +45,46 @@ if (!isset($_SESSION["Spieler"])) {
                 <div class="LvL">
                     <p><?php echo $newClass->SpielerLesen($connection, "lvl", $_SESSION["Spieler"]) ?></p><br>
                 </div>
-                <div class="Bildupload">
-                    <form id="inputform" action="./funktionen.php" method="POST" enctype="multipart/form-data">
-                        <!-- 3,5 mb maximal dateigröße -->
-                        <input type="hidden" name="MAX_FILE_SIZE" value="5000000" />
-                        <label>Bild</label><br>
-                        <label for="bild-hochladen" class="Angepasster-Input">Upload</label><br>
-                        <input id="bild-hochladen" type="file" name="bildhochladen" onclick="PlaySound();" />
-                        <input id="subbtn" class="Avatarbutton" type="image" src="/Bilder/Haken.png" onclick="PlaySound();" />
-                        <button type="reset" style="border: 0; background: transparent" onclick="PlaySound();">
-                            <img class="Avatarbutton" src="/Bilder/X.png" />
-                        </button>
-                    </form>
-                </div>
-                <p id="spielername"><?php echo $_SESSION["Spieler"]; ?></p>
             </div>
             <div class="Ausruestung">
-                <div class="RuestungContainer">
-                    <img class="Ruestungsbild" src="<?php $newClass->BildLesen($connection, "ruestungsbildpfad", "ruestung", "ruestungsid", $_SESSION["Spieler"]); ?>" width="40" height="40">
-                    <img id="RuestungsPlakette" class="Plakette" src="/Bilder/LvL_Plakette.png" />
-                    <div class="ruestungswert">
-                        <p><?php echo $newClass->SpielerRuestungsStatsLesen($connection, "ruestungswert", $newClass->SpielerLesen($connection, "ruestungsid", $_SESSION["Spieler"])) ?></p>
+                <div class="AusruestungItem">
+                    <div class="RuestungContainer">
+                        <img src="/Bilder/Verteidigung.png">
+                        <img id="RuestungsPlakette" class="Plakette" src="/Bilder/LvL_Plakette.png" />
+                        <div class="verteidigung">
+                            <p><?php echo $newClass->SpielerLesen($connection, "verteidigung", $_SESSION["Spieler"]) ?></p>
+                        </div>
+                        <p>Verteidigung</p>
                     </div>
-                    <div class="Ruestungsname"><?php $newClass->BildLesen($connection, "ruestungsname", "ruestung", "ruestungsid", $_SESSION["Spieler"]); ?></div>
+                    <div class=" RuestungContainer">
+                        <img src="/Bilder/Angriff.png">
+                        <img id="RuestungsPlakette" class="Plakette" src="/Bilder/LvL_Plakette.png" />
+                        <div class="angriff">
+                            <p><?php echo $newClass->SpielerLesen($connection, "angriff", $_SESSION["Spieler"]) ?></p>
+                        </div>
+                        <p>Angriff</p>
+                    </div>
                 </div>
-                <div class="WaffenCont">
-                    <img class="Waffenbild" src="<?php $newClass->BildLesen($connection, "waffenbildpfad", "waffen", "waffenid", $_SESSION["Spieler"]); ?>" width="40" height="40">
-                    <img id="RuestungsPlakette" class="Plakette" src="/Bilder/LvL_Plakette.png" />
-                    <div class="waffenwert">
-                        <p><?php echo $newClass->SpielerWaffenStatsLesen($connection, "waffenwert", $newClass->SpielerLesen($connection, "waffenid", $_SESSION["Spieler"])) + $newClass->SpielerLesen($connection, "angriff", $_SESSION["Spieler"]) ?></p>
+                <div class="AusruestungItem">
+                    <div class="RuestungContainer">
+                        <img class="Ruestungsbild" src="<?php $newClass->BildLesen($connection, "ruestungsbildpfad", "ruestung", "ruestungsid", $_SESSION["Spieler"]); ?>">
+                        <img id="RuestungsPlakette" class="Plakette" src="/Bilder/LvL_Plakette.png" />
+                        <div class="ruestungswert">
+                            <p><?php echo $newClass->SpielerRuestungsStatsLesen($connection, "ruestungswert", $newClass->SpielerLesen($connection, "ruestungsid", $_SESSION["Spieler"])) ?></p>
+                        </div>
+                        <p><?php $newClass->BildLesen($connection, "ruestungsname", "ruestung", "ruestungsid", $_SESSION["Spieler"]); ?></p>
                     </div>
-                    <div class="Waffenname"><?php $newClass->BildLesen($connection, "waffenname", "waffen", "waffenid", $_SESSION["Spieler"]); ?></div>
+                    <div class="RuestungContainer">
+                        <img class="Waffenbild" src="<?php $newClass->BildLesen($connection, "waffenbildpfad", "waffen", "waffenid", $_SESSION["Spieler"]); ?>">
+                        <img id="RuestungsPlakette" class="Plakette" src="/Bilder/LvL_Plakette.png" />
+                        <div class="waffenwert">
+                            <p><?php echo $newClass->SpielerWaffenStatsLesen($connection, "waffenwert", $newClass->SpielerLesen($connection, "waffenid", $_SESSION["Spieler"])) ?></p>
+                        </div>
+                        <p><?php $newClass->BildLesen($connection, "waffenname", "waffen", "waffenid", $_SESSION["Spieler"]); ?></p>
+                    </div>
                 </div>
             </div>
             <div class="Stats">
-                <p id="Titel">Kein Titel</p><br>
                 <img src="Bilder/Leben.png">
                 <label>Leben</label>
                 <p id="leben"><?php echo $newClass->SpielerLesen($connection, "leben", $_SESSION["Spieler"]) ?>&nbspvon&nbsp<?php echo $newClass->SpielerLesen($connection, "maxleben", $_SESSION["Spieler"]) ?> </p><br>

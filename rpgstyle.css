@@ -234,22 +234,26 @@ footer a
 }
 .Avatarbild
 {   
-	width:200px;
-	height:100px;
+	width:100%;
+	height:90px;
 	margin-left: auto;
 	margin-right: auto;
+	margin-bottom: 20px;
 	position: relative; 
+	display:flex;
+	flex-direction:column;
+	align-items:center;
+	justify-content:center;
 	background-color: burlywood;
-	display: block;
 }
 .LvL
 {
 	width:40px;
 	height:40px;
 	display: flex;
-	bottom:40px;
-	left:20px;
-	position: absolute;
+	bottom:-20px;
+	left:0px;
+	position: relative;
 	z-index:3;
 	justify-content: center;
 	vertical-align: auto;
@@ -265,16 +269,7 @@ footer a
 	height:80px;
 	margin-left: auto;
 	margin-right:auto;
-	position: relative;
-	z-index:1;
-}
-.Spielerbildrahmen img
-{
-	width: 80px;
-	height:80px;
-	margin-left: auto;
-	margin-right:auto;
-	position: relative;
+	position: absolute;
 	z-index:1;
 }
 .Spielerbild
@@ -283,12 +278,13 @@ footer a
 	height:80px;
 	z-index:0;
 	border-radius: 8px;
+	position: absolute;
 }
 #LvLPlakette
 {
 	position: relative;
-	bottom:40px;
-	left:20px;
+	bottom:-60px;
+	left:0px;
 }
 .Plakette
 {
@@ -298,9 +294,8 @@ footer a
 }
 .Bildupload
 {
-	top:0;
-	left:90px;
-	position: absolute;
+	left: 100px;
+	position: relative;
 }
 
 #bild-hochladen
@@ -333,11 +328,34 @@ footer a
 }
 .Ausruestung
 {
-	width: 250px;
-	height: 150px;
+	width: 100%;
+	height: 100px;
 	position: relative;
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
+}
+.AusruestungItem
+{
+width: 50%;
+height:auto;
+}
+.AusruestungItem img
+{
+width: 40px;
+height:40px;
+}
+.AusruestungItem p
+{
+	left:10px;
+	position: relative;
+}
+.RuestungContainer
+{
+	width: 100%;
+	height: 50%;
+	display:flex;
+	flex-direction: row;
+	align-items: left;
 }
 .Auslogbutton
 {
@@ -385,13 +403,39 @@ footer a
 {
 	bottom:30px;
 }
+.verteidigung
+{
+	width:40px;
+	height:40px;
+	display: flex;
+	bottom:57px;
+	left:30px;
+	position: absolute;
+	z-index:3;
+	justify-content: center;
+	vertical-align: auto;
+	align-items: center;
+}
+.angriff
+{
+	width:40px;
+	height:40px;
+	display: flex;
+	bottom:7px;
+	left:30px;
+	position: absolute;
+	z-index:3;
+	justify-content: center;
+	vertical-align: auto;
+	align-items: center;
+}
 .ruestungswert
 {
 width:40px;
 height:40px;
 display: flex;
-bottom:110px;
-left:48px;
+bottom:60px;
+left:280px;
 position: absolute;
 z-index:3;
 justify-content: center;
@@ -404,8 +448,8 @@ align-items: center;
 	width:40px;
 	height:40px;
 	display: flex;
-	bottom:40px;
-	left:48px;
+	bottom:10px;
+	left:280px;
 	position: absolute;
 	z-index:3;
 	justify-content: center;
@@ -416,7 +460,7 @@ align-items: center;
 {
   width: 100%;
   height:auto;
-  bottom:10px;
+  margin-top: 10px;
   position: relative;
 }
 #Titel
@@ -696,6 +740,7 @@ font-size: 24;
 	background-color: rgb(255, 217, 167);
 	background-color:burlywood;
 }
+
 .Waffenliste
 {   
 	width: 100%;

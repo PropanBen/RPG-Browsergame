@@ -101,7 +101,7 @@ include("funktionen.php");
       const gegnerdaten = <?php json_encode($newClass->JSONStringGegner($connection, $_POST["gegnerid"]), JSON_UNESCAPED_SLASHES); ?>;
 
       //Spieler Daten in Frontend laden
-      let spielerruestungswert = spielerdaten[0]["ruestungswert"];
+      let spielerruestungswert = spielerdaten[0]["ruestungswert"] + spielerdaten[0]["verteidigung"];
       let spielerruestungsbildpfad = spielerdaten[0]["ruestungsbildpfad"];
       let spielerleben = spielerdaten[0]["leben"];
       let spielermaxleben = spielerdaten[0]["maxleben"];
@@ -151,7 +151,7 @@ include("funktionen.php");
       const spielerdaten = <?php json_encode($newClass->JSONStringSpieler($connection, $_SESSION["Spieler"]), JSON_UNESCAPED_SLASHES); ?>;
       let spielerlvl = spielerdaten[0]["lvl"];
       let spielererfahrung = spielerdaten[0]["erfahrung"];
-      let spielerruestungswert = spielerdaten[0]["ruestungswert"];
+      let spielerruestungswert = spielerdaten[0]["ruestungswert"] + spielerdaten[0]["verteidigung"];
       let spielerruestungsbildpfad = spielerdaten[0]["ruestungsbildpfad"];
       let spielerleben = spielerdaten[0]["leben"];
       let uispielerruestungswert = document.getElementById('spielerruestungswert');
@@ -159,11 +159,12 @@ include("funktionen.php");
       let spielermaxleben = spielerdaten[0]["maxleben"];
       let spielerschaden = spielerdaten[0]["angriff"] + spielerdaten[0]["waffenwert"];
       let spielerangriffswert = spielerdaten[0]["angriff"];
+      let spielerverteidigung = spielerdaten[0]["verteidigung"];
       let spielerwaffenbild = spielerdaten[0]["waffenbildpfad"];
       let spielerbild = spielerdaten[0]["spielerbildpfad"];
       let spielername = spielerdaten[0]["spielername"];
       let spielergeld = spielerdaten[0]["geld"];
-      let Spieler = new Avatar(spielername, spielerlvl, spielerschaden, spielerruestungswert, spielerleben, uispielerruestungswert, uispielerleben, "links", spielergeld, spielererfahrung, spielerangriffswert, spielermaxleben);
+      let Spieler = new Avatar(spielername, spielerlvl, spielerschaden, spielerruestungswert, spielerleben, uispielerruestungswert, uispielerleben, "links", spielergeld, spielererfahrung, spielerangriffswert, spielerverteidigung, spielermaxleben);
       return Spieler;
     }
 
@@ -196,6 +197,7 @@ include("funktionen.php");
       }
       spielerdaten[0]["lvl"] = Spieler.lvl;
       spielerdaten[0]["angriff"] = Spieler.angriffswert;
+      spielerdaten[0]["verteidigung"] = Spieler.verteidigung;
       spielerdaten[0]["maxleben"] = Spieler.maxleben;
 
       if (spielerdaten[0]["leben"] == 0 && spielerdaten[0]["geld"] == 0) {
@@ -205,6 +207,7 @@ include("funktionen.php");
         spielerdaten[0]["geld"] = 6;
         spielerdaten[0]["lvl"] = 1;
         spielerdaten[0]["angriff"] = 1;
+        spielerdaten[0]["verteidigung"] = 0;
         spielerdaten[0]["maxleben"] = 3;
         spielerdaten[0]["waffenid"] = 0;
         spielerdaten[0]["ruestungsid"] = 0;

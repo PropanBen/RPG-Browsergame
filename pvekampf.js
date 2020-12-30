@@ -82,6 +82,7 @@ function Kampfende(Angreifer, Gegner) {
       Gewinner.lvl++;
       Gewinner.maxleben += 3;
       Gewinner.angriffswert += 1;
+      Gewinner.verteidigung += 1;
       lvlupbool = true;
     }
     verdienst = Verlierer.geld;
@@ -156,7 +157,7 @@ function Kampfende(Angreifer, Gegner) {
 }
 //X
 class Avatar {
-  constructor(name, lvl, angriff, ruestungswert, leben, uiruestung, uileben, seite, geld, erfahrung, angriffswert, maxleben) {
+  constructor(name, lvl, angriff, ruestungswert, leben, uiruestung, uileben, seite, geld, erfahrung, angriffswert, verteidigung, maxleben) {
     this.name = name;
     this.lvl = lvl;
     this.angriff = angriff;
@@ -168,6 +169,7 @@ class Avatar {
     this.geld = geld;
     this.erfahrung = erfahrung;
     this.angriffswert = angriffswert;
+    this.verteidigung = verteidigung;
     this.maxleben = maxleben;
   }
   Angreifen(Gegner) {

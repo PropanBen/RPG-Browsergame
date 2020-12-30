@@ -126,7 +126,7 @@ function Kampfende(Angreifer, Gegner) {
 }
 
 class Avatar {
-  constructor(name, lvl, angriff, ruestungswert, leben, uiruestung, uileben, seite, geld, erfahrung, erfahrungdb, angriffswert, maxleben) {
+  constructor(name, lvl, angriff, ruestungswert, leben, uiruestung, uileben, seite, geld, erfahrung, erfahrungdb, angriffswert, verteidigung, maxleben) {
     this.name = name;
     this.lvl = lvl;
     this.angriff = angriff;
@@ -139,6 +139,7 @@ class Avatar {
     this.erfahrung = erfahrung;
     this.erfahrungdb = erfahrungdb;
     this.angriffswert = angriffswert;
+    this.verteidigung = verteidigung;
     this.maxleben = maxleben;
   }
   Angreifen(Gegner) {

@@ -31,27 +31,24 @@ if (!isset($_SESSION["Erfolgpw"])) {
 
         <p class="Überschrift">Einstellungen</p>
         <div class="Waffenliste">
-            <div class="Avatarbild">
-                <img class="Spielerbildrahmen" src="/Bilder/Rahmen.png" />
-                <img class="Spielerbild" src="<?php echo $newClass->SpielerLesen($connection, "spielerbildpfad", $_SESSION["Spieler"]) ?>">
-                <img id="LvLPlakette" class="Plakette" src="/Bilder/LvL_Plakette.png" />
-                <div class="LvL">
-                    <p><?php echo $newClass->SpielerLesen($connection, "lvl", $_SESSION["Spieler"]) ?></p><br>
+            <div class="SpielerInfoContainer">
+                <div class="Avatarbild">
+                    <img class="Spielerbildrahmen" src="/Bilder/Rahmen.png" />
+                    <img class="Spielerbild" src="<?php echo $newClass->SpielerLesen($connection, "spielerbildpfad", $_SESSION["Spieler"]) ?>">
+                    <div class="Bildupload">
+                        <form id="inputform" action="./funktionen.php" method="POST" enctype="multipart/form-data">
+                            <!-- 3,5 mb maximal dateigröße -->
+                            <input type="hidden" name="MAX_FILE_SIZE" value="5000000" />
+                            <label>Bild</label><br>
+                            <label for="bild-hochladen" class="Angepasster-Input">Upload</label><br>
+                            <input id="bild-hochladen" type="file" name="bildhochladen" onclick="PlaySound();" />
+                            <input id="subbtn" class="Avatarbutton" type="image" src="/Bilder/Haken.png" onclick="PlaySound();" />
+                            <button type="reset" style="border: 0; background: transparent" onclick="PlaySound();">
+                                <img class="Avatarbutton" src="/Bilder/X.png" />
+                            </button>
+                        </form>
+                    </div>
                 </div>
-                <div class="Bildupload">
-                    <form id="inputform" action="./funktionen.php" method="POST" enctype="multipart/form-data">
-                        <!-- 3,5 mb maximal dateigröße -->
-                        <input type="hidden" name="MAX_FILE_SIZE" value="5000000" />
-                        <label>Bild</label><br>
-                        <label for="bild-hochladen" class="Angepasster-Input">Upload</label><br>
-                        <input id="bild-hochladen" type="file" name="bildhochladen" onclick="PlaySound();" />
-                        <input id="subbtn" class="Avatarbutton" type="image" src="/Bilder/Haken.png" onclick="PlaySound();" />
-                        <button type="reset" style="border: 0; background: transparent" onclick="PlaySound();">
-                            <img class="Avatarbutton" src="/Bilder/X.png" />
-                        </button>
-                    </form>
-                </div>
-                <p id="spielername"><?php echo $_SESSION["Spieler"]; ?></p>
             </div>
             <div class="PasswortContainer">
                 <p>Spielername ändern</p><br><br>

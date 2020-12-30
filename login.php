@@ -142,9 +142,9 @@ if (isset($_POST["action"]) && $_POST["action"] == "Registrieren" && isset($_POS
 
         //Spieler anlegen
         $insertspieler = $connection->prepare("INSERT INTO spieler (kontoid,spielername, lvl, erfahrung, 
-		geld,leben,maxleben, angriff, waffenid, ruestungsid, spielerbildpfad, rechte,gesperrt) 
-		VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
-        $insertspieler->bind_param("isiiiiiiiissi", $row["id"], $player, $lvl, $erfahrung, $geld, $leben, $maxleben, $angriff, $leer, $leer, $pfad, $rechte, $sperre);
+		geld,leben,maxleben, angriff,verteidigung, waffenid, ruestungsid, spielerbildpfad, rechte,gesperrt) 
+		VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        $insertspieler->bind_param("isiiiiiiiiissi", $row["id"], $player, $lvl, $erfahrung, $geld, $leben, $maxleben, $angriff, $verteidigung, $leer, $leer, $pfad, $rechte, $sperre);
         $player = $_POST["bname"];
         $lvl = 1;
         $erfahrung = 0;
@@ -152,6 +152,7 @@ if (isset($_POST["action"]) && $_POST["action"] == "Registrieren" && isset($_POS
         $leben = 3;
         $maxleben = 3;
         $angriff = 1;
+        $verteidigung = 0;
         $leer = 0;
         $pfad = "/Spieleravatare/Default.png";
         $rechte = "Spieler";
@@ -180,6 +181,10 @@ if (isset($_POST["action"]) && $_POST["action"] == "Registrieren" && isset($_POS
         $headers = "MIME-Version: 1.0" . "\r\n";
         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
         mail($recipient, $subject, $content, $headers, ' -f ' . $sender);
+
+        // Nachricht an alle Senden
+        $nachrichtentext = "Neuer Spieler " . $_SESSION["Spieler"] . " hat sich registriert !";
+        $newLoginClass->NachrichtenAnnehmen($connection, "alle", $nachrichtentext, $_SESSION["Spieler"]);
 
         //Logging
         $newLoginClass->Logging($connection, "Registriert");
@@ -330,5 +335,26 @@ class DBLoginAktionen
         $result = $select->get_result();
         $row = $result->fetch_assoc();
         return $row["id"];
+    }
+    // Nachrichten Senden
+    function NachrichtenAnnehmen($connection, $id, $nachrichtentext, $absender)
+    {
+        if ($id === "alle") {
+            $select = $connection->prepare("SELECT id FROM spieler");
+            $select->execute();
+            $result = $select->get_result();
+            while ($row = $result->fetch_array()) {
+                $id = $row['id'];
+                $insert = $connection->prepare("INSERT INTO `nachrichten` (spielerid,nachrichtentext,absender) VALUES (?,?,?)");
+                $insert->bind_param("sss", $nachrichtentext, $absender);
+                $insert->execute();
+                $insert->close();
+            }
+        } else {
+            $insert = $connection->prepare("INSERT INTO `nachrichten` (spielerid,nachrichtentext,absender) VALUES (?,?,?)");
+            $insert->bind_param("sss", $id, $nachrichtentext, $absender);
+            $insert->execute();
+            $insert->close();
+        }
     }
 }

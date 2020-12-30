@@ -106,7 +106,7 @@ include("funktionen.php");
     const spielergegnerdaten = <?php json_encode($newClass->JSONStringSpieler($connection, $_POST["spielergegner"]), JSON_UNESCAPED_SLASHES); ?>;
 
     //Spieler Daten in Frontend laden
-    let spieler1ruestungswert = spielerdaten[0]["ruestungswert"];
+    let spieler1ruestungswert = spielerdaten[0]["ruestungswert"] + spielerdaten[0]["verteidigung"];
     let spieler1ruestungsbildpfad = spielerdaten[0]["ruestungsbildpfad"];
     let spieler1leben = spielerdaten[0]["leben"];
     let spieler1maxleben = spielerdaten[0]["maxleben"];
@@ -135,7 +135,7 @@ include("funktionen.php");
 
     // SpielerGegner in Frontend laden
 
-    let spieler2ruestungswert = spielergegnerdaten[0]["ruestungswert"];
+    let spieler2ruestungswert = spielergegnerdaten[0]["ruestungswert"] + spielergegnerdaten[0]["verteidigung"];
     let spieler2ruestungsbildpfad = spielergegnerdaten[0]["ruestungsbildpfad"];
     let spieler2leben = spielergegnerdaten[0]["leben"];
     let spieler2maxleben = spielergegnerdaten[0]["maxleben"];
@@ -168,7 +168,7 @@ include("funktionen.php");
     const spielerdaten = <?php json_encode($newClass->JSONStringSpieler($connection, $_SESSION["Spieler"]), JSON_UNESCAPED_SLASHES); ?>;
     let spielerlvl = spielerdaten[0]["lvl"];
     let spielererfahrung = spielerdaten[0]["erfahrung"];
-    let spielerruestungswert = spielerdaten[0]["ruestungswert"];
+    let spielerruestungswert = spielerdaten[0]["ruestungswert"] + spielerdaten[0]["verteidigung"];;
     let spielerruestungsbildpfad = spielerdaten[0]["ruestungsbildpfad"];
     let spielerleben = spielerdaten[0]["leben"];
     let uispielerruestungswert = document.getElementById('spieler1ruestungswert');
@@ -176,11 +176,12 @@ include("funktionen.php");
     let spielermaxleben = spielerdaten[0]["maxleben"];
     let spielerschaden = spielerdaten[0]["angriff"] + spielerdaten[0]["waffenwert"];
     let spielerangriffswert = spielerdaten[0]["angriff"];
+    let spielerverteidigung = spielerdaten[0]["verteidigung"];
     let spielerwaffenbild = spielerdaten[0]["waffenbildpfad"];
     let spielerbild = spielerdaten[0]["spielerbildpfad"];
     let spielername = spielerdaten[0]["spielername"];
     let spielergeld = spielerdaten[0]["geld"];
-    let Spieler = new Avatar(spielername, spielerlvl, spielerschaden, spielerruestungswert, spielerleben, uispielerruestungswert, uispielerleben, "links", spielergeld, SpielerErfahrungBerechnen(spielerlvl, spielermaxleben, spielerschaden, spielerruestungswert), spielererfahrung, spielerangriffswert, spielermaxleben);
+    let Spieler = new Avatar(spielername, spielerlvl, spielerschaden, spielerruestungswert, spielerleben, uispielerruestungswert, uispielerleben, "links", spielergeld, SpielerErfahrungBerechnen(spielerlvl, spielermaxleben, spielerschaden, spielerruestungswert), spielererfahrung, spielerangriffswert, spielerverteidigung, spielermaxleben);
     return Spieler;
   }
 
@@ -188,7 +189,7 @@ include("funktionen.php");
     const spielerdaten = <?php json_encode($newClass->JSONStringSpieler($connection, $_POST["spielergegner"]), JSON_UNESCAPED_SLASHES); ?>;
     let spielerlvl = spielerdaten[0]["lvl"];
     let spielererfahrung = spielerdaten[0]["erfahrung"];
-    let spielerruestungswert = spielerdaten[0]["ruestungswert"];
+    let spielerruestungswert = spielerdaten[0]["ruestungswert"] + spielerdaten[0]["verteidigung"];
     let spielerruestungsbildpfad = spielerdaten[0]["ruestungsbildpfad"];
     let spielerleben = spielerdaten[0]["leben"];
     let uispielerruestungswert = document.getElementById('spieler2ruestungswert');
@@ -196,11 +197,12 @@ include("funktionen.php");
     let spielermaxleben = spielerdaten[0]["maxleben"];
     let spielerschaden = spielerdaten[0]["angriff"] + spielerdaten[0]["waffenwert"];
     let spielerangriffswert = spielerdaten[0]["angriff"];
+    let spielerverteidigung = spielerdaten[0]["verteidigung"];
     let spielerwaffenbild = spielerdaten[0]["waffenbildpfad"];
     let spielerbild = spielerdaten[0]["spielerbildpfad"];
     let spielername = spielerdaten[0]["spielername"];
     let spielergeld = spielerdaten[0]["geld"];
-    let SpielerGegner = new Avatar(spielername, spielerlvl, spielerschaden, spielerruestungswert, spielerleben, uispielerruestungswert, uispielerleben, "rechts", spielergeld, SpielerErfahrungBerechnen(spielerlvl, spielerleben, spielerschaden, spielerruestungswert), spielererfahrung, spielerangriffswert, spielermaxleben);
+    let SpielerGegner = new Avatar(spielername, spielerlvl, spielerschaden, spielerruestungswert, spielerleben, uispielerruestungswert, uispielerleben, "rechts", spielergeld, SpielerErfahrungBerechnen(spielerlvl, spielerleben, spielerschaden, spielerruestungswert), spielererfahrung, spielerangriffswert, spielerverteidigung, spielermaxleben);
     return SpielerGegner;
   }
 
@@ -217,6 +219,7 @@ include("funktionen.php");
     }
     spielerdaten[0]["lvl"] = Spieler.lvl;
     spielerdaten[0]["angriff"] = Spieler.angriffswert;
+    spielerdaten[0]["verteidigung"] = Spieler.verteidigung;
     spielerdaten[0]["maxleben"] = Spieler.maxleben;
 
     if (spielerdaten[0]["leben"] == 0 && spielerdaten[0]["geld"] == 0) {
@@ -226,6 +229,7 @@ include("funktionen.php");
       spielerdaten[0]["geld"] = 6;
       spielerdaten[0]["lvl"] = 1;
       spielerdaten[0]["angriff"] = 1;
+      spielerdaten[0]["verteidigung"] = 0;
       spielerdaten[0]["maxleben"] = 3;
       spielerdaten[0]["waffenid"] = 0;
       spielerdaten[0]["ruestungsid"] = 0;
@@ -241,6 +245,7 @@ include("funktionen.php");
     }
     spielergegnerdaten[0]["lvl"] = Gegner.lvl;
     spielergegnerdaten[0]["angriff"] = Gegner.angriffswert;
+    spielergegnerdaten[0]["verteidigung"] = Gegner.verteidigung;
     spielergegnerdaten[0]["maxleben"] = Gegner.maxleben;
 
     if (spielergegnerdaten[0]["leben"] == 0 && spielergegnerdaten[0]["geld"] == 0) {
@@ -250,6 +255,7 @@ include("funktionen.php");
       spielergegnerdaten[0]["geld"] = 6;
       spielergegnerdaten[0]["lvl"] = 1;
       spielergegnerdaten[0]["angriff"] = 1;
+      spielergegnerdaten[0]["verteidigung"] = 0;
       spielergegnerdaten[0]["maxleben"] = 3;
       spielergegnerdaten[0]["waffenid"] = 0;
       spielergegnerdaten[0]["ruestungsid"] = 0;

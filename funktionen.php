@@ -51,7 +51,7 @@ if (isset($_FILES["bildhochladen"]) && $_FILES["bildhochladen"]["size"] > 0) {
 	$newClass->Bildaendern($connection, "/Spieleravatare/" . $filename . $fileextension, $_SESSION["Spieler"]);
 	// Logging
 	$newClass->Logging($connection, 'Bild ' . $filename . $fileextension . ' hochgeladen');
-	header('location: rpg.php');
+	header('location: einstellungen.php');
 }
 
 //Bild löschen  ---------------------------------------------------------------------------------------------
@@ -121,11 +121,12 @@ if (isset($_POST["spielerdaten"]) && isset($_POST["spielergegnerdaten"])) {
 	$spielername = json_encode($spieler[0]["spielername"]);
 	$spielername = str_replace('"', "", $spielername);
 	$spielerangriff = json_encode($spieler[0]["angriff"]);
+	$spielerverteidigung = json_encode($spieler[0]["verteidigung"]);
 	$spielermaxleben = json_encode($spieler[0]["maxleben"]);
 	$spielerwaffenid = json_encode($spieler[0]["waffenid"]);
 	$spielerruestungsid = json_encode($spieler[0]["ruestungsid"]);
 	$sperre = 0;
-	$newClass->SpielerStatsSchreiben($connection, $lvl, $erfahrung, $geld, $leben, $spielerangriff, $spielermaxleben, $spielerwaffenid, $spielerruestungsid, $spielername);
+	$newClass->SpielerStatsSchreiben($connection, $lvl, $erfahrung, $geld, $leben, $spielerangriff, $spielerverteidigung, $spielermaxleben, $spielerwaffenid, $spielerruestungsid, $spielername);
 
 	$spielergegner = (json_decode($_POST["spielergegnerdaten"], true));
 	$lvl = json_encode($spielergegner[0]["lvl"]);
@@ -135,11 +136,12 @@ if (isset($_POST["spielerdaten"]) && isset($_POST["spielergegnerdaten"])) {
 	$spielergegnername = json_encode($spielergegner[0]["spielername"]);
 	$spielergegnername = str_replace('"', "", $spielergegnername);
 	$spielergegnerangriff = json_encode($spielergegner[0]["angriff"]);
+	$spielergegnerverteidigung = json_encode($spielergegner[0]["verteidigung"]);
 	$spielergegnermaxleben = json_encode($spielergegner[0]["maxleben"]);
 	$spielergegnerwaffenid = json_encode($spielergegner[0]["waffenid"]);
 	$spielergegnerruestungsid = json_encode($spielergegner[0]["ruestungsid"]);
 	$sperre = 0;
-	$newClass->SpielerStatsSchreiben($connection, $lvl, $erfahrung, $geld, $leben, $spielergegnerangriff, $spielergegnermaxleben, $spielergegnerwaffenid, $spielergegnerruestungsid, $spielergegnername);
+	$newClass->SpielerStatsSchreiben($connection, $lvl, $erfahrung, $geld, $leben, $spielergegnerangriff, $spielergegnerverteidigung, $spielergegnermaxleben, $spielergegnerwaffenid, $spielergegnerruestungsid, $spielergegnername);
 
 	// Nach Kampf entsperren
 	$sperre = 0;
@@ -159,11 +161,12 @@ if (isset($_POST["spielerdaten"]) && isset($_POST["gegnerdaten"])) {
 	$spielername = json_encode($spieler[0]["spielername"]);
 	$spielername = str_replace('"', "", $spielername);
 	$spielerangriff = json_encode($spieler[0]["angriff"]);
+	$spielerverteidigung = json_encode($spieler[0]["verteidigung"]);
 	$spielermaxleben = json_encode($spieler[0]["maxleben"]);
 	$spielerwaffenid = json_encode($spieler[0]["waffenid"]);
 	$spielerruestungsid = json_encode($spieler[0]["ruestungsid"]);
 	$sperre = 0;
-	$newClass->SpielerStatsSchreiben($connection, $lvl, $erfahrung, $geld, $leben, $spielerangriff, $spielermaxleben, $spielerwaffenid, $spielerruestungsid, $spielername);
+	$newClass->SpielerStatsSchreiben($connection, $lvl, $erfahrung, $geld, $leben, $spielerangriff, $spielerverteidigung, $spielermaxleben, $spielerwaffenid, $spielerruestungsid, $spielername);
 	if ($leben == 0 && $geld == 0) {
 		$_SESSION["tot"] = true;
 		header('location: tot.php');
@@ -336,6 +339,7 @@ class DBAktionen
 			$row_array['leben'] = $row['leben'];
 			$row_array['maxleben'] = $row['maxleben'];
 			$row_array['angriff'] = $row['angriff'];
+			$row_array['verteidigung'] = $row['verteidigung'];
 			$row_array['waffenwert'] = $this->SpielerWaffenStatsLesen($connection, "waffenwert", $row['waffenid']);
 			$row_array['waffenbildpfad'] = $this->SpielerWaffenStatsLesen($connection, "waffenbildpfad", $row['waffenid']);
 			$row_array['ruestungswert'] = $this->SpielerRuestungsStatsLesen($connection, "ruestungswert", $row['ruestungsid']);
@@ -388,10 +392,10 @@ class DBAktionen
 	}
 
 	// Zurückgegebene Spieler Kampfstats in die DB schreiben
-	function SpielerStatsSchreiben($connection, $lvl, $erfahrung, $geld, $leben, $spielerangriff, $spielermaxleben, $waffenid, $ruestungsid, $spielername)
+	function SpielerStatsSchreiben($connection, $lvl, $erfahrung, $geld, $leben, $spielerangriff, $spielerverteidigung, $spielermaxleben, $waffenid, $ruestungsid, $spielername)
 	{
-		$update = $connection->prepare("UPDATE spieler SET lvl=?,erfahrung=?,geld=?,leben=?,angriff=?,maxleben=?,waffenid=?,ruestungsid=? WHERE spielername=?");
-		$update->bind_param("iiiiiiiis", $lvl, $erfahrung, $geld, $leben, $spielerangriff, $spielermaxleben, $waffenid, $ruestungsid, $spielername);
+		$update = $connection->prepare("UPDATE spieler SET lvl=?,erfahrung=?,geld=?,leben=?,angriff=?,verteidigung=?,maxleben=?,waffenid=?,ruestungsid=? WHERE spielername=?");
+		$update->bind_param("iiiiiiiiis", $lvl, $erfahrung, $geld, $leben, $spielerangriff, $spielerverteidigung, $spielermaxleben, $waffenid, $ruestungsid, $spielername);
 		$update->execute();
 		$update->close();
 	}
@@ -822,7 +826,7 @@ class DBAktionen
 			while ($row = $result->fetch_array()) {
 				$id = $row['id'];
 				$insert = $connection->prepare("INSERT INTO `nachrichten` (spielerid,nachrichtentext,absender) VALUES (?,?,?)");
-				$insert->bind_param("sss", $id, $nachrichtentext, $absender);
+				$insert->bind_param("sss", $nachrichtentext, $absender);
 				$insert->execute();
 				$insert->close();
 			}
@@ -856,7 +860,7 @@ class DBAktionen
 		$result = $select->get_result();
 		while ($row = $result->fetch_array()) {
 			echo "
-			<p>" . $row["erstellt"] . " : " . $row["absender"] . " : " . $row["nachrichtentext"] . "
+			<p>" . $row["erstellt"] . " : " . $row["absender"] . " : " . htmlentities($row["nachrichtentext"], ENT_QUOTES, "UTF-8") . "
 			<img id=\"nachrichtloeschen\" src=/Bilder/Mülltonne.png onclick=\"NachrichtLoeschen(" . $row["id"] . ");\">
 			";
 		}
