@@ -24,7 +24,7 @@ include("funktionen.php");
                 <img class="Spielerbild" src="<?php echo $newClass->SpielerLesen($connection, "spielerbildpfad", $_SESSION["Spieler"]) ?>">
                 <img id="LvLPlakette" class="Plakette" src="/Bilder/LvL_Plakette.png" />
                 <div class="LvL">
-                    <p><?php echo $newClass->SpielerLesen($connection, "lvl", $_SESSION["Spieler"]) ?></p>
+                    <p><?php echo $newClass->SpielerLesen($connection, "lvl", $_SESSION["Spieler"]) ?></p><br>
                 </div>
                 <div class="Bildupload">
                     <form id="inputform" action="./funktionen.php" method="POST" enctype="multipart/form-data">
@@ -39,6 +39,7 @@ include("funktionen.php");
                         </button>
                     </form>
                 </div>
+                <p id="spielername"><?php echo $_SESSION["Spieler"]; ?></p>
             </div>
             <div class="Ausruestung">
                 <div class="RuestungContainer">
@@ -59,7 +60,7 @@ include("funktionen.php");
                 </div>
             </div>
             <div class="Stats">
-                <p id="spielername"><?php echo $_SESSION["Spieler"]; ?></p><br>
+                <p id="Titel">Kein Titel</p><br>
                 <img src="Bilder/Leben.png">
                 <label>Leben</label>
                 <p id="leben"><?php echo $newClass->SpielerLesen($connection, "leben", $_SESSION["Spieler"]) ?>&nbspvon&nbsp<?php echo $newClass->SpielerLesen($connection, "maxleben", $_SESSION["Spieler"]) ?> </p><br>
@@ -71,14 +72,7 @@ include("funktionen.php");
                     <p id="geld"><?php echo $newClass->SpielerLesen($connection, "geld", $_SESSION["Spieler"]) ?></p>
                     <img src="Bilder/Geld.png">
                 </div>
-                <div class="form">
-                    <form action="/login.php" method="POST">
-                        <input type="hidden" name="action" value="Ausloggen" />
-                        <input type="submit" class="Auslogbutton" value="" onclick="PlaySound();" />
-                    </form>
-                </div>
             </div>
-            <a class="Einstellungen" href="/einstellungen.php" onclick="PlaySound();"><img src="/Bilder/Einstellungen.png"></a>
         </div>
     </div>
 

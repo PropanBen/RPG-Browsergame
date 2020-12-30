@@ -26,19 +26,6 @@ include("funktionen.php");
                     <div class="LvL">
                         <p><?php echo $newClass->SpielerLesen($connection, "lvl", $_SESSION["Spieler"]) ?></p><br>
                     </div>
-                    <div class="Bildupload">
-                        <form id="inputform" action="./funktionen.php" method="POST" enctype="multipart/form-data">
-                            <!-- 3,5 mb maximal dateigröße -->
-                            <input type="hidden" name="MAX_FILE_SIZE" value="5000000" />
-                            <label>Bild</label><br>
-                            <label for="bild-hochladen" class="Angepasster-Input">Upload</label><br>
-                            <input id="bild-hochladen" type="file" name="bildhochladen" onclick="PlaySound();" />
-                            <input id="subbtn" class="Avatarbutton" type="image" src="/Bilder/Haken.png" onclick="PlaySound();" />
-                            <button type="reset" style="border: 0; background: transparent" onclick="PlaySound();">
-                                <img class="Avatarbutton" src="/Bilder/X.png" />
-                            </button>
-                        </form>
-                    </div>
                     <p id="spielername"><?php echo $_SESSION["Spieler"]; ?></p>
                 </div>
                 <div class="Ausruestung">
@@ -50,7 +37,7 @@ include("funktionen.php");
                         </div>
                         <div class="Ruestungsname"><?php $newClass->BildLesen($connection, "ruestungsname", "ruestung", "ruestungsid", $_SESSION["Spieler"]); ?></div>
                     </div>
-                    <div class="WaffenCont">
+                    <div class="WaffenContainter">
                         <img class="Waffenbild" src="<?php $newClass->BildLesen($connection, "waffenbildpfad", "waffen", "waffenid", $_SESSION["Spieler"]); ?>" width="40" height="40">
                         <img id="RuestungsPlakette" class="Plakette" src="/Bilder/LvL_Plakette.png" />
                         <div class="waffenwert">
@@ -73,60 +60,69 @@ include("funktionen.php");
                         <img src="Bilder/Geld.png">
                     </div>
                 </div>
-                <div class="Navigationsleiste">
+            </div>
+            <div class="Navigationsleiste">
 
-                    <div class="NavigationItem">
-                        <div id="Nachrichten">
-                            <img src="/Bilder/Schriftrolle.png">
-                            <div id="Schriftrolle" onclick="PopUp();">
-                                <p><?php echo $newClass->AnzahlNachrichtenLesen($connection) ?></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="NavigationItem">
-                        <a class="Einstellungen" href="/einstellungen.php" onclick="PlaySound();"><img src="/Bilder/Einstellungen.png"></a>
-                    </div>
-                    <div class="NavigationItem">
-                        <div class="form">
-                            <form action="/login.php" method="POST">
-                                <input type="hidden" name="action" value="Ausloggen" />
-                                <input type="submit" class="Auslogbutton" value="" onclick="PlaySound();" />
-                            </form>
+                <div class="NavigationItem">
+                    <a href="/spieleruebersicht.php"> <img src="/Bilder/Spieleruebersicht.png"></a>
+                </div>
+                <div class="NavigationItem">
+                    <div id="Nachrichten">
+                        <img src="/Bilder/Schriftrolle.png">
+                        <div id="Schriftrolle" onclick="PopUp();">
+                            <p><?php echo $newClass->AnzahlNachrichtenLesen($connection) ?></p>
                         </div>
                     </div>
                 </div>
-
-            </div>
-
-            <div class="SpielerlisteContainer">
-                <p>Spieleruebersicht</p>
-                <div class="Spielerliste">
-                    <p><?php $newClass->AlleSpielerLesen($connection) ?></p>
+                <div class="NavigationItem">
+                    <a class="Einstellungen" href="/einstellungen.php" onclick="PlaySound();"><img src="/Bilder/Einstellungen.png"></a>
                 </div>
-                <div class="admin"> <?php $newClass->AdminEinblenden($connection); ?> <?php $newClass->LogEinblenden($connection); ?> </div>
-            </div>
-            <div class="MarktplatzContainer">
-                <p class="Beschriftung">Marktplatz</p>
-                <div class="Aktionsbilder">
-                    <a href="/marktplatz.php" onclick="PlaySound();"><img src="Bilder/Marktplatzbutton.png" /></a>
+                <div class="NavigationItem">
+                    <div class="form">
+                        <form action="/login.php" method="POST">
+                            <input type="hidden" name="action" value="Ausloggen" />
+                            <input type="submit" class="Auslogbutton" value="" onclick="PlaySound();" />
+                        </form>
+                    </div>
                 </div>
             </div>
 
-            <div class="PVPKampfContainer">
-                <p class="Beschriftung">PVP Kampf</p><br>
-                <div class="Aktionsbilder">
-                    <a href="/spielergegner.php" onclick="PlaySound();"><img src="Bilder/PVP.png" /></a>
+            <div class="Menu">
+                <div class="MarktplatzContainer">
+                    <p class="Beschriftung">Geheim</p>
+                    <div class="Aktionsbilder">
+                        <a href="/rpg.php" onclick="PlaySound();"><img src="Bilder/HolzTextButtonNichtverfuegbar.png" /></a>
+                    </div>
                 </div>
-            </div>
-            <div class="PVEKampfContainer">
-                <p class="Beschriftung">PVE Kampf</p><br>
-                <div class="Aktionsbilder">
-                    <a href="/themen.php" onclick="PlaySound();"><img src="Bilder/PVE.png" /></a><br><br>
+                <div class="MarktplatzContainer">
+                    <p class="Beschriftung">Geheim</p>
+                    <div class="Aktionsbilder">
+                        <a href="/rpg.php" onclick="PlaySound();"><img src="Bilder/HolzTextButtonNichtverfuegbar.png" /></a>
+                    </div>
+                </div>
+                <div class="MarktplatzContainer">
+                    <p class="Beschriftung">Marktplatz</p>
+                    <div class="Aktionsbilder">
+                        <a href="/marktplatz.php" onclick="PlaySound();"><img src="Bilder/Marktplatzbutton.png" /></a>
+                    </div>
+                </div>
+
+                <div class="PVPKampfContainer">
+                    <p class="Beschriftung">PVP Kampf</p><br>
+                    <div class="Aktionsbilder">
+                        <a href="/spielergegner.php" onclick="PlaySound();"><img src="Bilder/PVP.png" /></a>
+                    </div>
+                </div>
+                <div class="PVEKampfContainer">
+                    <p class="Beschriftung">PVE Kampf</p><br>
+                    <div class="Aktionsbilder">
+                        <a href="/themen.php" onclick="PlaySound();"><img src="Bilder/PVE.png" /></a><br><br>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="SzenenContainer">
-            <img class="Szenenbild" src="Bilder/Szene.png">
+            <img class="Szenenbild" src="Bilder/SzeneMap.png">
         </div>
     </div>
     <div id="Nachrichtenfenster">
@@ -183,8 +179,8 @@ include("funktionen.php");
         }
         var audio = new Audio('/Audio/tap.wav');
         audio.play();
-        $("#Nachricht").load(location.href + "/einstellungen.php #Nachricht");
-        $("#Schriftrolle").load(location.href + "/einstellungen.php #Schriftrolle");
+        $("#Nachricht").load(location.href + "/einstellungen.php #Nachricht>*");
+        $("#Schriftrolle").load(location.href + "/einstellungen.php #Schriftrolle >*");
     }
 
     // Nachrichten Senden

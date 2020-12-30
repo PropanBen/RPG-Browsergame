@@ -39,6 +39,7 @@ body
 	margin:0;
 	font-family: "PerryGothic";
 	position: absolute;
+	font-size: 14px;
 }
 .inputinvalid
 {
@@ -191,12 +192,13 @@ footer a
 }
 .Navigation
 {
-    max-width: 500px;
-	height: 90%;
+    width: 500px;
+	height: auto;
 	margin-left:1%;
 	margin-top: auto;
 	margin-bottom: auto;
-	flex:1;
+	display: flex;
+	flex-direction: column;
 	border: 3px solid rgb(0, 0, 0);
 	border-radius:10px;
 	background-color: burlywood;
@@ -204,8 +206,7 @@ footer a
 .SzenenContainer
 {
 	width: calc(100% - 560px);	
-	height: 90%;
-	border: 1px outset rgb(0, 0, 0);
+	height: 75%;
 	margin-top: auto;
 	margin-bottom: auto;
 	margin-left:10px;
@@ -214,31 +215,32 @@ footer a
 }
 .Szenenbild
 {
-    width: 100%;
+    width: 90%;
 	height: 100%;
 	object-fit: fill;
+	border-radius:10px;
 }
 .SpielerInfoContainer
 {
 	width: 100%;
 	height: auto;
-	margin-left:0;
-	margin-right:auto;
 	display:flex;	
 	position: relative;
-	border-top-left-radius :7px ;
-	border-top-right-radius :7px ;
+    border-radius: 10px;
 	flex-direction:column;
+	align-items:center;
+	justify-content:center;
 	background-color: burlywood;
 }
 .Avatarbild
 {   
 	width:200px;
-	height:auto;
-	margin-top: 1%;
-	margin-left:1%;
+	height:100px;
+	margin-left: auto;
+	margin-right: auto;
 	position: relative; 
 	background-color: burlywood;
+	display: block;
 }
 .LvL
 {
@@ -259,9 +261,20 @@ footer a
 }
 .Spielerbildrahmen
 {
-	widows: 80px;
+	width: 80px;
 	height:80px;
-	position: absolute; 
+	margin-left: auto;
+	margin-right:auto;
+	position: relative;
+	z-index:1;
+}
+.Spielerbildrahmen img
+{
+	width: 80px;
+	height:80px;
+	margin-left: auto;
+	margin-right:auto;
+	position: relative;
 	z-index:1;
 }
 .Spielerbild
@@ -273,7 +286,7 @@ footer a
 }
 #LvLPlakette
 {
-	position: absolute;
+	position: relative;
 	bottom:40px;
 	left:20px;
 }
@@ -320,13 +333,9 @@ footer a
 }
 .Ausruestung
 {
-	width: 200px;
+	width: 250px;
 	height: 150px;
-	top:0%;
-	right:0%;
-	margin-right: 5%;
-	margin-top: 1%;
-	position: absolute;
+	position: relative;
 	display: flex;
 	flex-direction: column;
 }
@@ -363,7 +372,7 @@ footer a
 	width:30px;
 	height:30px;
 	display: flex;
-	position: absolute;
+	position: relative;
 	z-index:3;
 	justify-content: center;
 	vertical-align: auto;
@@ -374,7 +383,7 @@ footer a
 }
 #Schriftrolle
 {
-	bottom:10px;
+	bottom:30px;
 }
 .ruestungswert
 {
@@ -430,6 +439,7 @@ align-items: center;
 	width: auto;
 	height:50px;
 	display:flex;
+	top: 0px;
 	align-items: center;
 	justify-content: center;
 	flex-direction: row;	
@@ -440,6 +450,11 @@ align-items: center;
 	height: auto;
 	margin-left:20px;
 	display: block;
+}
+.NavigationItem img
+{
+   width:30px;
+   height:30px;
 }
 #geldcontainer
 {
@@ -469,16 +484,21 @@ align-items: center;
 	height:30px;
 }
 
+
+
+
 .SpielerlisteContainer
 {
-	width: 100%;
-	height: 30%;
-	margin-left:0;
+	width: 90%;
+	height: 80%;
+	margin-left:auto;
 	margin-right:auto;
 	display:flex;	
 	position: relative;
 	flex-direction:column;
 	background-color: burlywood;
+	border:1px solid black;
+	border-radius:10px;
 }
 .SpielerlisteContainer p
 {
@@ -498,14 +518,24 @@ align-items: center;
 }
 .Spielerliste
 {
+	width: 100%;
+	height: 85%;
 	overflow-y: scroll;
 	z-index: 1;
 }
 
+.Menu
+{
+	width: 100%;
+	height:100%;
+	display: flex;
+	flex-direction: column;
+	position: relative;
+}
 .MarktplatzContainer
 {
 	width: 100%;
-	height: 10%;
+	height: 20%;
 	margin-left:auto;
 	margin-right:auto;
 	display:flex;	
@@ -524,7 +554,7 @@ align-items: center;
 .Aktionsbilder img
 {
     width: 100%;
-	height: 100%;
+	height: auto;
 	object-fit: fill;
 }
 .Beschriftung
@@ -535,7 +565,7 @@ font-size: 24;
 .PVPKampfContainer
 {
 	width: 100%;
-	height: 10%;
+	height: 20%;
 	margin-left:auto;
 	margin-right:auto;
 	display:flex;	
@@ -546,7 +576,7 @@ font-size: 24;
 .PVEKampfContainer
 {
 	width: 100%;
-	height: 15%;
+	height: 20%;
 	margin-left:auto;
 	margin-right:auto;
 	display:flex;	

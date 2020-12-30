@@ -307,7 +307,7 @@ include("funktionen.php");
     var xhttp = new XMLHttpRequest();
     xhttp.open("POST", "funktionen.php", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send("benachrichtigung=true?gewinner=" + gewinner + "&verlierer=" + verlierer + "&verdienst=" + verdienst + "&verlust=" + verlust + "&erfahrung=" + erfahrung + "");
+    xhttp.send("benachrichtigung=true&gewinner=" + gewinner + "&verlierer=" + verlierer + "&verdienst=" + verdienst + "&verlust=" + verlust + "&erfahrung=" + erfahrung + "");
   }
 </script>
 

@@ -168,21 +168,10 @@ label
 }   
 .Navigation 
 {
-    max-width: 95%;
+    width: 300px;
     margin-left:auto;
 	margin-right:auto;
 
-}
-.PVEKampfContainer
-{
-    height:17%;
-}
-
-.Ausruestung
-{
-    width: 140px;
-    margin-right:1%;
-    
 }
 .Stats p
 {
@@ -206,8 +195,15 @@ label
 }
 .waffenwert
 {
-    bottom:47px;
+    bottom:37px;
     left:41px;
+    position: relative;
+}
+.Waffenname
+{
+    bottom:37px;
+    left:0px;
+    position: relative; 
 }
 #leben
 {
@@ -229,6 +225,7 @@ label
 {
     font-size: 16px;
 }
+
 /* Ende rpg.php    */
 
 /* Start Marktplatz.php    */

@@ -8,12 +8,15 @@ if (!isset($_SESSION["Spieler"])) {
 	header('location: index.php');
 }
 
-// PVP Kampf verloren Benachrichtigung
+// PVP Kampf Benachrichtigung
 if (isset($_POST["benachrichtigung"])) {
 
-	$spielerid = $newClass->SpielerIDNameLesen($connection, $_POST["verlierer"]);
-	$nachrichtentext = "Du hast gegen " . $_POST["gewinner"] . " im PVP verloren und verlierst " . $_POST["verlust"] . "";
-	$newClass->NachrichtenAnnehmen($connection, $id, $nachrichtentext, $_POST["gewinner"]);
+	$verliererid = $newClass->SpielerIDNameLesen($connection, $_POST["verlierer"]);
+	$gewinnerid = $newClass->SpielerIDNameLesen($connection, $_POST["gewinner"]);
+	$nachrichtentext = "Du hast gegen mich im PVP verloren. Ich erbeute " . $_POST["verdienst"] . " Geld und " . $_POST["erfahrung"] . " EXP von dir";
+	$nachrichtentext2 = "Du hast gegen " . $_POST["verlierer"] . " im PVP gewonnen und gewinnst " . $_POST["verlust"] . " Geld und " . $_POST["erfahrung"] . " EXP";
+	$newClass->NachrichtenAnnehmen($connection, $verliererid, $nachrichtentext, $_POST["gewinner"]);
+	$newClass->NachrichtenAnnehmen($connection, $gewinnerid, $nachrichtentext2, $_POST["verlierer"]);
 }
 
 // Nachricht löschen
@@ -276,7 +279,7 @@ if (isset($_POST["trankhochladen"])) {
 // Logging Kampf
 if (
 	isset($_POST["gewinner"]) && isset($_POST["verlierer"]) && isset($_POST["verdienst"])
-	&& isset($_POST["verlust"]) && isset($_POST["erfahrung"])
+	&& isset($_POST["verlust"]) && isset($_POST["erfahrung"]) && !isset($_POST["benachrichtigung"])
 ) {
 
 	$ereignis = "" . $_POST["gewinner"] . " gewinnt gegen " . $_POST["verlierer"] . " +" . $_POST["verdienst"] . " G +" . $_POST["erfahrung"] . " EXP ";
@@ -286,6 +289,8 @@ if (
 if (isset($_POST["gewinner"]) && isset($_POST["lvl"])) {
 	$ereignis = "" . $_POST["gewinner"] . " ist jetzt LvL " . $_POST["lvl"] . "";
 	$newClass->Logging($connection, $ereignis);
+	$ereignis = "Ist jetzt LvL " . $_POST["lvl"] . "";
+	$newClass->NachrichtenAnnehmen($connection, "alle", $ereignis, $_POST["gewinner"]);
 }
 
 class DBAktionen
