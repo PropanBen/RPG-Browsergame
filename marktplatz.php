@@ -102,7 +102,7 @@ if (!isset($_SESSION["Spieler"])) {
     <div class="WaffenContainer">
         <p class="Überschrift">Heilstube</p>
         <div class="Waffenliste">
-            <p><?php $newClass->AlleTraenkeLesen($connection) ?></p>
+            <?php $newClass->AlleTraenkeLesen($connection) ?>
         </div>
     </div>
     <div class="WaffenContainer">
@@ -115,7 +115,7 @@ if (!isset($_SESSION["Spieler"])) {
     <div class="WaffenContainer">
         <p class="Überschrift">Rüstungsschmied</p>
         <div class="Waffenliste">
-            <p><?php $newClass->AlleRüstungenLesen($connection) ?></p>
+            <?php $newClass->AlleRüstungenLesen($connection) ?>
         </div>
     </div>
     <br>

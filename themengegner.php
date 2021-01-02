@@ -20,7 +20,7 @@ include("funktionen.php");
     <div class="WaffenContainer">
         <p class="Überschrift">Gegneruebersicht</p>
         <div class="Waffenliste">
-            <p><?php $newClass->ThemenGegnerAnzeigen($connection, $_POST["themenname"]) ?></p>
+            <?php $newClass->ThemenGegnerAnzeigen($connection, $_POST["themenname"]) ?>
         </div>
     </div>
 

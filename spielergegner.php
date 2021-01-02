@@ -86,7 +86,7 @@ include("funktionen.php");
     <div class="WaffenContainer">
         <p class="Überschrift">Spieleruebersicht</p>
         <div class="Waffenliste">
-            <p><?php $newClass->AlleSpielerKampf($connection) ?></p>
+            <?php $newClass->AlleSpielerKampf($connection) ?>
         </div>
     </div>
 </body>

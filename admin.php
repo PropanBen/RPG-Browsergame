@@ -120,6 +120,10 @@ if ($admin === false)
 			<input id="trankwert" type="text" name="trankwert"><br><br>
 			<span>Trankwert Permanent</span><br>
 			<input id="trankwertpermanent" type="text" name="trankwertpermanent"><br><br>
+			<span>Trankwert Verteidigung</span><br>
+			<input id="trankwertverteidigung" type="text" name="trankwertverteidigung"><br><br>
+			<span>Trankwert Angriff</span><br>
+			<input id="trankwertangriff" type="text" name="trankwertangriff"><br><br>
 			<span>Kosten</span><br>
 			<input id="trankgeld" type="text" name="trankgeldwert"><br><br>
 			<span>Trankbildbild hochladen</span><br>

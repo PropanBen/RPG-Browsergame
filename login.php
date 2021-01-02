@@ -8,28 +8,46 @@ $newLoginClass = new DBLoginAktionen();
 // Namensänderung
 if (isset($_POST["action"]) && $_POST["action"] === "nameaendern" && isset($_POST["neuername"])) {
 
-    $select = $connection->prepare("SELECT id FROM konto WHERE benutzername = ? ");
-    $select->bind_param("s", $_SESSION["Spieler"]);
-    $select->execute();
-    $result = $select->get_result();
-    $row = $result->fetch_assoc();
+    $select2 = $connection->prepare("SELECT benutzername FROM konto WHERE benutzername = ? ");
+    $select2->bind_param("s", $_POST["neuername"]);
+    $select2->execute();
+    $result2 = $select2->get_result();
+    $row2 = $result2->fetch_assoc();
 
-    if ($result->num_rows == 1 && preg_match("^[a-zA-Z]{3,16}^", $_POST["neuername"])) {
-        $update = $connection->prepare("UPDATE spieler SET spielername=? WHERE kontoid=?");
-        $update->bind_param("ss", $_POST["neuername"], $row["id"]);
-        $update->execute();
-        $update->close();
+    if ($row2["benutzername"] !== $_POST["neuername"]) {
+        $select = $connection->prepare("SELECT id FROM konto WHERE benutzername = ? ");
+        $select->bind_param("s", $_SESSION["Spieler"]);
+        $select->execute();
+        $result = $select->get_result();
+        $row = $result->fetch_assoc();
 
-        $update = $connection->prepare("UPDATE konto SET benutzername=? WHERE id=?");
-        $update->bind_param("ss", $_POST["neuername"], $row["id"]);
-        $update->execute();
-        $update->close();
-        $_SESSION["Erfolg"] = "Geaendert";
-        $_SESSION["Spieler"] = $_POST["neuername"];
-        header('location: einstellungen.php');
+        $select2 = $connection->prepare("SELECT benutzername FROM konto WHERE benutzername = ? ");
+        $select2->bind_param("s", $_POST["neuername"]);
+        $select2->execute();
+        $result2 = $select2->get_result();
+        $row2 = $result2->fetch_assoc();
+
+        if ($result->num_rows == 1 && preg_match("^[a-zA-Z]{3,16}^", $_POST["neuername"])) {
+            $update = $connection->prepare("UPDATE spieler SET spielername=? WHERE kontoid=?");
+            $update->bind_param("ss", $_POST["neuername"], $row["id"]);
+            $update->execute();
+            $update->close();
+
+            $update = $connection->prepare("UPDATE konto SET benutzername=? WHERE id=?");
+            $update->bind_param("ss", $_POST["neuername"], $row["id"]);
+            $update->execute();
+            $update->close();
+            $_SESSION["Erfolgname"] = "Geaendert";
+            $_SESSION["Spieler"] = $_POST["neuername"];
+            header('location: einstellungen.php');
+        } else {
+
+            $_SESSION["Erfolgname"] = "Bereits vorhanden";
+            $_SESSION["Erfolg"] = "negativ";
+            header('location: einstellungen.php');
+        }
     } else {
-
-        $_SESSION["Erfolg"] = "negativ";
+        $_SESSION["Erfolgname"] = "Bereits vorhanden";
         header('location: einstellungen.php');
     }
 }
@@ -346,7 +364,7 @@ class DBLoginAktionen
             while ($row = $result->fetch_array()) {
                 $id = $row['id'];
                 $insert = $connection->prepare("INSERT INTO `nachrichten` (spielerid,nachrichtentext,absender) VALUES (?,?,?)");
-                $insert->bind_param("sss", $nachrichtentext, $absender);
+                $insert->bind_param("iss", $id, $nachrichtentext, $absender);
                 $insert->execute();
                 $insert->close();
             }

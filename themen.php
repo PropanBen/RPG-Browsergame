@@ -21,7 +21,7 @@ include("funktionen.php");
     <div class="WaffenContainer">
         <p class="Überschrift">Themenuebersicht</p>
         <div class="Waffenliste">
-            <p><?php $newClass->ThemenAnzeigen($connection) ?></p>
+            <?php $newClass->ThemenAnzeigen($connection) ?>
         </div>
     </div>
 

@@ -70,10 +70,10 @@ include("funktionen.php");
                 <div class="Stats">
                     <img src="Bilder/Leben.png">
                     <label>Leben</label>
-                    <p id="leben"><?php echo $newClass->SpielerLesen($connection, "leben", $_SESSION["Spieler"]) ?>&nbspvon&nbsp<?php echo $newClass->SpielerLesen($connection, "maxleben", $_SESSION["Spieler"]) ?> </p><br>
+                    <p id="leben"><?php echo $newClass->SpielerLesen($connection, "leben", $_SESSION["Spieler"]) ?>&nbsp/&nbsp<?php echo $newClass->SpielerLesen($connection, "maxleben", $_SESSION["Spieler"]) ?> </p><br>
                     <img src="Bilder/XP.png">
                     <label>Erfahrung</label>
-                    <p id="erfahrung"><?php echo $newClass->SpielerLesen($connection, "erfahrung", $_SESSION["Spieler"]) ?>&nbspvon&nbsp<?php $newClass->MAXErfahrung($connection, $_SESSION["Spieler"]) ?></p>
+                    <p id="erfahrung"><?php echo $newClass->SpielerLesen($connection, "erfahrung", $_SESSION["Spieler"]) ?>&nbsp/&nbsp<?php $newClass->MAXErfahrung($connection, $_SESSION["Spieler"]) ?></p>
                     <div id="geldcontainer">
                         <label>Geld</label>
                         <p id="geld"><?php echo $newClass->SpielerLesen($connection, "geld", $_SESSION["Spieler"]) ?></p>
@@ -84,7 +84,7 @@ include("funktionen.php");
             <div class="Navigationsleiste">
 
                 <div class="NavigationItem">
-                    <a href="/spieleruebersicht.php"> <img src="/Bilder/Spieleruebersicht.png"></a>
+                    <a href="/spieleruebersicht.php" onclick="PlaySound();"> <img src="/Bilder/Spieleruebersicht.png"></a>
                 </div>
                 <div class="NavigationItem">
                     <div id="Nachrichten">
@@ -115,9 +115,9 @@ include("funktionen.php");
                     </div>
                 </div>
                 <div class="MarktplatzContainer">
-                    <p class="Beschriftung">Geheim</p>
+                    <p class="Beschriftung">Taverne</p>
                     <div class="Aktionsbilder">
-                        <a href="/rpg.php" onclick="PlaySound();"><img src="Bilder/HolzTextButtonNichtverfuegbar.png" /></a>
+                        <a href="/taverne.php" onclick="PlaySound();"><img src="Bilder/Tavernenschild.png" /></a>
                     </div>
                 </div>
                 <div class="MarktplatzContainer">

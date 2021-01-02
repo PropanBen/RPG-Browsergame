@@ -8,6 +8,60 @@ if (!isset($_SESSION["Spieler"])) {
 	header('location: index.php');
 }
 
+
+// Würfelspiel Geld abfragen
+if (isset($_POST["action"]) && $_POST["action"] === "spielergeldabfragen") {
+	$geld = $newClass->SpielerLesen($connection, "geld", $_SESSION["Spieler"]);
+	echo $geld;
+}
+
+// Einsatz annehmen und in DB schreiben
+if (isset($_POST["action"]) && $_POST["action"] === "spielereinsatz") {
+
+	$einsatz = $_POST["einsatz"];
+	$geld = $newClass->SpielerLesen($connection, "geld", $_SESSION["Spieler"]);
+
+	$geld = $geld - $einsatz;
+
+	$update = $connection->prepare("UPDATE spieler SET einsatz=?,geld=? WHERE id=?");
+	$update->bind_param("iii", $_POST["einsatz"], $geld, $_SESSION["Spielerid"]);
+	$update->execute();
+	$update->close();
+
+	echo $geld;
+}
+
+
+
+// Würfelspiel Ergebnis annehmen und in DB schreiben
+if (isset($_POST["action"]) && $_POST["action"] === "spielergebniswuerfeln") {
+	$einsatz = $newClass->SpielerLesen($connection, "einsatz", $_SESSION["Spieler"]);
+	$geld = $newClass->SpielerLesen($connection, "geld", $_SESSION["Spieler"]);
+
+	if ($_POST["ergebnis"] === "gewonnen") {
+		$geld += $einsatz * 2;
+		$newClass->Logging($connection, "Hat " . ($einsatz * 2) . " beim Würfeln gewonnen");
+	}
+	if ($_POST["ergebnis"] === "unentschieden") {
+		$geld += $einsatz;
+		$newClass->Logging($connection, "Hat " . ($einsatz) . " eingesetzt, Unentschieden");
+	}
+	if ($_POST["ergebnis"] === "verloren") {
+		$newClass->Logging($connection, "Hat " . ($einsatz) . " beim Würfeln verloren");
+	}
+
+	$einsatz = 0;
+	$update = $connection->prepare("UPDATE spieler SET geld=?,einsatz=? WHERE id=?");
+	$update->bind_param("iii", $geld, $einsatz, $_SESSION["Spielerid"]);
+	$update->execute();
+	$update->close();
+
+	$geld = $newClass->SpielerLesen($connection, "geld", $_SESSION["Spieler"]);
+
+	echo $geld;
+}
+
+
 // PVP Kampf Benachrichtigung
 if (isset($_POST["benachrichtigung"])) {
 
@@ -262,11 +316,13 @@ if (isset($_POST["ruestunghochladen"])) {
 }
 // Tränke
 if (isset($_POST["trankhochladen"])) {
-	$insert = $connection->prepare("INSERT INTO traenke (trankname, trankwert,trankwertpermanent,geldwert,trankbildpfad) VALUES (?,?,?,?,?)");
-	$insert->bind_param("siiis", $trankname, $trankwert, $trankwertpermanent, $geldwert, $pfad);
+	$insert = $connection->prepare("INSERT INTO traenke (trankname, trankwert,trankwertpermanent,trankwertverteidigung,trankwertangriff,geldwert,trankbildpfad) VALUES (?,?,?,?,?,?,?)");
+	$insert->bind_param("siiiiis", $trankname, $trankwert, $trankwertpermanent, $trankwertverteidigung, $trankwertangriff, $geldwert, $pfad);
 	$trankname = $_POST["trankname"];
 	$trankwert = $_POST["trankwert"];
 	$trankwertpermanent = $_POST["trankwertpermanent"];
+	$trankwertverteidigung = $_POST["trankwertverteidigung"];
+	$trankwertangriff = $_POST["trankwertangriff"];
 	$geldwert = $_POST["trankgeldwert"];
 	$tranknametrim = str_replace(" ", "", $trankname);
 	$pfad = "/Traenkebilder/" . $tranknametrim  . "" . date("Ymd") . time() . ".png";
@@ -493,10 +549,28 @@ class DBAktionen
 		$select = $connection->prepare("SELECT spielerbildpfad, spielername, lvl FROM spieler ORDER BY lvl DESC,spielername ASC");
 		$select->execute();
 		$result = $select->get_result();
+
+
 		while ($row = $result->fetch_array()) {
-			echo ("<img src=" . ($row['spielerbildpfad']) . "> &nbsp
+			$select2 = $connection->prepare("SELECT count(id) as Anzahl FROM log WHERE datum > DATE_SUB(NOW(), INTERVAL 5 MINUTE) AND spieler =? AND ereignis != \"Ausgeloggt\"
+			ORDER BY datum DESC");
+			$select2->bind_param("s", $row['spielername']);
+			$select2->execute();
+			$result2 = $select2->get_result();
+			$row2 = $result2->fetch_assoc();
+
+			if ($row2["Anzahl"] > 0) {
+				echo ("<img class=\"Online\" src=\"/Bilder/Online.png\">
+				<img class=\"SpielerlisteBilder\" src=" . ($row['spielerbildpfad']) . "> &nbsp
+				" . $row['spielername'] . "&nbsp lvl: &nbsp" . $row['lvl'] . "<br>");
+			} else {
+				echo ("
+				<img class=\"Online\" src=\"/Bilder/Offline.png\">
+				<img class=\"SpielerlisteBilder\" src=" . ($row['spielerbildpfad']) . "> &nbsp
 			" . $row['spielername'] . "&nbsp lvl: &nbsp" . $row['lvl'] . "<br>");
+			}
 		}
+		$select->close();
 	}
 	//SpielerKampf PVP ---------------------------------------------------------------------------------------------
 	function AlleSpielerKampf($connection)
@@ -573,15 +647,16 @@ class DBAktionen
 	function TränkeKaufen($connection, $id)
 	{
 		$geld = $this->SpielerLesen($connection, "geld", $_SESSION["Spieler"]);
-		$select = $connection->prepare("SELECT geldwert,trankname,trankwert,trankwertpermanent FROM traenke WHERE trankid =?");
+		$select = $connection->prepare("SELECT geldwert,trankname,trankwert,trankwertpermanent,trankwertverteidigung,trankwertangriff FROM traenke WHERE trankid =?");
 		$select->bind_param("i", $id);
 		$select->execute();
 		$result = $select->get_result();
 		$row = $result->fetch_assoc();
 		$kosten = $row["geldwert"];
 		$trankwert = $row["trankwert"];
-		$trankname = $row["trankname"];
 		$trankwertpermanent = $row["trankwertpermanent"];
+		$trankwertverteidigung = $row["trankwertverteidigung"];
+		$trankwertangriff = $row["trankwertangriff"];
 
 		$leben = $this->SpielerLesen($connection, "leben", $_SESSION["Spieler"]);
 		$maxleben = $this->SpielerLesen($connection, "maxleben", $_SESSION["Spieler"]);
@@ -592,8 +667,8 @@ class DBAktionen
 				$leben = $maxleben;
 			}
 			$neuesguthaben = $geld - $kosten;
-			$update = $connection->prepare("UPDATE spieler SET leben=?,maxleben=maxleben+?, geld=? WHERE spielername=?");
-			$update->bind_param("iiis", $leben, $trankwertpermanent, $neuesguthaben, $_SESSION["Spieler"]);
+			$update = $connection->prepare("UPDATE spieler SET leben=?,maxleben=maxleben+?,verteidigung=verteidigung+?,angriff=angriff+?, geld=? WHERE spielername=?");
+			$update->bind_param("iiiiis", $leben, $trankwertpermanent, $trankwertverteidigung, $trankwertangriff, $neuesguthaben, $_SESSION["Spieler"]);
 			$update->execute();
 		}
 		//$this->Logging($connection, "" . $trankname . " fuer " . $kosten . " Geld gekauft");
@@ -667,7 +742,7 @@ class DBAktionen
 	function AlleTraenkeLesen($connection)
 	{
 		$geld = $this->SpielerLesen($connection, "geld", $_SESSION["Spieler"]);
-		$select = $connection->prepare("SELECT trankbildpfad, trankid, trankname, trankwert,trankwertpermanent, geldwert FROM traenke ORDER BY geldwert ASC");
+		$select = $connection->prepare("SELECT trankbildpfad, trankid, trankname, trankwert,trankwertpermanent,trankwertverteidigung,trankwertangriff, geldwert FROM traenke ORDER BY geldwert ASC");
 		$select->execute();
 		$result = $select->get_result();
 		while ($row = $result->fetch_array()) {
@@ -678,6 +753,14 @@ class DBAktionen
 			if ($row['trankwertpermanent'] > 0) {
 				$typ = "Permanent";
 				$value = $row['trankwertpermanent'];
+			}
+			if ($row['trankwertverteidigung'] > 0) {
+				$typ = "Verteidigung";
+				$value = $row['trankwertverteidigung'];
+			}
+			if ($row['trankwertangriff'] > 0) {
+				$typ = "Angriff";
+				$value = $row['trankwertangriff'];
 			}
 
 			if ($geld >= $row['geldwert']) {
@@ -826,7 +909,7 @@ class DBAktionen
 			while ($row = $result->fetch_array()) {
 				$id = $row['id'];
 				$insert = $connection->prepare("INSERT INTO `nachrichten` (spielerid,nachrichtentext,absender) VALUES (?,?,?)");
-				$insert->bind_param("sss", $nachrichtentext, $absender);
+				$insert->bind_param("iss", $id, $nachrichtentext, $absender);
 				$insert->execute();
 				$insert->close();
 			}
@@ -854,7 +937,7 @@ class DBAktionen
 
 	function NachrichtenAnzeigen($connection)
 	{
-		$select = $connection->prepare("SELECT id,erstellt, nachrichtentext,absender FROM nachrichten WHERE spielerid =?");
+		$select = $connection->prepare("SELECT id,erstellt, nachrichtentext,absender FROM nachrichten WHERE spielerid =? ORDER BY erstellt");
 		$select->bind_param("i", $_SESSION["Spielerid"]);
 		$select->execute();
 		$result = $select->get_result();

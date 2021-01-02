@@ -7,6 +7,10 @@ if (!isset($_SESSION["Erfolg"])) {
 if (!isset($_SESSION["Erfolgpw"])) {
     $_SESSION["Erfolgpw"] = null;
 }
+if (!isset($_SESSION["Erfolgname"])) {
+    $_SESSION["Erfolgname"] = null;
+}
+
 
 ?>
 
@@ -32,6 +36,7 @@ if (!isset($_SESSION["Erfolgpw"])) {
         <p class="Überschrift">Einstellungen</p>
         <div class="Waffenliste">
             <div class="SpielerInfoContainer">
+
                 <div class="Avatarbild">
                     <img class="Spielerbildrahmen" src="/Bilder/Rahmen.png" />
                     <img class="Spielerbild" src="<?php echo $newClass->SpielerLesen($connection, "spielerbildpfad", $_SESSION["Spieler"]) ?>">
@@ -49,12 +54,13 @@ if (!isset($_SESSION["Erfolgpw"])) {
                         </form>
                     </div>
                 </div>
+                <div class="admin"> <?php $newClass->AdminEinblenden($connection); ?> <?php $newClass->LogEinblenden($connection); ?> </div>
             </div>
             <div class="PasswortContainer">
                 <p>Spielername ändern</p><br><br>
                 <form action="/login.php" method="POST">
                     <input id="nameaendern" name="neuername" type="text" pattern="[a-zA-Z]{3,16}" title="3 bis 16 Zeichen">
-                    <p id="fehlername"><?php echo $_SESSION["Erfolg"]; ?></p>
+                    <p id="fehlername"><?php echo $_SESSION["Erfolgname"]; ?></p>
                     <div class="LoginButtons">
                         <button type="submit" name="action" value="nameaendern" style="border: 0; background: transparent" onclick="PlaySound();"><img src="/Bilder/HolzTextButtonAendern.png"></button>
                         <button type="reset" value="Zurücksetzen" style="border: 0; background: transparent" onclick="PlaySound();"><img src="/Bilder/HolzTextButtonEntfernen.png"></button>
