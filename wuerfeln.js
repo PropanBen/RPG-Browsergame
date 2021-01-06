@@ -47,6 +47,7 @@ function submitbuttonunlock() {
 }
 
 function roll() {
+  document.getElementById("Meldung").innerHTML = "";
   WuerfelSound();
   p();
   setTimeout(npc, 2000);

@@ -9,6 +9,14 @@ if (!isset($_SESSION["Spieler"])) {
 }
 
 
+// Titel ändern annehmen und in DB schreiben
+if (isset($_POST["action"]) && $_POST["action"] === "titelaendern") {
+	$update = $connection->prepare("UPDATE spieler SET titelid=? WHERE id=?");
+	$update->bind_param("ii", $_POST["titelid"], $_SESSION["Spielerid"]);
+	$update->execute();
+	$update->close();
+}
+
 // Würfelspiel Geld abfragen
 if (isset($_POST["action"]) && $_POST["action"] === "spielergeldabfragen") {
 	$geld = $newClass->SpielerLesen($connection, "geld", $_SESSION["Spieler"]);
@@ -21,12 +29,14 @@ if (isset($_POST["action"]) && $_POST["action"] === "spielereinsatz") {
 	$einsatz = $_POST["einsatz"];
 	$geld = $newClass->SpielerLesen($connection, "geld", $_SESSION["Spieler"]);
 
-	$geld = $geld - $einsatz;
+	if ($einsatz <= $geld) {
+		$geld = $geld - $einsatz;
 
-	$update = $connection->prepare("UPDATE spieler SET einsatz=?,geld=? WHERE id=?");
-	$update->bind_param("iii", $_POST["einsatz"], $geld, $_SESSION["Spielerid"]);
-	$update->execute();
-	$update->close();
+		$update = $connection->prepare("UPDATE spieler SET einsatz=?,geld=? WHERE id=?");
+		$update->bind_param("iii", $_POST["einsatz"], $geld, $_SESSION["Spielerid"]);
+		$update->execute();
+		$update->close();
+	}
 
 	echo $geld;
 }
@@ -208,6 +218,7 @@ if (isset($_POST["spielerdaten"]) && isset($_POST["spielergegnerdaten"])) {
 if (isset($_POST["spielerdaten"]) && isset($_POST["gegnerdaten"])) {
 	//Spieler
 	$spieler = (json_decode($_POST["spielerdaten"], true));
+	$spielerid = json_encode($spieler[0]["kontoid"]);
 	$lvl = json_encode($spieler[0]["lvl"]);
 	$erfahrung = json_encode($spieler[0]["erfahrung"]);
 	$leben = json_encode($spieler[0]["leben"]);
@@ -231,11 +242,18 @@ if (isset($_POST["spielerdaten"]) && isset($_POST["gegnerdaten"])) {
 	$gegnerid =  json_encode($gegner[0]["gegnerid"]);
 	$gegnerleben = json_encode($gegner[0]["leben"]);
 	$gegnergeld =  json_encode($gegner[0]["geld"]);
-	if ($gegnerleben > 0) {
+
+	if ($newClass->GegnerLesen($connection, "thema", $gegnerid) === "Bossmonster") {
 		$newClass->GegnerStatsSchreiben($connection, $gegnerleben, $gegnergeld, $gegnerid);
+		if ($gegnerleben == 0) {
+			$titel = "Besieger von " . $newClass->GegnerLesen($connection, "gegnername", $gegnerid);
+			$newClass->TitelErstellen($connection, $_SESSION["Spielerid"], $titel);
+		}
 	} else {
-		//	$newClass->Gegnerloeschen($connection, $gegnerid);
+		$newClass->GegnerStatsSchreiben($connection, $newClass->GegnerLesen($connection, "leben", $gegnerid), $gegnergeld, $gegnerid);
 	}
+	//	$newClass->Gegnerloeschen($connection, $gegnerid);
+	//	}
 
 	//Spieler und Gegner entsperren
 	$newClass->Spielersperren($connection, $sperre, $spielername);
@@ -388,6 +406,7 @@ class DBAktionen
 		$result = $select->get_result();
 
 		while ($row = $result->fetch_array()) {
+			$row_array['kontoid'] = $row['kontoid'];
 			$row_array['spielername'] = $row['spielername'];
 			$row_array['lvl'] = $row['lvl'];
 			$row_array['erfahrung'] = $row['erfahrung'];
@@ -425,6 +444,7 @@ class DBAktionen
 			$row_array['angriff'] = $row['angriff'];
 			$row_array['geld'] = $row['geld'];
 			$row_array['gegnerbildpfad'] = $row['gegnerbildpfad'];
+			$row_array['thema'] = $row['thema'];
 			array_push($return_arr, $row_array);
 		}
 		echo json_encode($return_arr);
@@ -485,6 +505,16 @@ class DBAktionen
 		$row = $result->fetch_assoc();
 		return $row["" . $var . ""];
 	}
+	function GegnerLesen($connection, $var, $gegnerid)
+	{
+		$select = $connection->prepare("SELECT " . $var . " FROM gegner WHERE gegnerid = ?");
+		$select->bind_param("i", $gegnerid);
+		$select->execute();
+		$result = $select->get_result();
+		$row = $result->fetch_assoc();
+		return $row["" . $var . ""];
+	}
+
 	function SpielerWaffenStatsLesen($connection, $feld, $id)
 	{
 		$select = $connection->prepare("SELECT " . $feld . " FROM waffen WHERE waffenid = ?");
@@ -546,7 +576,7 @@ class DBAktionen
 	//Spielerübersicht  ---------------------------------------------------------------------------------------------
 	function AlleSpielerLesen($connection)
 	{
-		$select = $connection->prepare("SELECT spielerbildpfad, spielername, lvl FROM spieler ORDER BY lvl DESC,spielername ASC");
+		$select = $connection->prepare("SELECT spielerbildpfad, spielername,id, lvl FROM spieler ORDER BY lvl DESC,spielername ASC");
 		$select->execute();
 		$result = $select->get_result();
 
@@ -560,14 +590,15 @@ class DBAktionen
 			$row2 = $result2->fetch_assoc();
 
 			if ($row2["Anzahl"] > 0) {
-				echo ("<img class=\"Online\" src=\"/Bilder/Online.png\">
+				echo ("<p>
+				<img class=\"Online\" src=\"/Bilder/Online.png\">
 				<img class=\"SpielerlisteBilder\" src=" . ($row['spielerbildpfad']) . "> &nbsp
-				" . $row['spielername'] . "&nbsp lvl: &nbsp" . $row['lvl'] . "<br>");
+				" . $row['spielername']  . $this->TitelAnzeigen($connection, $row["id"])  .  "&nbsp lvl: &nbsp" . $row['lvl'] . "</p><br>");
 			} else {
-				echo ("
+				echo ("<p>
 				<img class=\"Online\" src=\"/Bilder/Offline.png\">
 				<img class=\"SpielerlisteBilder\" src=" . ($row['spielerbildpfad']) . "> &nbsp
-			" . $row['spielername'] . "&nbsp lvl: &nbsp" . $row['lvl'] . "<br>");
+			" . $row['spielername'] . "&nbsp lvl: &nbsp" . $row['lvl'] . "&nbsp" . $this->TitelAnzeigen($connection, $row["id"]) . "</p><br></p>");
 			}
 		}
 		$select->close();
@@ -583,7 +614,7 @@ class DBAktionen
 			$eigenerSpieler = $_SESSION["Spieler"];
 			$sperre = 0;
 			$leben = 0;
-			$select = $connection->prepare("SELECT spielerbildpfad, spielername, lvl FROM spieler WHERE gesperrt = ? AND lvl >=? AND spielername !=? AND leben >? ORDER BY lvl");
+			$select = $connection->prepare("SELECT id,spielerbildpfad, spielername, lvl FROM spieler WHERE gesperrt = ? AND lvl >=? AND spielername !=? AND leben >? ORDER BY lvl");
 			$select->bind_param("iisi", $sperre, $lvl, $eigenerSpieler, $leben);
 			$select->execute();
 			$result = $select->get_result();
@@ -594,6 +625,7 @@ class DBAktionen
 				<p>" . $row['spielername'] . "</p><p>Level : " . $row["lvl"] . "</p>
 				<form action=\"/pvp.php\" method=\"POST\">
 				<input type=\"hidden\" name=\"spielergegner\" value=\"" . $row['spielername'] . "\" />
+				<input type=\"hidden\" name=\"spielergegnerid\" value=\"" . $row['id'] . "\" />
 				<input class=\"Kampfimg\" type=\"image\"src=\"/Bilder/Kampf.png\" width=\"80\" height=\"80\">
 				</form>
 				</div>");
@@ -826,7 +858,7 @@ class DBAktionen
 	function ThemenGegnerAnzahl($connection, $themenname)
 	{
 		$sperre = 0;
-		$select = $connection->prepare("SELECT COUNT(gegnername)AS anzahl FROM gegner WHERE thema=? AND gesperrt=?");
+		$select = $connection->prepare("SELECT COUNT(gegnername)AS anzahl FROM gegner WHERE thema=? AND gesperrt=? AND leben >0");
 		$select->bind_param("si", $themenname, $sperre);
 		$select->execute();
 		$result = $select->get_result();
@@ -997,5 +1029,53 @@ class DBAktionen
 		$result = $select->get_result();
 		$row = $result->fetch_assoc();
 		return $row["id"];
+	}
+
+	// Titel erstellen
+	function TitelErstellen($connection, $spielerid, $titel)
+	{
+		$insert = $connection->prepare("INSERT INTO titel (spielerid, titel) VALUES (?,?)");
+		$insert->bind_param("is", $spielerid, $titel);
+		$insert->execute();
+		$insert->close();
+
+		$nachrichtentext = "Neuer Titel \"" . $titel . "\" verfügbar";
+		$this->NachrichtenAnnehmen($connection, $spielerid, $nachrichtentext, $_SESSION["Spieler"]);
+	}
+
+	function TitelAnzeigen($connection, $spielerid)
+	{
+		$select = $connection->prepare("SELECT titelid FROM spieler WHERE id=?");
+		$select->bind_param("i", $spielerid);
+		$select->execute();
+		$result = $select->get_result();
+		$row = $result->fetch_assoc();
+		$select2 = $connection->prepare("SELECT COUNT(titelid) AS anzahl FROM titel WHERE titelid=?");
+		$select2->bind_param("i", $row["titelid"]);
+		$select2->execute();
+		$result2 = $select2->get_result();
+		$row2 = $result2->fetch_assoc();
+
+		if ($row2["anzahl"] == 1) {
+
+			$select3 = $connection->prepare("SELECT titel FROM spieler,titel WHERE spieler.titelid = titel.titelid AND id=?");
+			$select3->bind_param("i", $spielerid);
+			$select3->execute();
+			$result3 = $select3->get_result();
+			$row3 = $result3->fetch_assoc();
+
+			echo $row3["titel"];
+		} else echo "Kein Titel";
+	}
+
+	function SpielerTitelLesen($connection)
+	{
+		$select = $connection->prepare("SELECT titelid,titel from titel WHERE spielerid=?");
+		$select->bind_param("i", $_SESSION["Spielerid"]);
+		$select->execute();
+		$result = $select->get_result();
+		while ($row = $result->fetch_array()) {
+			echo '<option value="' . $row["titelid"] . '">' . $row["titel"] . '</option>';
+		}
 	}
 }

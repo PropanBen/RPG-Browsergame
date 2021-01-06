@@ -56,7 +56,20 @@ if (!isset($_SESSION["Erfolgname"])) {
                 </div>
                 <div class="admin"> <?php $newClass->AdminEinblenden($connection); ?> <?php $newClass->LogEinblenden($connection); ?> </div>
             </div>
+
+
             <div class="PasswortContainer">
+                <p>Titel ändern</p>
+                <form action="/rpg.php" method="POST">
+                    <select id="spieler" name="titelid">
+                        <option value="keintitel">Kein Titel</option>
+                        <?php $newClass->SpielerTitelLesen($connection); ?>
+                    </select><br><br>
+                    <div class="LoginButtons">
+                        <button type="submit" name="action" value="titelaendern" style="border: 0; background: transparent" onclick="PlaySound();"><img src="/Bilder/HolzTextButtonAendern.png"></button>
+                    </div>
+                </form>
+                <div class="Platzhalter"></div>
                 <p>Spielername ändern</p><br><br>
                 <form action="/login.php" method="POST">
                     <input id="nameaendern" name="neuername" type="text" pattern="[a-zA-Z]{3,16}" title="3 bis 16 Zeichen">

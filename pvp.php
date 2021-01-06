@@ -1,5 +1,8 @@
 <?php
 include("funktionen.php");
+
+if (isset($_POST["spielergegnerid"]))
+  $_SESSION["Spielergegnerid"] = $_POST["spielergegnerid"];
 ?>
 
 <html>
@@ -22,7 +25,10 @@ include("funktionen.php");
 
   <div class="RahmenContainer">
     <div class="SpielerRahmenLinks">
-      <p id="spieler1name" class="spielername1">Hans</p>
+      <div class="spielername1">
+        <p id="Titel"><?php echo $newClass->TitelAnzeigen($connection, $_SESSION["Spielerid"]) ?></p>
+        <p id="spieler1name">Hans</p>
+      </div>
       <div class="SpielerBildRahmenLinks">
         <img id="spieler1bild" class="SpielerBildLinks" src="Spieleravatare/Ritter.png" alt="Bild links">
         <div id="RuestungRahmenLinks">
@@ -49,7 +55,10 @@ include("funktionen.php");
       </div>
     </div>
     <div class="SpielerRahmenRechts">
-      <p id="spieler2name" class="spielername2">Ben</p>
+      <div class="spielername2">
+        <p id="Titel"><?php echo $newClass->TitelAnzeigen($connection, $_SESSION["Spielergegnerid"]) ?></p>
+        <p id="spieler2name">Ben</p>
+      </div>
       <div class="SpielerBildRahmenRechts">
         <img id="spieler2bild" class="SpielerBildRechts" src="Spieleravatare/Ritter.png" alt="Bild rechts">
         <div id="RuestungRahmenRechts">

@@ -21,7 +21,10 @@ include("funktionen.php");
 
   <div class="RahmenContainer">
     <div class="SpielerRahmenLinks">
-      <p id="spielername" class="spielername1">Spieler1</p>
+      <div class="spielername1">
+        <p id="Titel"><?php echo $newClass->TitelAnzeigen($connection, $_SESSION["Spielerid"]) ?></p>
+        <p id="spielername">Spieler1</p>
+      </div>
       <div class="SpielerBildRahmenLinks">
         <img id="spielerbild" class="SpielerBildLinks" src="Spieleravatare/Ritter.png" alt="Bild links">
         <div id="RuestungRahmenLinks">
@@ -213,8 +216,7 @@ include("funktionen.php");
         spielerdaten[0]["ruestungsid"] = 0;
       }
 
-      // Gegner Stats nach Kampf temporär nicht zurückgesetzt
-      // gegnerdaten[0]["leben"] = Gegner.leben; 
+      gegnerdaten[0]["leben"] = Gegner.leben;
       gegnerdaten[0]["geld"] = gegnerdaten[0]["geld"];
 
       const spielerdatennachkampf = JSON.stringify(spielerdaten);

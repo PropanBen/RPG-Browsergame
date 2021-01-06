@@ -20,7 +20,7 @@ include("funktionen.php");
         <div class="Navigation">
             <div class="SpielerInfoContainer">
                 <p id="spielername"><?php echo $_SESSION["Spieler"]; ?></p>
-                <p id="Titel">Kein Titel</p><br>
+                <p id="Titel"><?php echo $newClass->TitelAnzeigen($connection, $_SESSION["Spielerid"]) ?></p><br>
                 <div class="Avatarbild">
                     <img class="Spielerbildrahmen" src="/Bilder/Rahmen.png" />
                     <img class="Spielerbild" src="<?php echo $newClass->SpielerLesen($connection, "spielerbildpfad", $_SESSION["Spieler"]) ?>">

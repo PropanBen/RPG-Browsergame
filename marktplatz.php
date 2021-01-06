@@ -37,7 +37,7 @@ if (!isset($_SESSION["Spieler"])) {
     <div class="NavigationMarktplatz">
         <div class="SpielerInfoContainer">
             <p id="spielername"><?php echo $_SESSION["Spieler"]; ?></p>
-            <p id="Titel">Kein Titel</p><br>
+            <p id="Titel"><?php echo $newClass->TitelAnzeigen($connection, $_SESSION["Spielerid"]) ?></p><br>
             <div class="Avatarbild">
                 <img class="Spielerbildrahmen" src="/Bilder/Rahmen.png" />
                 <img class="Spielerbild" src="<?php echo $newClass->SpielerLesen($connection, "spielerbildpfad", $_SESSION["Spieler"]) ?>">
@@ -87,10 +87,10 @@ if (!isset($_SESSION["Spieler"])) {
             <div class="Stats">
                 <img src="Bilder/Leben.png">
                 <label>Leben</label>
-                <p id="leben"><?php echo $newClass->SpielerLesen($connection, "leben", $_SESSION["Spieler"]) ?>&nbspvon&nbsp<?php echo $newClass->SpielerLesen($connection, "maxleben", $_SESSION["Spieler"]) ?> </p><br>
+                <p id="leben"><?php echo $newClass->SpielerLesen($connection, "leben", $_SESSION["Spieler"]) ?>&nbsp/&nbsp<?php echo $newClass->SpielerLesen($connection, "maxleben", $_SESSION["Spieler"]) ?> </p><br>
                 <img src="Bilder/XP.png">
                 <label>Erfahrung</label>
-                <p id="erfahrung"><?php echo $newClass->SpielerLesen($connection, "erfahrung", $_SESSION["Spieler"]) ?>&nbspvon&nbsp<?php $newClass->MAXErfahrung($connection, $_SESSION["Spieler"]) ?></p>
+                <p id="erfahrung"><?php echo $newClass->SpielerLesen($connection, "erfahrung", $_SESSION["Spieler"]) ?>&nbsp/&nbsp<?php $newClass->MAXErfahrung($connection, $_SESSION["Spieler"]) ?></p>
                 <div id="geldcontainer">
                     <label>Geld</label>
                     <p id="geld"><?php echo $newClass->SpielerLesen($connection, "geld", $_SESSION["Spieler"]) ?></p>

@@ -359,8 +359,9 @@ height:40px;
 }
 .AusruestungItem p
 {
-	left:10px;
+	left:20px;
 	position: relative;
+	padding-right:20px;
 }
 .RuestungContainer
 {
@@ -547,9 +548,10 @@ align-items: center;
 .SpielerlisteContainer
 {
 	width: 90%;
-	height: 80%;
+	height: 90%;
 	margin-left:auto;
 	margin-right:auto;
+	margin-top:2.5%;
 	display:flex;	
 	position: relative;
 	flex-direction:column;
@@ -579,6 +581,7 @@ align-items: center;
 	height: 85%;
 	overflow-y: scroll;
 	z-index: 1;
+	padding:5px;
 }
 .Online
 {
