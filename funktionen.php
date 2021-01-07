@@ -803,7 +803,7 @@ class DBAktionen
 			" . $row['trankname'] . "</p>
 			 <p>" . $typ . " &nbsp" . $value . "</p>
 			 <p>Kostet: &nbsp " . $row['geldwert'] . "<img id=\"geld\" src=\"Bilder/Geld.png\"></p>
-			 <form action=\"marktplatz.php\" method=\"POST\">
+			 <form action=\"heilstube.php\" method=\"POST\">
 			 <input type=\"hidden\" name=\"trankid\" value=\"" . $row['trankid'] . "\" />
 			 <input id=\"audio\" type=\"image\" src=\"/Bilder/Geldsack.png\">
 			 </form>

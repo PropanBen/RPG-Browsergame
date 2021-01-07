@@ -18,6 +18,7 @@ include("funktionen.php");
     <div class="Zurückbutton">
         <a href="/rpg.php" onclick="PlaySound();"><img src="Bilder/Zurückbutton.png" /></a>
     </div>
+    <div class="Platzhalter"></div>
     <div class="WaffenContainer">
         <p class="Überschrift">Themenuebersicht</p>
         <div class="Waffenliste">

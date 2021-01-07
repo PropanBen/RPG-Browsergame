@@ -178,7 +178,10 @@ if (isset($_POST["action"]) && $_POST["action"] == "Registrieren" && isset($_POS
         $insertspieler->execute();
         $insertspieler->close();
         $_SESSION["Spieler"] = $_POST["bname"];
-        $_SESSION["Spielerid"] = $newLoginClass->SpielerIDErmitteln($connection, $row2["id"]);
+        $_SESSION["Spielerid"] = $newLoginClass->SpielerIDErmitteln($connection, $row["id"]);
+
+        //Invetar erstellen
+        $newLoginClass->InventarErstellen($connection, $_SESSION["Spielerid"]);
 
         // Email versenden
         $recipient = $_POST["email"];
@@ -199,6 +202,8 @@ if (isset($_POST["action"]) && $_POST["action"] == "Registrieren" && isset($_POS
         $headers = "MIME-Version: 1.0" . "\r\n";
         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
         mail($recipient, $subject, $content, $headers, ' -f ' . $sender);
+        $subject = "Neuer Spieler " . $_SESSION["Spieler"] . " hat sich registriert !";
+        mail("info@propanben.de", $subject, "", $headers, $sender);
 
         // Nachricht an alle Senden
         $nachrichtentext = "Neuer Spieler " . $_SESSION["Spieler"] . " hat sich registriert !";
@@ -312,6 +317,9 @@ if (isset($_POST["token"]) && isset($_POST["pw"]) && isset($_POST["pw2"])) {
 if (isset($_POST["konto"]) && $_POST["konto"] === "loeschen") {
 
 
+    // Invetar + Slots löschen
+    $newLoginClass->Inventarloeschen($connection, $_SESSION["Spielerid"]);
+
     // Erst FK Tabelle löschen
     $delete = $connection->prepare("DELETE from spieler WHERE spielername =?");
     $delete->bind_param("s", $_SESSION["Spieler"]);
@@ -374,5 +382,54 @@ class DBLoginAktionen
             $insert->execute();
             $insert->close();
         }
+    }
+
+    // Inventar erstellen
+    function InventarErstellen($connection, $spielerid)
+    {
+        $status = 0;
+        $insert = $connection->prepare("INSERT INTO inventar (spielerid,slot1status,slot2status,slot3status,slot4status,slot5status) VALUES (?,?,?,?,?,?)");
+        $insert->bind_param("iiiiii", $spielerid, $status, $status, $status, $status, $status);
+        $insert->execute();
+        $insert->close();
+
+        $select = $connection->prepare("SELECT id FROM inventar WHERE spielerid = ? ");
+        $select->bind_param("i", $spielerid);
+        $select->execute();
+        $result = $select->get_result();
+        $row = $result->fetch_assoc();
+
+        $update = $connection->prepare("UPDATE spieler SET inventarid=? WHERE id=?");
+        $update->bind_param("id", $row["id"], $spielerid);
+        $update->execute();
+        $update->close();
+        $select->close();
+    }
+
+    // Inventar löschen
+    function InventarLoeschen($connection, $spielerid)
+    {
+        $select = $connection->prepare("SELECT inventarid FROM spieler WHERE id = ? ");
+        $select->bind_param("i", $spielerid);
+        $select->execute();
+        $result = $select->get_result();
+        $row = $result->fetch_assoc();
+
+        if ($result->num_rows > 0) {
+            $this->SlotsLoeschen($connection, $row["inventarid"]);
+        }
+
+        $delete = $connection->prepare("DELETE from inventar WHERE spielerid =?");
+        $delete->bind_param("i", $spielerid);
+        $delete->execute();
+        $delete->close();
+    }
+    // Slots löschen
+    function SlotsLoeschen($connection, $inventarid)
+    {
+        $delete = $connection->prepare("DELETE from slot WHERE inventarid =?");
+        $delete->bind_param("i", $inventarid);
+        $delete->execute();
+        $delete->close();
     }
 }

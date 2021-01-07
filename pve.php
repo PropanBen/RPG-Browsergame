@@ -148,6 +148,8 @@ include("funktionen.php");
       uigegnername.innerText = gegnername;
       uigegnerbild.src = gegnerbild;
 
+      // Kampf automatisch starten
+      // KampfStarten(SpielerDatenLaden(), GegnerDatenLaden());
     }
     //X
     function SpielerDatenLaden() {
