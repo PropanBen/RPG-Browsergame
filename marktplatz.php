@@ -50,6 +50,11 @@ if (!isset($_SESSION["Spieler"])) {
                 <p>Rüstungsschmied</p>
                 <a href="/ruestungsschmied.php"><img type=image src="/Bilder/Schild.png" width=80 height=80 onclick="PlaySound();"></a>
             </div>
+            <div class=GegenstandEinzeln>
+                <img src='/Bilder/Marktplatzbutton.png' width=100 height=100>
+                <p>Händler</p>
+                <a href="/haendler.php"><img type=image src="/Bilder/Schild.png" width=80 height=80 onclick="PlaySound();"></a>
+            </div>
         </div>
     </div>
 </body>

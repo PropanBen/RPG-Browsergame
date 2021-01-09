@@ -87,6 +87,11 @@ include("funktionen.php");
                     <a href="/spieleruebersicht.php" onclick="PlaySound();"> <img src="/Bilder/Spieleruebersicht.png"></a>
                 </div>
                 <div class="NavigationItem">
+                    <div id="Inventardiv" onclick="InventarPopUp();">
+                        <img src="/Bilder/Kiste.png">
+                    </div>
+                </div>
+                <div class="NavigationItem">
                     <div id="Nachrichten">
                         <img src="/Bilder/Schriftrolle.png">
                         <div id="Schriftrolle" onclick="PopUp();">
@@ -167,6 +172,33 @@ include("funktionen.php");
             <img id="allenachrichtenloeschen" src="/Bilder/Mülltonne.png" onclick="AlleNachrichtLoeschen();">
         </div>
     </div>
+    <div id="Inventarfenster">
+        <div class="Zurückbutton">
+            <img src="Bilder/Zurückbutton.png" onclick="InventarPopDown();" />
+        </div>
+        <div class="InventarContainer">
+            <div class="Inventar">
+                <?php $newClass->InventarAnzeigen($connection); ?>
+                <!--  <div class="InventarSlotContainer">
+                    <div class="InventarSlot">
+                        <img class="ItemImg" src="/Itembilder/Stein.png">
+                    </div>
+                    <img class="ItemLvLPlakette" class="Plakette" src="/Bilder/LvL_Plakette.png" />
+                    <p class="ItemLvL">0</p>
+                    <img class="InventarPlakette" class="Plakette" src="/Bilder/LvL_Plakette.png" />
+                    <p class="ItemAnzahl">0</p>
+                    <p class="ItemName"></p>
+                    <div class="VerkaufsContainer">
+                        <img class="VerkaufsButton" src="/Bilder/Verkaufen.png">
+                    </div>
+                </div>
+                <div class="InventarSlotContainer"></div>
+                <div class="InventarSlotContainer"></div>
+                <div class="InventarSlotContainer"></div>
+                <div class="InventarSlotContainer"></div>-->
+            </div>
+        </div>
+    </div>
 </body>
 
 <script>
@@ -201,6 +233,29 @@ include("funktionen.php");
         audio.play();
         $("#Nachricht").load(location.href + "/einstellungen.php #Nachricht>*");
         $("#Schriftrolle").load(location.href + "/einstellungen.php #Schriftrolle >*");
+    }
+
+    // Inventar Popup
+    function InventarPopUp() {
+        let popup
+        popup = document.querySelector("#Inventarfenster")
+        if (popup !== null) {
+            popup.style.opacity = 1;
+            popup.style.transform = "translate(+0%, +0%) scale(1)";
+        }
+        var audio = new Audio('/Audio/tap.wav');
+        audio.play();
+    }
+
+    function InventarPopDown() {
+        let popup
+        popup = document.querySelector("#Inventarfenster")
+        if (popup !== null) {
+            popup.style.opacity = 0;
+            popup.style.transform = "translate(+0%, +0%) scale(0)";
+        }
+        var audio = new Audio('/Audio/tap.wav');
+        audio.play();
     }
 
     // Nachrichten Senden

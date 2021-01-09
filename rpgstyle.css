@@ -715,6 +715,134 @@ font-size: 24;
 	height:30px;
 	cursor: pointer;
 }
+#Inventarfenster
+{
+	width: 600px;
+	height: 50%;
+	margin:auto;
+	left:calc(50% - 300px);
+	top:5%;
+	border: 3px solid black;
+	border-radius: 10px;
+	background-color: burlywood;
+	z-index: 10;
+	display: block;
+	position: absolute;
+	opacity:1;
+	transform: translate(+0%, +0%) scale(0);
+	transition: opacity 1s, transform 1s;	
+}
+#Inventardiv
+{
+width:30px;
+height:30px;
+display: flex;
+position: relative;
+z-index:10;
+justify-content: center;
+vertical-align: auto;
+align-items: center;
+cursor: pointer;
+}
+.InventarContainer
+{
+	width: 100%;
+	height: 100%;
+	display:flex;
+	justify-content: center;
+	align-items: center;
+}
+.Inventar
+{
+  width:500px;
+  height:150px;
+  background-color: burlywood;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 10px;
+  text-align: center;
+  border-radius:10px;
+}
+.InventarSlotContainer
+{
+	width:100px;
+	height:100%;
+	background-color: burlywood;
+}
+.InventarSlot
+{
+	width:100%;
+	height:100px;
+	background-image: url("/Bilder/Rahmen.png");		
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;	
+	background-color:  rgb(255, 223, 181);
+	display:flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	border-radius: 15px;
+}
+.Itemimg
+{
+	width: 80px;
+	height: 80px;
+	position: relative;
+	z-index: 10;
+}
+.ItemLvLPlakette
+{
+	width:30px;
+	height:30px;
+	bottom:15px;
+	left:-30px;
+	position: relative;
+}
+.ItemLvL
+{
+	bottom:45px;
+	left: -30;
+	position: relative;
+}
+.InventarPlakette
+{
+	width:30px;
+	height:30px;
+	bottom:80px;
+	right:-30px;
+	position: relative;
+}
+.ItemAnzahl
+{
+	right:-30px;
+	bottom:110px;
+	position: relative;
+}
+.ItemName
+{
+	top:-110px;
+	position: relative;
+}
+.VerkaufsContainer
+{
+	width: 25px;
+	height:25px;
+	margin-left: auto;
+	margin-right: auto;
+	top: -110px;
+	position: relative;
+	cursor: pointer;
+}
+.VerkaufsContainer img
+{
+	width: 25px;
+	height:25px;
+}
+
+
+
 /*  Ende rpg.php  */
 
 /*  Start Marktplatz marktplatz.php  */

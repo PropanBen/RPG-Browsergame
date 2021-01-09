@@ -9,6 +9,58 @@ if (!isset($_SESSION["Spieler"])) {
 }
 
 
+// Inventarslot kaufen
+if (isset($_POST["action"]) && $_POST["action"] === "slotkaufen") {
+
+	$geld = $newClass->SpielerLesen($connection, "geld", $_SESSION["Spieler"]);
+	$inventarid = $newClass->SpielerLesen($connection, "inventarid", $_SESSION["Spieler"]);
+
+	$select = $connection->prepare("SELECT slotanzahl from inventar WHERE id=?");
+	$select->bind_param("i", $inventarid);
+	$select->execute();
+	$result = $select->get_result();
+	$row = $result->fetch_assoc();
+
+	$kaufen = false;
+	$kosten = 0;
+
+	$slotanzahl = $row["slotanzahl"];
+	if ($slotanzahl === 0 && $geld >= 1000) {
+		$kosten = 1000;
+		$kaufen = true;
+	}
+	if ($slotanzahl === 1 && $geld >= 3000) {
+		$kosten = 3000;
+		$kaufen = true;
+	}
+	if ($slotanzahl === 2 && $geld >= 5000) {
+		$kosten = 5000;
+		$kaufen = true;
+	}
+	if ($slotanzahl === 3 && $geld >= 8000) {
+		$kosten = 8000;
+		$kaufen = true;
+	}
+	if ($slotanzahl === 4 && $geld >= 15000) {
+		$kosten = 15000;
+		$kaufen = true;
+	}
+
+	if ($kaufen === true) {
+		$geld = $geld - $kosten;
+		$update = $connection->prepare("UPDATE spieler SET geld=? WHERE id=?");
+		$update->bind_param("ii", $geld, $_SESSION["Spielerid"]);
+		$update->execute();
+		$update->close();
+
+		$slotanzahl = $slotanzahl + 1;
+		$update = $connection->prepare("UPDATE inventar SET slotanzahl=? WHERE id=?");
+		$update->bind_param("ii", $slotanzahl, $inventarid);
+		$update->execute();
+		$update->close();
+	}
+}
+
 // Titel ändern annehmen und in DB schreiben
 if (isset($_POST["action"]) && $_POST["action"] === "titelaendern") {
 	$update = $connection->prepare("UPDATE spieler SET titelid=? WHERE id=?");
@@ -822,6 +874,55 @@ class DBAktionen
 		}
 	}
 
+	// Händler------------------------------------------------------------------------------------------------------------------
+	function HaendlerLesen($connection)
+	{
+		$geld = $this->SpielerLesen($connection, "geld", $_SESSION["Spieler"]);
+		$inventarid = $this->SpielerLesen($connection, "inventarid", $_SESSION["Spieler"]);
+
+		$select = $connection->prepare("SELECT slotanzahl,slot1,slot2,slot3,slot4,slot5 from inventar WHERE id=?");
+		$select->bind_param("i", $inventarid);
+		$select->execute();
+		$result = $select->get_result();
+		$row = $result->fetch_assoc();
+
+		$kosten = 0;
+		$slotanzahl = $row["slotanzahl"];
+		if ($slotanzahl === 0)
+			$kosten = 1000;
+		if ($slotanzahl === 1)
+			$kosten = 3000;
+		if ($slotanzahl === 2)
+			$kosten = 5000;
+		if ($slotanzahl === 3)
+			$kosten = 8000;
+		if ($slotanzahl === 4)
+			$kosten = 15000;
+
+		if ($slotanzahl < 5) {
+			if ($geld >= $kosten) {
+				echo ("
+			<div class=\"GegenstandEinzeln\">
+			<img src=\"/Bilder/Rahmen.png\">&nbsp
+			<p>Inventar Slot kaufen</p>
+			 <p>Kostet: &nbsp " . $kosten . "<img id=\"geld\" src=\"Bilder/Geld.png\"></p>
+			 <form action=\"haendler.php\" method=\"POST\">
+			 <input type=\"hidden\" name=\"action\" value=\"slotkaufen\" />
+			 <input id=\"audio\" type=\"image\" src=\"/Bilder/Geldsack.png\">
+			 </form>
+			 </div>");
+			} else {
+				echo ("
+				<div class=\"GegenstandEinzeln\">
+				<img src=\"/Bilder/Rahmen.png\">&nbsp
+				<p>Inventar Slot kaufen</p>
+				<p>Kostet: &nbsp " . $kosten . "<img id=\"geld\" src=\"Bilder/Geld.png\"></p>
+                <img id=\"GeldX\" src=\"/Bilder/GeldsackX.png\" title=\"Zu wenig Geld\">
+				 </div>");
+			}
+		}
+	}
+
 	// admin.php -----------------------------------------------------------------------------------------------
 	// Themen auswahl auslesen----------------------------------------------------------------------------------
 	function Themenlesen($connection)
@@ -1076,6 +1177,95 @@ class DBAktionen
 		$result = $select->get_result();
 		while ($row = $result->fetch_array()) {
 			echo '<option value="' . $row["titelid"] . '">' . $row["titel"] . '</option>';
+		}
+	}
+
+	// Inventar ------------------------------------------------------------------------------------------------------------------
+	function InventarAnzeigen($connection)
+	{
+		$inventarid = $this->SpielerLesen($connection, "inventarid", $_SESSION["Spieler"]);
+
+		$select = $connection->prepare("SELECT slotanzahl,slot1,slot2,slot3,slot4,slot5 from inventar WHERE id=?");
+		$select->bind_param("i", $inventarid);
+		$select->execute();
+		$result = $select->get_result();
+		$row = $result->fetch_assoc();
+
+		if ($row["slotanzahl"] > 0) {
+			for ($i = 1; $i <= $row["slotanzahl"]; $i++) {
+
+				$slotid = $row["slot" . $i . ""];
+				if ($slotid === NULL) {
+					$slotid = 0;
+				}
+				$itemid = $this->SlotItemIDAuslesen($connection, $slotid);
+				$itembildpfad = $this->ItemAuslesen($connection, "itembildpfad", $itemid);
+				$itemlvl = $this->ItemAuslesen($connection, "lvl", $itemid);
+				$itemanzahl = $this->SlotItemAnzahlAuslesen($connection, $slotid);
+				$itemname = $this->ItemAuslesen($connection, "itemname", $itemid);
+
+				if ($itembildpfad === 0)
+					$itembildpfad = "/Itembilder/Default.png";
+				if ($itemname === 0)
+					$itemname = "Leer";
+
+				echo ('			
+				<div class="InventarSlotContainer">
+				<div class="InventarSlot">
+					<img class="ItemImg" src="' . $itembildpfad . '">
+				</div>
+				<img class="ItemLvLPlakette" class="Plakette" src="/Bilder/LvL_Plakette.png" />
+				<p class="ItemLvL">' . $itemlvl . '</p>
+				<img class="InventarPlakette" class="Plakette" src="/Bilder/LvL_Plakette.png" />
+				<p class="ItemAnzahl">' . $itemanzahl . '</p>
+				<p class="ItemName">' . $itemname . '</p>
+				<div class="VerkaufsContainer">
+					<img class="VerkaufsButton" src="/Bilder/Verkaufen.png">
+				</div>
+			</div>							
+				');
+			}
+		}
+	}
+
+	function SlotItemIDAuslesen($connection, $slotid)
+	{
+		if ($slotid == 0)
+			return 0;
+		else {
+			$select = $connection->prepare("SELECT itemid from slot WHERE id=?");
+			$select->bind_param("i", $slotid);
+			$select->execute();
+			$result = $select->get_result();
+			$row = $result->fetch_assoc();
+			return $row["itemid"];
+		}
+	}
+	function SlotItemAnzahlAuslesen($connection, $slotid)
+	{
+		if ($slotid == 0)
+			return 0;
+		else {
+			$select = $connection->prepare("SELECT anzahl from slot WHERE id=?");
+			$select->bind_param("i", $slotid);
+			$select->execute();
+			$result = $select->get_result();
+			$row = $result->fetch_assoc();
+			return $row["anzahl"];
+		}
+	}
+
+	function ItemAuslesen($connection, $var, $itemid)
+	{
+		if ($itemid == 0)
+			return 0;
+		else {
+			$select = $connection->prepare("SELECT " . $var . " FROM item WHERE id = ?");
+			$select->bind_param("i", $itemid);
+			$select->execute();
+			$result = $select->get_result();
+			$row = $result->fetch_assoc();
+			return $row["" . $var . ""];
 		}
 	}
 }
