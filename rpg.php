@@ -178,30 +178,24 @@ include("funktionen.php");
         </div>
         <div class="InventarContainer">
             <div class="Inventar">
-                <?php $newClass->InventarAnzeigen($connection); ?>
-                <!--  <div class="InventarSlotContainer">
-                    <div class="InventarSlot">
-                        <img class="ItemImg" src="/Itembilder/Stein.png">
-                    </div>
-                    <img class="ItemLvLPlakette" class="Plakette" src="/Bilder/LvL_Plakette.png" />
-                    <p class="ItemLvL">0</p>
-                    <img class="InventarPlakette" class="Plakette" src="/Bilder/LvL_Plakette.png" />
-                    <p class="ItemAnzahl">0</p>
-                    <p class="ItemName"></p>
-                    <div class="VerkaufsContainer">
-                        <img class="VerkaufsButton" src="/Bilder/Verkaufen.png">
-                    </div>
-                </div>
-                <div class="InventarSlotContainer"></div>
-                <div class="InventarSlotContainer"></div>
-                <div class="InventarSlotContainer"></div>
-                <div class="InventarSlotContainer"></div>-->
+                <?php $newClass->InventarAnzeigen($connection, "rpg.php"); ?>
             </div>
         </div>
     </div>
 </body>
 
 <script>
+    function ItemLoeschen(slotid) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "funktionen.php", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("action=itemloeschen&slotid=" + slotid + "");
+
+        $("#Inventarfenster").load(location.href + "/rpg.php #Inventarfenster>*");
+        PlaySound();
+    }
+
+
     let nachricht = document.getElementById('Nachricht');
 
     function PlaySound() {

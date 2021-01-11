@@ -1,16 +1,17 @@
 <?php
 
+include("funktionen.php");
+if (!isset($_SESSION["Spieler"])) {
+    header('location: index.php');
+}
+
 // Bei Kauf Sound abspielen
-if (isset($_POST["itemid"])) {
+if (isset($_SESSION["soundkaufen"])) {
     $myAudioFile = "/Audio/coin.wav";
     echo '<audio autoplay="true">
 <source src="' . $myAudioFile . '" type="audio/wav">
 </audio>';
-}
-
-include("funktionen.php");
-if (!isset($_SESSION["Spieler"])) {
-    header('location: index.php');
+    $_SESSION["soundkaufen"] = NULL;
 }
 ?>
 
@@ -46,7 +47,7 @@ if (!isset($_SESSION["Spieler"])) {
             </div>
         </div>
         <div class="Inventar">
-            <?php $newClass->InventarAnzeigen($connection); ?>
+            <?php $newClass->InventarAnzeigen($connection, "steinhaendler.php"); ?>
         </div>
     </div>
     <div class="WaffenContainer">

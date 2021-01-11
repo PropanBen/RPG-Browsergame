@@ -80,6 +80,70 @@
 {
     display: none;
 }
+.Inventar
+{
+    height:180px;
+}
+#Inventarfenster
+{
+    width:300px;
+    left:calc(50% - 152px);
+}
+.InventarSlotContainer
+{
+    width: 50px;
+	height:110px;
+}
+.InventarSlot
+{
+    width: 40px;
+    height: 40px; 
+    background-image: url("/Bilder/Rahmen40.png");	
+    border-radius:0;
+    margin-left:auto;
+    margin-right:auto;
+}
+.ItemImg
+{
+    width: 35px;
+    height: 35px;  
+}
+.ItemLvLPlakette
+{
+    width: 15px;
+    height: 15px;
+    bottom: 10px;
+    left:-15px;
+}
+.ItemLvL
+{
+    bottom: 32px;
+    left:-15px;
+    font-size: 8px;
+}
+.InventarPlakette
+{
+    width: 15px;
+    height: 15px; 
+    bottom:55px;
+    right:-15px;
+}
+.ItemAnzahl
+{
+    right:-15px;
+    bottom:76px;
+    font-size: 8px;  
+}
+.ItemName
+{
+    font-size: 8px; 
+    top: -80px;
+}
+.VerkaufsContainer
+{
+    top: -80px;
+}
+
 /* Ende rpg.php    */
 
 
@@ -272,6 +336,71 @@ height:25px;
 {
     font-size: 16px;
 }
+.Inventar
+{
+    width:300px;
+    height:180px;
+}
+#Inventarfenster
+{
+    width:300px;
+    left:calc(50% - 152px);
+}
+.InventarSlotContainer
+{
+    width: 50px;
+	height:110px;
+}
+.InventarSlot
+{
+    width: 40px;
+    height: 40px; 
+    background-image: url("/Bilder/Rahmen40.png");	
+    border-radius:0;
+    margin-left:auto;
+    margin-right:auto;
+}
+.ItemImg
+{
+    width: 35px;
+    height: 35px;  
+}
+.ItemLvLPlakette
+{
+    width: 15px;
+    height: 15px;
+    bottom: 10px;
+    left:-15px;
+}
+.ItemLvL
+{
+    bottom: 32px;
+    left:-15px;
+    font-size: 8px;
+}
+.InventarPlakette
+{
+    width: 15px;
+    height: 15px; 
+    bottom:55px;
+    right:-15px;
+}
+.ItemAnzahl
+{
+    right:-15px;
+    bottom:76px;
+    font-size: 8px;  
+}
+.ItemName
+{
+    font-size: 8px; 
+    top: -80px;
+}
+.VerkaufsContainer
+{
+    top: -80px;
+}
+
 
 /* Ende rpg.php    */
 

@@ -46,7 +46,7 @@ if (!isset($_SESSION["Spieler"])) {
             </div>
         </div>
         <div class="Inventar">
-            <?php $newClass->InventarAnzeigen($connection); ?>
+            <?php $newClass->InventarAnzeigen($connection, NULL); ?>
         </div>
     </div>
     <div class="WaffenContainer">

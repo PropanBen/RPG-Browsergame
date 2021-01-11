@@ -719,7 +719,7 @@ font-size: 24;
 #Inventarfenster
 {
 	width: 600px;
-	height: 50%;
+	height: 80%;
 	margin:auto;
 	left:calc(50% - 300px);
 	top:5%;
@@ -755,7 +755,7 @@ cursor: pointer;
 .Inventar
 {
   width:500px;
-  height:150px;
+  height:200px;
   background-color: burlywood;
   display: flex;
   justify-content: center;
@@ -835,7 +835,7 @@ cursor: pointer;
 	position: relative;
 	cursor: pointer;
 }
-.VerkaufsContainer img
+.VerkaufsContainer input
 {
 	width: 25px;
 	height:25px;

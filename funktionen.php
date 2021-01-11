@@ -8,6 +8,59 @@ if (!isset($_SESSION["Spieler"])) {
 	header('location: index.php');
 }
 
+
+// Item löschen aus Inventar
+
+if (isset($_POST["action"]) && $_POST["action"] === "itemloeschen") {
+
+	$itemanzahl = $newClass->SlotItemAnzahlAuslesen($connection, $_POST["slotid"]);
+
+	if ($itemanzahl == 1) {
+		$inventarid = $newClass->SpielerLesen($connection, "inventarid", $_SESSION["Spieler"]);
+		$nummer = $newClass->SlotnummerAuslesen($connection, $_POST["slotid"]);
+		$slotnummer = "slot" . $nummer;
+		$itemid = $newClass->SlotItemIDAuslesen($connection, $_POST["slotid"]);
+		$newClass->Slotloeschen($connection, $_POST["slotid"]);
+		$newClass->InventarSlotAktulisieren($connection, $slotnummer, 0, $inventarid);
+	} else if ($itemanzahl > 1) {
+		$anzahl = $newClass->SlotItemAnzahlAuslesen($connection, $_POST["slotid"]);
+		$anzahl = $anzahl - 1;
+		$newClass->SlotItemAnzahlAktualiseren($connection, $anzahl, $_POST["slotid"]);
+	}
+}
+
+
+
+// Item verkaufen annehmen
+if (isset($_POST["action"]) && $_POST["action"] === "itemverkaufen") {
+	$itemanzahl = $newClass->SlotItemAnzahlAuslesen($connection, $_POST["slotid"]);
+
+	if ($itemanzahl == 1) {
+		$inventarid = $newClass->SpielerLesen($connection, "inventarid", $_SESSION["Spieler"]);
+		$nummer = $newClass->SlotnummerAuslesen($connection, $_POST["slotid"]);
+		$slotnummer = "slot" . $nummer;
+		$itemid = $newClass->SlotItemIDAuslesen($connection, $_POST["slotid"]);
+		$newClass->Slotloeschen($connection, $_POST["slotid"]);
+		$newClass->InventarSlotAktulisieren($connection, $slotnummer, 0, $inventarid);
+		$geld = $newClass->SpielerLesen($connection, "geld", $_SESSION["Spieler"]);
+		$verdienst = $newClass->ItemAuslesen($connection, "geldwert", $itemid);
+		$geld = $geld + $verdienst;
+		$newClass->SpielerGeldAktualisieren($connection, $geld);
+		$_SESSION["soundkaufen"] = true;
+	} else if ($itemanzahl > 1) {
+		$anzahl = $newClass->SlotItemAnzahlAuslesen($connection, $_POST["slotid"]);
+		$anzahl = $anzahl - 1;
+		$newClass->SlotItemAnzahlAktualiseren($connection, $anzahl, $_POST["slotid"]);
+		$itemid = $newClass->SlotItemIDAuslesen($connection, $_POST["slotid"]);
+		$verdienst = $newClass->ItemAuslesen($connection, "geldwert", $itemid);
+		$geld = $newClass->SpielerLesen($connection, "geld", $_SESSION["Spieler"]);
+		$geld = $geld + $verdienst;
+		$newClass->SpielerGeldAktualisieren($connection, $geld);
+		$_SESSION["soundkaufen"] = true;
+	}
+}
+
+
 //Item kaufen annehmen
 if (isset($_POST["action"]) && $_POST["action"] === "itemkaufen") {
 	$geld = $newClass->SpielerLesen($connection, "geld", $_SESSION["Spieler"]);
@@ -15,8 +68,13 @@ if (isset($_POST["action"]) && $_POST["action"] === "itemkaufen") {
 
 	if ($geld >= $kosten) {
 		$geld = $geld - $kosten;
-		$newClass->SpielerGeldAktualisieren($connection, $geld);
-		$newClass->InventarItemHinzufuegen($connection, $_POST["itemid"]);
+
+		if ($newClass->InventarItemHinzufuegen($connection, $_POST["itemid"])) {
+			$newClass->SpielerGeldAktualisieren($connection, $geld);
+			$_SESSION["soundkaufen"] = true;
+		} else {
+			$_SESSION["soundkaufen"] = NULL;
+		}
 	}
 }
 
@@ -922,7 +980,7 @@ class DBAktionen
 			if ($geld >= $kosten) {
 				echo ("
 			<div class=\"GegenstandEinzeln\">
-			<img src=\"/Bilder/Rahmen.png\">&nbsp
+			<img src=\"/Bilder/Kiste.png\">&nbsp
 			<p>Inventar Slot kaufen</p>
 			 <p>Kostet: &nbsp " . $kosten . "<img id=\"geld\" src=\"Bilder/Geld.png\"></p>
 			 <form action=\"haendler.php\" method=\"POST\">
@@ -933,7 +991,7 @@ class DBAktionen
 			} else {
 				echo ("
 				<div class=\"GegenstandEinzeln\">
-				<img src=\"/Bilder/Rahmen.png\">&nbsp
+				<img src=\"/Bilder/Kiste.png\">&nbsp
 				<p>Inventar Slot kaufen</p>
 				<p>Kostet: &nbsp " . $kosten . "<img id=\"geld\" src=\"Bilder/Geld.png\"></p>
                 <img id=\"GeldX\" src=\"/Bilder/GeldsackX.png\" title=\"Zu wenig Geld\">
@@ -1200,7 +1258,7 @@ class DBAktionen
 	}
 
 	// Inventar ------------------------------------------------------------------------------------------------------------------
-	function InventarAnzeigen($connection)
+	function InventarAnzeigen($connection, $shop)
 	{
 		$inventarid = $this->SpielerLesen($connection, "inventarid", $_SESSION["Spieler"]);
 
@@ -1228,6 +1286,31 @@ class DBAktionen
 				if ($itemname === 0)
 					$itemname = "Leer";
 
+				if (isset($shop) && $shop != "rpg.php") {
+					$string =
+						'
+				<div class="VerkaufsContainer">
+				<form action="' . $shop . '" method="POST">
+				<input type="hidden" name="slotid" value="' . $slotid . '"/>
+				<input type="hidden" name="action" value="itemverkaufen" />
+				<input id="audio" class="VerkaufsButton" type="image" src="/Bilder/Verkaufen.png">
+				</form>			
+	     	    </div>	
+				';
+				} else {
+					$string = "";
+				}
+
+				if (isset($shop) && $shop == "rpg.php") {
+					$string =
+						'
+					<div class="VerkaufsContainer">
+					<input id="audio" class="VerkaufsButton" type="image" 
+					src="/Bilder/Mülltonne.png" onclick="ItemLoeschen(' . $slotid . ');">		
+					 </div>	
+					';
+				}
+
 				echo ('			
 				<div class="InventarSlotContainer">
 				<div class="InventarSlot">
@@ -1238,12 +1321,10 @@ class DBAktionen
 				<img class="InventarPlakette" class="Plakette" src="/Bilder/LvL_Plakette.png" />
 				<p class="ItemAnzahl">' . $itemanzahl . '</p>
 				<p class="ItemName">' . $itemname . '</p>
-				<div class="VerkaufsContainer">
-					<img class="VerkaufsButton" src="/Bilder/Verkaufen.png">
-				</div>
-			</div>							
-				');
+				' . $string . '</div>');
 			}
+		} else {
+			echo "<h2>Du hast noch kein Inventar. Kaufe dir Inventar Slots bei einem örtlichen Händler</h2>";
 		}
 	}
 
@@ -1363,8 +1444,8 @@ class DBAktionen
 
 					if (!$success) {
 						$anzahl = 1;
-						$insert = $connection->prepare("INSERT INTO slot (inventarid,itemid,anzahl) VALUES (?,?,?)");
-						$insert->bind_param("iii", $inventarid, $itemid, $anzahl);
+						$insert = $connection->prepare("INSERT INTO slot (inventarid,slotnummer,itemid,anzahl) VALUES (?,?,?,?)");
+						$insert->bind_param("iiii", $inventarid, $i, $itemid, $anzahl);
 						$insert->execute();
 						$id = $insert->insert_id;
 						$insert->close();
@@ -1376,6 +1457,7 @@ class DBAktionen
 						$update->execute();
 						$update->close();
 						$success = true;
+						return true;
 					}
 				} else {
 					if (!$success) {
@@ -1388,16 +1470,57 @@ class DBAktionen
 						$slotitemid = $row["itemid"];
 						$anzahlneu = $row["anzahl"] + 1;
 						$select->close();
-						if ($itemid == $slotitemid) {
+						if ($itemid == $slotitemid && $row["anzahl"] < 99) {
 							$update = $connection->prepare("UPDATE slot SET anzahl=? WHERE id=?");
 							$update->bind_param("ii", $anzahlneu, $slotid);
 							$update->execute();
 							$update->close();
 							$success = true;
+							return true;
 						}
+					} else {
+						return false;
 					}
 				}
 			}
 		}
+	}
+
+	// Slotnummer auslesen
+	function SlotnummerAuslesen($connection, $slotid)
+	{
+		$select = $connection->prepare("SELECT slotnummer from slot WHERE id=?");
+		$select->bind_param("i", $slotid);
+		$select->execute();
+		$result = $select->get_result();
+		$row = $result->fetch_assoc();
+		return $row["slotnummer"];
+	}
+
+	// Slot löschen
+	function Slotloeschen($connection, $slotid)
+	{
+		$delete = $connection->prepare("DELETE from slot WHERE id =?");
+		$delete->bind_param("i", $slotid);
+		$delete->execute();
+		$delete->close();
+	}
+
+	// Inventar Updaten
+	function InventarSlotAktulisieren($connection, $var, $value, $inventarid)
+	{
+		$update = $connection->prepare("UPDATE inventar SET " . $var . "=? WHERE id=?");
+		$update->bind_param("ii", $value, $inventarid);
+		$update->execute();
+		$update->close();
+	}
+
+	// Slot Item Anzahl Aktualsieren
+	function SlotItemAnzahlAktualiseren($connection, $anzahl, $slotid)
+	{
+		$update = $connection->prepare("UPDATE slot SET anzahl=? WHERE id=?");
+		$update->bind_param("ii", $anzahl, $slotid);
+		$update->execute();
+		$update->close();
 	}
 }
