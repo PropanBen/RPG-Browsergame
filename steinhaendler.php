@@ -1,7 +1,7 @@
 <?php
 
 // Bei Kauf Sound abspielen
-if (isset($_POST["trankid"]) || isset($_POST["waffenid"]) || isset($_POST["ruestungsid"]) || isset($_POST["action"])) {
+if (isset($_POST["itemid"])) {
     $myAudioFile = "/Audio/coin.wav";
     echo '<audio autoplay="true">
 <source src="' . $myAudioFile . '" type="audio/wav">
@@ -17,7 +17,7 @@ if (!isset($_SESSION["Spieler"])) {
 <html>
 
 <head>
-    <title>Händler</title>
+    <title>Steinhändler</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" type="text/css" href="rpgstyle.css" />
     <link rel="stylesheet" type="text/css" href="mobilerpgstyle.css" />
@@ -28,7 +28,7 @@ if (!isset($_SESSION["Spieler"])) {
     <div class="Hintergrund"></div>
 
     <div class="Zurückbutton">
-        <a href="/marktplatz.php" onclick="PlaySound();"><img src="Bilder/Zurückbutton.png" /></a>
+        <a href="/rohstoffhaendler.php" onclick="PlaySound();"><img src="Bilder/Zurückbutton.png" /></a>
     </div>
 
     <div class="Platzhalter"></div>
@@ -50,9 +50,9 @@ if (!isset($_SESSION["Spieler"])) {
         </div>
     </div>
     <div class="WaffenContainer">
-        <p class="Überschrift">Händler</p>
+        <p class="Überschrift">Steinhändler</p>
         <div class="Waffenliste">
-            <?php $newClass->HaendlerLesen($connection) ?>
+            <?php $newClass->ItemsAnzeigen($connection, "Stein", "steinhaendler.php"); ?>
         </div>
     </div>
     <br>

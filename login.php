@@ -388,8 +388,9 @@ class DBLoginAktionen
     function InventarErstellen($connection, $spielerid)
     {
         $anzahl = 0;
-        $insert = $connection->prepare("INSERT INTO inventar (spielerid,slotanzahl) VALUES (?,?)");
-        $insert->bind_param("ii", $spielerid, $anzahl);
+        $slot = 0;
+        $insert = $connection->prepare("INSERT INTO inventar (spielerid,slot1,slot2,slot3,slot4,slot5,slotanzahl) VALUES (?,?,?,?,?,?,?)");
+        $insert->bind_param("ii", $spielerid, $slot, $slot, $slot, $slot, $slot, $anzahl);
         $insert->execute();
         $insert->close();
 

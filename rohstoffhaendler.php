@@ -17,7 +17,7 @@ if (!isset($_SESSION["Spieler"])) {
 <html>
 
 <head>
-    <title>Händler</title>
+    <title>Rohstoffhändler</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" type="text/css" href="rpgstyle.css" />
     <link rel="stylesheet" type="text/css" href="mobilerpgstyle.css" />
@@ -50,9 +50,12 @@ if (!isset($_SESSION["Spieler"])) {
         </div>
     </div>
     <div class="WaffenContainer">
-        <p class="Überschrift">Händler</p>
+        <p class="Überschrift">Rohstoffhändler</p>
         <div class="Waffenliste">
-            <?php $newClass->HaendlerLesen($connection) ?>
+            <div class=GegenstandEinzeln>
+                <p>Steinhändler</p>
+                <a href="/steinhaendler.php"><img src='/Bilder/Marktplatzbutton.png' width=100 height=100 onclick="PlaySound();"></a>
+            </div>
         </div>
     </div>
     <br>

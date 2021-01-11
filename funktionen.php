@@ -8,6 +8,18 @@ if (!isset($_SESSION["Spieler"])) {
 	header('location: index.php');
 }
 
+//Item kaufen annehmen
+if (isset($_POST["action"]) && $_POST["action"] === "itemkaufen") {
+	$geld = $newClass->SpielerLesen($connection, "geld", $_SESSION["Spieler"]);
+	$kosten = $newClass->ItemAuslesen($connection, "geldwert", $_POST["itemid"]);
+
+	if ($geld >= $kosten) {
+		$geld = $geld - $kosten;
+		$newClass->SpielerGeldAktualisieren($connection, $geld);
+		$newClass->InventarItemHinzufuegen($connection, $_POST["itemid"]);
+	}
+}
+
 
 // Inventarslot kaufen
 if (isset($_POST["action"]) && $_POST["action"] === "slotkaufen") {
@@ -556,6 +568,13 @@ class DBAktionen
 		$result = $select->get_result();
 		$row = $result->fetch_assoc();
 		return $row["" . $var . ""];
+	}
+	function SpielerGeldAktualisieren($connection, $geld)
+	{
+		$update = $connection->prepare("UPDATE spieler SET geld=? WHERE id=?");
+		$update->bind_param("ii", $geld, $_SESSION["Spielerid"]);
+		$update->execute();
+		$update->close();
 	}
 	function GegnerLesen($connection, $var, $gegnerid)
 	{
@@ -1266,6 +1285,119 @@ class DBAktionen
 			$result = $select->get_result();
 			$row = $result->fetch_assoc();
 			return $row["" . $var . ""];
+		}
+	}
+
+	// Für Händler
+	function ItemsAnzeigen($connection, $typ, $shop)
+	{
+		$geld = $this->SpielerLesen($connection, "geld", $_SESSION["Spieler"]);
+
+		$select = $connection->prepare("SELECT id,itembildpfad, itemname, lvl, geldwert FROM item WHERE typ = ? ORDER BY lvl ASC");
+		$select->bind_param("s", $typ);
+		$select->execute();
+		$result = $select->get_result();
+		while ($row = $result->fetch_array()) {
+
+			$itembildpfad = $row["itembildpfad"];
+			$itemname = $row["itemname"];
+			$lvl = $row["lvl"];
+			$kosten = $row["geldwert"];
+			$id = $row["id"];
+
+			if ($geld >= $kosten) {
+				echo ("
+			<div class=\"GegenstandEinzeln\">
+			<img src=" . $itembildpfad . ">
+			<p>" . $itemname . "</p>
+			<p>LvL : " . $lvl . "</p>
+			 <p>Kostet: &nbsp " . $kosten . "<img id=\"geld\" src=\"Bilder/Geld.png\"></p>
+			 <form action=" . $shop . " method=\"POST\">
+			 <input type=\"hidden\" name=\"itemid\" value=" . $id . " />
+			 <input type=\"hidden\" name=\"action\" value=\"itemkaufen\" />
+			 <input id=\"audio\" type=\"image\" src=\"/Bilder/Geldsack.png\">
+			 </form>
+			 </div>");
+			} else {
+				echo ("
+				<div class=\"GegenstandEinzeln\">
+				<img src=" . $itembildpfad . ">&nbsp
+				<p>" . $itemname . "</p>
+				<p>LvL : " . $lvl . "</p>
+				<p>Kostet: &nbsp " . $kosten . "<img id=\"geld\" src=\"Bilder/Geld.png\"></p>
+                <img id=\"GeldX\" src=\"/Bilder/GeldsackX.png\" title=\"Zu wenig Geld\">
+				 </div>");
+			}
+		}
+	}
+
+	// Item dem Inventar hinzufügen
+	function InventarItemHinzufuegen($connection, $itemid)
+	{
+		$inventarid = $this->SpielerLesen($connection, "inventarid", $_SESSION["Spieler"]);
+
+		$select = $connection->prepare("SELECT slotanzahl from inventar WHERE id=?");
+		$select->bind_param("i", $inventarid);
+		$select->execute();
+		$result = $select->get_result();
+		$row = $result->fetch_assoc();
+		$slotanzal = $row["slotanzahl"];
+		$select->close();
+		$success = false;
+
+		if ($slotanzal > 0) {
+			for ($i = 1; $i <= $slotanzal; $i++) {
+
+				$select = $connection->prepare("SELECT slot1,slot2,slot3,slot4,slot5 from inventar WHERE id=?");
+				$select->bind_param("i", $inventarid);
+				$select->execute();
+				$result = $select->get_result();
+				$row = $result->fetch_assoc();
+
+				$slotid = $row["slot" . $i . ""];
+
+				if ($slotid === NULL) {
+					$slotid = 0;
+				}
+				if ($slotid === 0) {
+
+					if (!$success) {
+						$anzahl = 1;
+						$insert = $connection->prepare("INSERT INTO slot (inventarid,itemid,anzahl) VALUES (?,?,?)");
+						$insert->bind_param("iii", $inventarid, $itemid, $anzahl);
+						$insert->execute();
+						$id = $insert->insert_id;
+						$insert->close();
+
+						$slotstring = 'slot' . $i . '';
+
+						$update = $connection->prepare("UPDATE inventar SET " . $slotstring . "=? WHERE id=?");
+						$update->bind_param("ii", $id, $inventarid);
+						$update->execute();
+						$update->close();
+						$success = true;
+					}
+				} else {
+					if (!$success) {
+						$select = $connection->prepare("SELECT itemid,anzahl from slot WHERE id=?");
+						$select->bind_param("i", $slotid);
+						$select->execute();
+						$result = $select->get_result();
+						$row = $result->fetch_assoc();
+
+						$slotitemid = $row["itemid"];
+						$anzahlneu = $row["anzahl"] + 1;
+						$select->close();
+						if ($itemid == $slotitemid) {
+							$update = $connection->prepare("UPDATE slot SET anzahl=? WHERE id=?");
+							$update->bind_param("ii", $anzahlneu, $slotid);
+							$update->execute();
+							$update->close();
+							$success = true;
+						}
+					}
+				}
+			}
 		}
 	}
 }

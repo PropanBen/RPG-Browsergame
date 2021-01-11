@@ -1,7 +1,7 @@
 <?php
 
 // Bei Kauf Sound abspielen
-if (isset($_POST["trankid"]) || isset($_POST["waffenid"]) || isset($_POST["ruestungsid"])) {
+if (isset($_POST["trankid"])) {
     $myAudioFile = "/Audio/coin.wav";
     echo '<audio autoplay="true">
 <source src="' . $myAudioFile . '" type="audio/wav">
