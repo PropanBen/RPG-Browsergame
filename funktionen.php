@@ -1056,7 +1056,7 @@ class DBAktionen
 			$result2 = $select2->get_result();
 			while ($row2 = $result2->fetch_array()) {
 				echo
-					"
+				"
 				<div class=GegenstandEinzeln>
 				<img src=" . $row2["gegnerbildpfad"] . " width=100 height=100>
 				<p>" . $row2["gegnername"] . "</p><p>Level : " . $row2["lvl"] . "</p>
@@ -1522,5 +1522,42 @@ class DBAktionen
 		$update->bind_param("ii", $anzahl, $slotid);
 		$update->execute();
 		$update->close();
+	}
+
+	// Berufe -------------------------------------------------------------------------------------------------------------------------------------------
+
+	function BerufeAnzeigen($connection)
+	{
+		$select = $connection->prepare("SELECT id,berufsbildpfad,bezeichnung from beruf");
+		$select->execute();
+		$select->execute();
+		$result = $select->get_result();
+		while ($row = $result->fetch_array()) {
+
+			$select2 = $connection->prepare("SELECT COUNT(berufsid)AS anzahl FROM berufsfortschritt WHERE berufsid=? AND spielerid=?");
+			$select2->bind_param("ii", $row["id"], $_SESSION["Spielerid"]);
+			$select2->execute();
+			$result2 = $select2->get_result();
+			$row2 = $result2->fetch_assoc();
+
+			$lvl = 0;
+			if ($row2["anzahl"] === 1) {
+				$select3 = $connection->prepare("SELECT lvl from berufsfortschritt WHERE berufsid=? AND spielerid=?");
+				$select3->bind_param("ii", $row["id"], $_SESSION["Spielerid"]);
+				$select3->execute();
+				$select3->execute();
+				$result3 = $select3->get_result();
+				$row3 = $result3->fetch_assoc();
+				$lvl = $row3["lvl"];
+			}
+
+			echo '
+			<div class="Beruf-Item">
+			<img class="BerufImg" src="' . $row["berufsbildpfad"] . '"/>
+			<p>' . $row["bezeichnung"] . '</p>
+			<p>LvL : ' . $lvl . '</p>			
+			</div>					
+			';
+		}
 	}
 }

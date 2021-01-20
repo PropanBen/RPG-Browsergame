@@ -87,14 +87,19 @@ include("funktionen.php");
                     <a href="/spieleruebersicht.php" onclick="PlaySound();"> <img src="/Bilder/Spieleruebersicht.png"></a>
                 </div>
                 <div class="NavigationItem">
-                    <div id="Inventardiv" onclick="InventarPopUp();">
+                    <div id="Handwerkdiv" onclick="PopUp('#Handwerksfenster');">
+                        <img src="/Bilder/Handwerk.png">
+                    </div>
+                </div>
+                <div class="NavigationItem">
+                    <div id="Inventardiv" onclick="PopUp('#Inventarfenster');">
                         <img src="/Bilder/Kiste.png">
                     </div>
                 </div>
                 <div class="NavigationItem">
                     <div id="Nachrichten">
                         <img src="/Bilder/Schriftrolle.png">
-                        <div id="Schriftrolle" onclick="PopUp();">
+                        <div id="Schriftrolle" onclick="PopUp('#Nachrichtenfenster');">
                             <p><?php echo $newClass->AnzahlNachrichtenLesen($connection) ?></p>
                         </div>
                     </div>
@@ -152,7 +157,7 @@ include("funktionen.php");
     </div>
     <div id="Nachrichtenfenster">
         <div class="Zurückbutton">
-            <img src="Bilder/Zurückbutton.png" onclick="PopDown();" />
+            <img src="Bilder/Zurückbutton.png" onclick="PopDown('#Nachrichtenfenster');" />
         </div>
         <div id="NachrichtenContainer">
             <div id="Nachricht">
@@ -172,9 +177,18 @@ include("funktionen.php");
             <img id="allenachrichtenloeschen" src="/Bilder/Mülltonne.png" onclick="AlleNachrichtLoeschen();">
         </div>
     </div>
+
+    <div id="Handwerksfenster">
+        <div class="Zurückbutton">
+            <img src="Bilder/Zurückbutton.png" onclick="PopDown('#Handwerksfenster');" />
+        </div>
+        <div class="Beruf-Grid-Container">
+            <?php $newClass->BerufeAnzeigen($connection); ?>
+        </div>
+    </div>
     <div id="Inventarfenster">
         <div class="Zurückbutton">
-            <img src="Bilder/Zurückbutton.png" onclick="InventarPopDown();" />
+            <img src="Bilder/Zurückbutton.png" onclick="PopDown('#Inventarfenster');" />
         </div>
         <div class="InventarContainer">
             <div class="Inventar">
@@ -205,20 +219,22 @@ include("funktionen.php");
         audio.play();
     }
 
-    function PopUp() {
+    function PopUp(element) {
+
         let popup
-        popup = document.querySelector("#Nachrichtenfenster")
+        popup = document.querySelector(element)
         if (popup !== null) {
             popup.style.opacity = 1;
             popup.style.transform = "translate(+0%, +0%) scale(1)";
         }
         var audio = new Audio('/Audio/tap.wav');
         audio.play();
+
     }
 
-    function PopDown() {
+    function PopDown(element) {
         let popup
-        popup = document.querySelector("#Nachrichtenfenster")
+        popup = document.querySelector(element)
         if (popup !== null) {
             popup.style.opacity = 0;
             popup.style.transform = "translate(+0%, +0%) scale(0)";
@@ -228,30 +244,6 @@ include("funktionen.php");
         $("#Nachricht").load(location.href + "/einstellungen.php #Nachricht>*");
         $("#Schriftrolle").load(location.href + "/einstellungen.php #Schriftrolle >*");
     }
-
-    // Inventar Popup
-    function InventarPopUp() {
-        let popup
-        popup = document.querySelector("#Inventarfenster")
-        if (popup !== null) {
-            popup.style.opacity = 1;
-            popup.style.transform = "translate(+0%, +0%) scale(1)";
-        }
-        var audio = new Audio('/Audio/tap.wav');
-        audio.play();
-    }
-
-    function InventarPopDown() {
-        let popup
-        popup = document.querySelector("#Inventarfenster")
-        if (popup !== null) {
-            popup.style.opacity = 0;
-            popup.style.transform = "translate(+0%, +0%) scale(0)";
-        }
-        var audio = new Audio('/Audio/tap.wav');
-        audio.play();
-    }
-
     // Nachrichten Senden
     function NachrichtSenden() {
         var audio = new Audio('/Audio/tap.wav');

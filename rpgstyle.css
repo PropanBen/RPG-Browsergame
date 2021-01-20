@@ -841,6 +841,58 @@ cursor: pointer;
 	height:25px;
 }
 
+#Handwerksfenster
+{
+	width: 600px;
+	height: 80%;
+	margin:auto;
+	left:calc(50% - 300px);
+	top:5%;
+	border: 3px solid black;
+	border-radius: 10px;
+	background-color: burlywood;
+	z-index: 10;
+	display: block;
+	position: absolute;
+	opacity:1;
+	transform: translate(+0%, +0%) scale(0);
+	transition: opacity 1s, transform 1s;		
+}
+#Handwerkdiv
+{	
+	width:30px;
+	height:30px;
+	display: flex;
+	position: relative;
+	justify-content: center;
+	vertical-align: auto;
+	align-items: center;
+	cursor: pointer;		
+}
+.Beruf-Grid-Container
+{
+	width: 550px;
+	height: 90%;
+	position: relative;
+	margin:25px;
+	margin-top:80px;
+	display:inline-grid;
+	grid-template-columns: auto auto auto;
+}
+.Beruf-Item
+{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.BerufImg
+{
+	width:50px;
+	height:50px;
+}
+
+
+
 
 
 /*  Ende rpg.php  */
