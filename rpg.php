@@ -87,7 +87,7 @@ include("funktionen.php");
                     <a href="/spieleruebersicht.php" onclick="PlaySound();"> <img src="/Bilder/Spieleruebersicht.png"></a>
                 </div>
                 <div class="NavigationItem">
-                    <div id="Handwerkdiv" onclick="PopUp('#Handwerksfenster');">
+                    <div id="Berufdiv" onclick="PopUp('#Berufsfenster');">
                         <img src="/Bilder/Handwerk.png">
                     </div>
                 </div>
@@ -178,9 +178,9 @@ include("funktionen.php");
         </div>
     </div>
 
-    <div id="Handwerksfenster">
+    <div id="Berufsfenster">
         <div class="Zurückbutton">
-            <img src="Bilder/Zurückbutton.png" onclick="PopDown('#Handwerksfenster');" />
+            <img src="Bilder/Zurückbutton.png" onclick="PopDown('#Berufsfenster');" />
         </div>
         <div class="Beruf-Grid-Container">
             <?php $newClass->BerufeAnzeigen($connection); ?>
@@ -281,6 +281,17 @@ include("funktionen.php");
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.send("allenachrichtenloeschen=true");
         $("#Nachricht").load(location.href + "/einstellungen.php #Nachricht");
+    }
+
+    function LehrgeldZahlen(berufsid) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "funktionen.php", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("berufkaufen=" + berufsid + "");
+        $("#Berufsfenster").load(location.href + "/rpg.php #Berufsfenster>*");
+        $("#geldcontainer").load(location.href + "/rpg.php #geldcontainer>*");
+        var audio = new Audio('/Audio/coin.wav');
+        audio.play();
     }
 </script>
 

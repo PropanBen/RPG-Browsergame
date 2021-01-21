@@ -8,6 +8,22 @@ if (!isset($_SESSION["Spieler"])) {
 	header('location: index.php');
 }
 
+// Beruf freischalten
+if (isset($_POST["berufkaufen"])) {
+	$geld = $newClass->SpielerLesen($connection, "geld", $_SESSION["Spieler"]);
+	if ($geld >= 1000) {
+		$lvl = 1;
+		$erfahrung = 0;
+		$insert = $connection->prepare("INSERT INTO berufsfortschritt (berufsid, spielerid,lvl,erfahrung) VALUES (?,?,?,?)");
+		$insert->bind_param("iiii", $_POST["berufkaufen"], $_SESSION["Spielerid"], $lvl, $erfahrung);
+		$insert->execute();
+		$insert->close();
+
+		$geld = $geld - 1000;
+		$newClass->SpielerGeldAktualisieren($connection, $geld);
+		$_SESSION["soundkaufen"] = true;
+	}
+}
 
 // Item löschen aus Inventar
 
@@ -1542,22 +1558,39 @@ class DBAktionen
 
 			$lvl = 0;
 			if ($row2["anzahl"] === 1) {
-				$select3 = $connection->prepare("SELECT lvl from berufsfortschritt WHERE berufsid=? AND spielerid=?");
+				$select3 = $connection->prepare("SELECT lvl,erfahrung from berufsfortschritt WHERE berufsid=? AND spielerid=?");
 				$select3->bind_param("ii", $row["id"], $_SESSION["Spielerid"]);
 				$select3->execute();
 				$select3->execute();
 				$result3 = $select3->get_result();
 				$row3 = $result3->fetch_assoc();
 				$lvl = $row3["lvl"];
-			}
 
-			echo '
-			<div class="Beruf-Item">
-			<img class="BerufImg" src="' . $row["berufsbildpfad"] . '"/>
-			<p>' . $row["bezeichnung"] . '</p>
-			<p>LvL : ' . $lvl . '</p>			
-			</div>					
-			';
+				echo
+				'<div class="Beruf-Item-Gekauft">
+				<img class="BerufImg" src="' . $row["berufsbildpfad"] . '"/>
+				<p>' . $row["bezeichnung"] . '</p>
+				<p>LvL : ' . $lvl . '</p>
+				<p>Erfahrung : ' . $row3["erfahrung"] . ' / ' . ($lvl * 1000) . '</p>
+				</div>';
+			} else {
+				$geld = $this->SpielerLesen($connection, "geld", $_SESSION["Spieler"]);
+				if ($geld >= 1000) {
+					echo
+					'<div class="Beruf-Item">
+					<img class="BerufImg CursorPointer" src="' . $row["berufsbildpfad"] . '" onclick="LehrgeldZahlen(' . $row["id"] . ');"/>
+					<p>' . $row["bezeichnung"] . '</p>
+					<p>Kostet: 1000 <img id="geld" src="Bilder/Geld.png"></p>		
+					</div>	';
+				} else {
+					echo
+					'<div class="Beruf-Item">
+					<img class="BerufImg" src="' . $row["berufsbildpfad"] . '"/>
+					<p>' . $row["bezeichnung"] . '</p>
+					<p>Kostet: 1000 <img id="geld" src="Bilder/GeldsackX.png"></p>		
+					</div>	';
+				}
+			}
 		}
 	}
 }
