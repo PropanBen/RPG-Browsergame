@@ -400,6 +400,16 @@ height:25px;
 {
     top: -80px;
 }
+#Berufsfenster
+{
+    width:300px;
+    left:calc(50% - 153px);
+    font-size:8px;
+}
+.Beruf-Grid-Container
+{
+    width:250px;
+}
 
 
 /* Ende rpg.php    */

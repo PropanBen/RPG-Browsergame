@@ -1580,14 +1580,14 @@ class DBAktionen
 					'<div class="Beruf-Item">
 					<img class="BerufImg CursorPointer" src="' . $row["berufsbildpfad"] . '" onclick="LehrgeldZahlen(' . $row["id"] . ');"/>
 					<p>' . $row["bezeichnung"] . '</p>
-					<p>Kostet: 1000 <img id="geld" src="Bilder/Geld.png"></p>		
+					<p>1000 <img id="geld" src="Bilder/Geld.png"></p>		
 					</div>	';
 				} else {
 					echo
 					'<div class="Beruf-Item">
 					<img class="BerufImg" src="' . $row["berufsbildpfad"] . '"/>
 					<p>' . $row["bezeichnung"] . '</p>
-					<p>Kostet: 1000 <img id="geld" src="Bilder/GeldsackX.png"></p>		
+					<p>1000 <img id="geld" src="Bilder/GeldsackX.png"></p>		
 					</div>	';
 				}
 			}
