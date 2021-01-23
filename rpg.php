@@ -87,6 +87,9 @@ include("funktionen.php");
                     <a href="/spieleruebersicht.php" onclick="PlaySound();"> <img src="/Bilder/Spieleruebersicht.png"></a>
                 </div>
                 <div class="NavigationItem">
+                    <a href="/karte.php" onclick="PlaySound();"> <img src="/Bilder/SzeneMap.png"></a>
+                </div>
+                <div class="NavigationItem">
                     <div id="Berufdiv" onclick="PopUp('#Berufsfenster');">
                         <img src="/Bilder/Handwerk.png">
                     </div>
@@ -152,7 +155,11 @@ include("funktionen.php");
             </div>
         </div>
         <div class="SzenenContainer">
-            <img class="Szenenbild" src="Bilder/SzeneMap.png">
+            <!-- <img class="Szenenbild" src="Bilder/SzeneMap.png">-->
+            <div class="KartenContainer">
+                <img id="Karte" src="/Bilder/SzeneMap.png">
+                <?php $newClass->BerufeAufKarteAnzeigen($connection, 3); ?>
+            </div>
         </div>
     </div>
     <div id="Nachrichtenfenster">

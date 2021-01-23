@@ -22,6 +22,10 @@ if (isset($_POST["berufkaufen"])) {
 		$geld = $geld - 1000;
 		$newClass->SpielerGeldAktualisieren($connection, $geld);
 		$_SESSION["soundkaufen"] = true;
+
+		$berufsbezeichnung = $newClass->BerufsnameVonID($connection, $_POST["berufkaufen"]);
+		$ereignis = 'Beruf ' . $berufsbezeichnung . ' gekauft';
+		$newClass->Logging($connection, $ereignis);
 	}
 }
 
@@ -1546,7 +1550,6 @@ class DBAktionen
 	{
 		$select = $connection->prepare("SELECT id,berufsbildpfad,bezeichnung from beruf");
 		$select->execute();
-		$select->execute();
 		$result = $select->get_result();
 		while ($row = $result->fetch_array()) {
 
@@ -1561,7 +1564,6 @@ class DBAktionen
 				$select3 = $connection->prepare("SELECT lvl,erfahrung from berufsfortschritt WHERE berufsid=? AND spielerid=?");
 				$select3->bind_param("ii", $row["id"], $_SESSION["Spielerid"]);
 				$select3->execute();
-				$select3->execute();
 				$result3 = $select3->get_result();
 				$row3 = $result3->fetch_assoc();
 				$lvl = $row3["lvl"];
@@ -1571,7 +1573,7 @@ class DBAktionen
 				<img class="BerufImg" src="' . $row["berufsbildpfad"] . '"/>
 				<p>' . $row["bezeichnung"] . '</p>
 				<p>LvL : ' . $lvl . '</p>
-				<p>Erfahrung : ' . $row3["erfahrung"] . ' / ' . ($lvl * 1000) . '</p>
+				<p>EXP : ' . $row3["erfahrung"] . ' / ' . ($lvl * 1000) . '</p>
 				</div>';
 			} else {
 				$geld = $this->SpielerLesen($connection, "geld", $_SESSION["Spieler"]);
@@ -1591,6 +1593,55 @@ class DBAktionen
 					</div>	';
 				}
 			}
+		}
+	}
+
+	function BerufsnameVonID($connection, $id)
+	{
+		$select = $connection->prepare("SELECT  bezeichnung from beruf WHERE id=?");
+		$select->bind_param("i", $id);
+		$select->execute();
+		$result = $select->get_result();
+		$row = $result->fetch_assoc();
+		return $row["bezeichnung"];
+	}
+
+	function BerufeAufKarteAnzeigen($connection, $berufsid)
+	{
+		$select = $connection->prepare("SELECT 
+		CASE 
+		WHEN bezeichnung = 'Minenarbeiter' THEN 'mine'
+		WHEN bezeichnung = 'Holzfaeller' THEN 'wald' 
+		WHEN bezeichnung = 'Steinmetz' THEN 'steinbruch'
+		WHEN bezeichnung = 'Bauer' THEN 'feld'
+		WHEN bezeichnung = 'Schmied' THEN 'schmiede'
+		WHEN bezeichnung = 'Jaeger' THEN 'jagdgebiet'
+		WHEN bezeichnung = 'Fischer' THEN 'fluss'
+		WHEN bezeichnung = 'Kraeutersammler' THEN 'hain'
+		WHEN bezeichnung = 'Schneider' THEN 'schneiderstube'
+		WHEN bezeichnung = 'Koch' THEN 'kueche'
+		WHEN bezeichnung = 'Zimmerer' THEN 'werkstatt'
+		WHEN bezeichnung = 'Alchemist' THEN 'labor'
+		END as bezeichnung,	
+		berufsbildpfad from beruf WHERE id=?");
+		$select->bind_param("i", $berufsid);
+		$select->execute();
+		$result = $select->get_result();
+		$row = $result->fetch_assoc();
+
+		$select2 = $connection->prepare("SELECT COUNT(berufsid)AS anzahl FROM berufsfortschritt WHERE berufsid=? AND spielerid=?");
+		$select2->bind_param("ii", $berufsid, $_SESSION["Spielerid"]);
+		$select2->execute();
+		$result2 = $select2->get_result();
+		$row2 = $result2->fetch_assoc();
+
+		if ($row2["anzahl"] > 0) {
+			echo
+			'
+			<div id="' . $row["bezeichnung"] . '" class="Ort">
+			<a href="/' . $row["bezeichnung"] . '.php" onclick="PlaySound();"><img src="' . $row["berufsbildpfad"] . '" /></a>
+			</div>
+			';
 		}
 	}
 }

@@ -53,7 +53,7 @@ if (isset($_SESSION["soundkaufen"])) {
     <div class="WaffenContainer">
         <p class="Überschrift">Steinhändler</p>
         <div class="Waffenliste">
-            <?php $newClass->ItemsAnzeigen($connection, "Stein", "steinhaendler.php"); ?>
+            <?php $newClass->ItemsAnzeigen($connection, "Steinmetz", "steinhaendler.php"); ?>
         </div>
     </div>
     <br>

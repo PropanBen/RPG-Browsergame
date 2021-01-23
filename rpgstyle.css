@@ -223,19 +223,12 @@ footer a
 .SzenenContainer
 {
 	width: calc(100% - 560px);	
-	height: 75%;
-	margin-top: auto;
+	height: 85%;
+	margin-top: 0;
 	margin-bottom: auto;
 	margin-left:10px;
 	margin-right:10px;
 	flex:1;
-}
-.Szenenbild
-{
-    width: 90%;
-	height: 100%;
-	object-fit: fill;
-	border-radius:10px;
 }
 .SpielerInfoContainer
 {
@@ -848,7 +841,7 @@ cursor: pointer;
 #Berufsfenster
 {
 	width: 600px;
-	height: 80%;
+	height: auto;
 	margin:auto;
 	left:calc(50% - 300px);
 	top:5%;
@@ -886,12 +879,14 @@ cursor: pointer;
 }
 .Beruf-Item
 {
+	height: 150px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 }
 .Beruf-Item-Gekauft
 {
+	height: 150px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -903,6 +898,69 @@ cursor: pointer;
 	width:50px;
 	height:50px;
 }
+
+.Kartencontainer
+{
+	width:100%;
+	height:auto;
+	margin-left:auto;
+	margin-right: auto;
+	margin-top:80px;
+	position: relative;		
+}
+#Karte
+{
+    width: 100%;
+    height: 100%;
+}
+
+.Ort img
+{
+	width: 100%;
+	height: 100%;
+}
+.Ort:hover
+{
+	transform: scale(1.1);
+}
+
+.HandwerksContainer
+{
+	width:60%;
+	height:80%;
+	margin-left:auto;
+	margin-right:auto;
+	margin-top:80px;
+	border:3px solid black;
+	border-radius:10px;
+	display:flex;
+	align-items: center;
+	flex-direction: column;
+}
+.HandwerkItemContainer
+{
+	width: 100%;
+	height:20%;
+	display: grid;
+	grid-template-columns: auto auto auto auto auto;
+}
+.HandwerkItemContainer img
+{
+	width:20px;
+	height: 20px;
+}
+#steinbruch
+{
+   width: 50px;
+   height: 50px;
+   top: 65%;
+   left: 46%;
+   position: absolute;	
+   background-color:green;
+   border-radius: 50%;
+   border:3px solid black;
+}
+
 
 
 

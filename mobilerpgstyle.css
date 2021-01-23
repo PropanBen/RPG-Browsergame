@@ -336,6 +336,10 @@ height:25px;
 {
     font-size: 16px;
 }
+.NavigationItem
+{
+    margin-left:0px;
+}
 .Inventar
 {
     width:300px;
@@ -410,6 +414,13 @@ height:25px;
 {
     width:250px;
 }
+#steinbruch
+{
+    width: 30px;
+    height: 30px;
+    border:1px solid black;
+}
+
 
 
 /* Ende rpg.php    */
