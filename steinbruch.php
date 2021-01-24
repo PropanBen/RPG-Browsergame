@@ -23,7 +23,17 @@ if (!isset($_SESSION["Spieler"])) {
     </div>
     <div class="HandwerksContainer">
         <div class="HandwerkItemContainer">
+            <img class="Pfeil" src="/Bilder/Pfeil_links.png">
+            <img class="RohstoffItem" src="/Itembilder/Stein.png">
+            <img class="Pfeil" src="/Bilder/Pfeil_rechts.png">
         </div>
+        <div class="UmgebungsContainer">
+        </div>
+        <div class="Inventar">
+            <?php $newClass->InventarAnzeigen($connection, NULL); ?>
+        </div>
+    </div>
+
     </div>
 
 

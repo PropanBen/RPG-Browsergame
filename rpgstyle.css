@@ -752,7 +752,7 @@ cursor: pointer;
 .Inventar
 {
   width:500px;
-  height:200px;
+  height:150px;
   background-color: burlywood;
   display: flex;
   justify-content: center;
@@ -926,8 +926,8 @@ cursor: pointer;
 
 .HandwerksContainer
 {
-	width:60%;
-	height:80%;
+	width:600px;
+	height:800px;
 	margin-left:auto;
 	margin-right:auto;
 	margin-top:80px;
@@ -936,18 +936,20 @@ cursor: pointer;
 	display:flex;
 	align-items: center;
 	flex-direction: column;
+	background-image: url("/Orte/Steinbruch.png");		
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
 }
 .HandwerkItemContainer
 {
 	width: 100%;
-	height:20%;
-	display: grid;
-	grid-template-columns: auto auto auto auto auto;
-}
-.HandwerkItemContainer img
-{
-	width:20px;
-	height: 20px;
+	height:300px;
+	display: flex;
+	margin-top:100px;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;	
 }
 #steinbruch
 {
@@ -959,6 +961,22 @@ cursor: pointer;
    background-color:green;
    border-radius: 50%;
    border:3px solid black;
+}
+.UmgebungsContainer
+{
+	width: 60%;
+	height: 550px;
+	border-radius: 100px;	
+}
+.RohstoffItem
+{
+	width:200px;
+	height: 200px;
+}
+.Pfeil
+{
+	width: 50px;
+	height: 50px;
 }
 
 

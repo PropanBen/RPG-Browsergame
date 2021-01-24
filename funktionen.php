@@ -1644,4 +1644,32 @@ class DBAktionen
 			';
 		}
 	}
+
+	function RohstoffeAnzeigen($connection, $typ, $index)
+	{
+		$select = $connection->prepare("SELECT id,itembildpfad, itemname, lvl FROM item WHERE typ = ? ORDER BY lvl ASC");
+		$select->bind_param("s", $typ);
+		$select->execute();
+		$result = $select->get_result();
+
+		$datensaetze = [];
+		while ($row = $result->fetch_array()) {
+
+			array_push($datensaetze, $row);
+		}
+
+		$itemanzahl = count($datensaetze);
+
+		$id = $datensaetze[$index][0];
+		$itembildpfad = $datensaetze[$index][1];
+		$itemname = $datensaetze[$index][2];
+		$lvl = $datensaetze[$index][3];
+
+
+		echo ("
+				<img src=" . $itembildpfad . ">&nbsp
+				<p>" . $itemname . "</p>
+				<p>LvL : " . $lvl . "</p>
+				 </div>");
+	}
 }

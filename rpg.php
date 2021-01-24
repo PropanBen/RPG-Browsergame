@@ -155,7 +155,6 @@ include("funktionen.php");
             </div>
         </div>
         <div class="SzenenContainer">
-            <!-- <img class="Szenenbild" src="Bilder/SzeneMap.png">-->
             <div class="KartenContainer">
                 <img id="Karte" src="/Bilder/SzeneMap.png">
                 <?php $newClass->BerufeAufKarteAnzeigen($connection, 3); ?>
@@ -297,6 +296,7 @@ include("funktionen.php");
         xhttp.send("berufkaufen=" + berufsid + "");
         $("#Berufsfenster").load(location.href + "/rpg.php #Berufsfenster>*");
         $("#geldcontainer").load(location.href + "/rpg.php #geldcontainer>*");
+        $(".KartenContainer").load(location.href + "/rpg.php .KartenContainer>*");
         var audio = new Audio('/Audio/coin.wav');
         audio.play();
     }
