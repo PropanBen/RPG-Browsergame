@@ -940,13 +940,23 @@ cursor: pointer;
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: cover;
+	text-align: center;	
 }
+.ItemAnzeige
+{	
+	width: 100%;
+	height:auto;
+	margin-top:100px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
 .HandwerkItemContainer
 {
 	width: 100%;
-	height:300px;
 	display: flex;
-	margin-top:100px;
 	flex-direction: row;
 	justify-content: center;
 	align-items: center;	
@@ -970,8 +980,8 @@ cursor: pointer;
 }
 .RohstoffItem
 {
-	width:200px;
-	height: 200px;
+	width:100px;
+	height: 100px;
 }
 .Pfeil
 {

@@ -22,10 +22,8 @@ if (!isset($_SESSION["Spieler"])) {
         <a href="/karte.php" onclick="PlaySound();"><img src="Bilder/Zurückbutton.png" /></a>
     </div>
     <div class="HandwerksContainer">
-        <div class="HandwerkItemContainer">
-            <img class="Pfeil" src="/Bilder/Pfeil_links.png">
-            <img class="RohstoffItem" src="/Itembilder/Stein.png">
-            <img class="Pfeil" src="/Bilder/Pfeil_rechts.png">
+        <div id="ItemAnzeige">
+            <?php $newClass->RohstoffeAnzeigen($connection, "Steinmetz", 0);  ?>
         </div>
         <div class="UmgebungsContainer">
         </div>
@@ -40,10 +38,60 @@ if (!isset($_SESSION["Spieler"])) {
 </body>
 <script>
     function PlaySound() {
-        //onclick="PlaySound();"
-
         var audio = new Audio('/Audio/tap.wav');
         audio.play();
+    }
+
+    function PlaySoundError() {
+        var audio = new Audio('/Audio/error.wav');
+        audio.play();
+    }
+
+    function ItemVor() {
+        let index = document.getElementById('index');
+        let itemanzahl = document.getElementById('itemanzahl');
+        let typ = document.getElementById('typ');
+
+        let maxindex = itemanzahl.value - 1;
+
+        if (index.value < maxindex) {
+            index.value++;
+            ItemAnfrage(index.value, typ.value);
+            PlaySound();
+        } else {
+            PlaySoundError();
+        }
+
+    }
+
+    function ItemZurueck() {
+        let index = document.getElementById('index');
+        let itemanzahl = document.getElementById('itemanzahl');
+        let typ = document.getElementById('typ');
+
+        let maxindex = itemanzahl.value;
+
+        if (index.value > 0) {
+            index.value--;
+            ItemAnfrage(index.value, typ.value);
+            PlaySound();
+        } else {
+            PlaySoundError();
+        }
+
+    }
+
+    function ItemAnfrage(index, typ) {
+        let divbox = document.getElementById('ItemAnzeige')
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                divbox.innerHTML = this.responseText;
+            }
+        }
+        xhttp.open("POST", "funktionen.php", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("action=itemanfrage&index=" + index + "&typ=" + typ + "");
     }
 </script>
 

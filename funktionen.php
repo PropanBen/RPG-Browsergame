@@ -8,6 +8,12 @@ if (!isset($_SESSION["Spieler"])) {
 	header('location: index.php');
 }
 
+// ItemAnfrage
+if (isset($_POST["action"]) && $_POST["action"] === "itemanfrage") {
+
+	echo $newClass->RohstoffeAnzeigen($connection, $_POST["typ"], $_POST["index"]);
+}
+
 // Beruf freischalten
 if (isset($_POST["berufkaufen"])) {
 	$geld = $newClass->SpielerLesen($connection, "geld", $_SESSION["Spieler"]);
@@ -1660,16 +1666,23 @@ class DBAktionen
 
 		$itemanzahl = count($datensaetze);
 
-		$id = $datensaetze[$index][0];
+		$itemid = $datensaetze[$index][0];
 		$itembildpfad = $datensaetze[$index][1];
 		$itemname = $datensaetze[$index][2];
 		$lvl = $datensaetze[$index][3];
 
-
-		echo ("
-				<img src=" . $itembildpfad . ">&nbsp
-				<p>" . $itemname . "</p>
-				<p>LvL : " . $lvl . "</p>
-				 </div>");
+		echo '
+		<div id="HandwerkItemContainer" class="HandwerkItemContainer">
+		<input id="index" type="hidden" value="' . $index . '">
+		<input id="itemanzahl" type="hidden" value="' . $itemanzahl . '" >  
+		<input id="itemid" type="hidden" value="' . $itemid . '"  >
+		<input id="typ" type="hidden" value=' . $typ . '>       
+		<img class="Pfeil CursorPointer" src="/Bilder/Pfeil_links.png"  onclick="ItemZurueck();">
+		<img class="RohstoffItem" src="' . $datensaetze[$index][1] . '">
+		<img class="Pfeil CursorPointer" src="/Bilder/Pfeil_rechts.png" onclick="ItemVor();">
+		</div>
+		<p>' . $itemname . '</p>
+		<p>LvL : ' . $lvl . '</p>	
+		';
 	}
 }
