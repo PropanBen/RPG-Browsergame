@@ -799,23 +799,33 @@ cursor: pointer;
 }
 .ItemLvL
 {
+	width:30px;
+	height:30px;
 	bottom:45px;
-	left: -30;
+	left: +5;
 	position: relative;
+	display:flex;
+	justify-content: center;
+	align-items: center;
 }
 .InventarPlakette
 {
 	width:30px;
 	height:30px;
-	bottom:80px;
+	bottom:75px;
 	right:-30px;
 	position: relative;
 }
 .ItemAnzahl
 {
-	right:-30px;
-	bottom:110px;
+	width:30px;
+	height:30px;
+	bottom:105px;
+	right:-65px;
 	position: relative;
+	display:flex;
+	justify-content: center;
+	align-items: center;
 }
 .ItemName
 {
@@ -942,15 +952,10 @@ cursor: pointer;
 	background-size: cover;
 	text-align: center;	
 }
-.ItemAnzeige
+#ItemAnzeige
 {	
-	width: 100%;
-	height:auto;
-	margin-top:100px;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
+background-color: burlywood;
+border-radius: 10px;
 }
 
 .HandwerkItemContainer
@@ -977,7 +982,36 @@ cursor: pointer;
 	width: 60%;
 	height: 550px;
 	border-radius: 100px;	
+	display:flex;
+	justify-content: center;
+	align-items: center;
 }
+.AktionsButtonContainer
+{
+	width: 200px;
+	height: 200px;
+	display:flex;
+	justify-content: center;
+	align-items: center;
+}
+.AktionsButtonContainer input
+{
+	width: 200px;
+	height: 200px;
+	border-radius: 80px;
+	opacity: 0.5;
+	background-color: white;
+}
+.AktionsButtonContainer input:hover
+{
+    opacity: 1;
+}
+.AktionsButtonContainer input
+{
+	width: 200px;
+	height: 200px;
+}
+
 .RohstoffItem
 {
 	width:100px;

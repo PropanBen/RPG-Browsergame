@@ -8,6 +8,11 @@ if (!isset($_SESSION["Spieler"])) {
 	header('location: index.php');
 }
 
+// Itemabbauen annehmen
+if (isset($_POST["action"]) && $_POST["action"] === "itemabbauen") {
+	$newClass->SammelZaehler($connection, $_POST["berufsid"], $_POST["itemid"]);
+}
+
 // ItemAnfrage
 if (isset($_POST["action"]) && $_POST["action"] === "itemanfrage") {
 
@@ -20,8 +25,9 @@ if (isset($_POST["berufkaufen"])) {
 	if ($geld >= 1000) {
 		$lvl = 1;
 		$erfahrung = 0;
-		$insert = $connection->prepare("INSERT INTO berufsfortschritt (berufsid, spielerid,lvl,erfahrung) VALUES (?,?,?,?)");
-		$insert->bind_param("iiii", $_POST["berufkaufen"], $_SESSION["Spielerid"], $lvl, $erfahrung);
+		$zaehler = 10;
+		$insert = $connection->prepare("INSERT INTO berufsfortschritt (berufsid, spielerid,lvl,erfahrung,zaehler) VALUES (?,?,?,?,?)");
+		$insert->bind_param("iiiii", $_POST["berufkaufen"], $_SESSION["Spielerid"], $lvl, $erfahrung, $zaehler);
 		$insert->execute();
 		$insert->close();
 
@@ -1343,10 +1349,16 @@ class DBAktionen
 					<img class="ItemImg" src="' . $itembildpfad . '">
 				</div>
 				<img class="ItemLvLPlakette" class="Plakette" src="/Bilder/LvL_Plakette.png" />
-				<p class="ItemLvL">' . $itemlvl . '</p>
+				<div class="ItemLvL">
+				<p>' . $itemlvl . '</p>
+				</div>
 				<img class="InventarPlakette" class="Plakette" src="/Bilder/LvL_Plakette.png" />
-				<p class="ItemAnzahl">' . $itemanzahl . '</p>
-				<p class="ItemName">' . $itemname . '</p>
+				<div class="ItemAnzahl">
+				<p>' . $itemanzahl . '</p>
+				</div>
+				<div class="ItemName">
+				<p>' . $itemname . '</p>
+				</div>
 				' . $string . '</div>');
 			}
 		} else {
@@ -1678,11 +1690,32 @@ class DBAktionen
 		<input id="itemid" type="hidden" value="' . $itemid . '"  >
 		<input id="typ" type="hidden" value=' . $typ . '>       
 		<img class="Pfeil CursorPointer" src="/Bilder/Pfeil_links.png"  onclick="ItemZurueck();">
-		<img class="RohstoffItem" src="' . $datensaetze[$index][1] . '">
+		<img class="RohstoffItem" src="' . $itembildpfad . '">
 		<img class="Pfeil CursorPointer" src="/Bilder/Pfeil_rechts.png" onclick="ItemVor();">
 		</div>
 		<p>' . $itemname . '</p>
 		<p>LvL : ' . $lvl . '</p>	
 		';
+	}
+	function SammelZaehler($connection, $id, $itemid)
+	{
+		$select = $connection->prepare("SELECT zaehler from berufsfortschritt WHERE berufsid=? AND spielerid=?");
+		$select->bind_param("ii", $id, $_SESSION["Spielerid"]);
+		$select->execute();
+		$result = $select->get_result();
+		$row = $result->fetch_assoc();
+		$zaehler = $row["zaehler"];
+
+		$zaehler--;
+		if ($zaehler == 0) {
+			$this->InventarItemHinzufuegen($connection, $itemid);
+			$zaehler = 10;
+			echo 1;
+		}
+
+		$update = $connection->prepare("UPDATE berufsfortschritt SET zaehler=? WHERE berufsid=? AND spielerid=?");
+		$update->bind_param("iii", $zaehler, $id, $_SESSION["Spielerid"]);
+		$update->execute();
+		$update->close();
 	}
 }

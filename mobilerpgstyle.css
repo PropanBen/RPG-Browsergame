@@ -378,31 +378,37 @@ height:25px;
 }
 .ItemLvL
 {
-    bottom: 32px;
-    left:-15px;
+    width: 15px;
+    height: 15px;
+    bottom: 25px;
+    left:3px;
     font-size: 8px;
+    position: relative;
 }
 .InventarPlakette
 {
     width: 15px;
     height: 15px; 
-    bottom:55px;
+    bottom:40px;
     right:-15px;
 }
 .ItemAnzahl
 {
-    right:-15px;
-    bottom:76px;
-    font-size: 8px;  
+    width: 15px;
+    height: 15px;  
+    right:-33px;
+    bottom:54px;
+    font-size: 8px; 
+    position: relative; 
 }
 .ItemName
 {
     font-size: 8px; 
-    top: -80px;
+    top: -60px;
 }
 .VerkaufsContainer
 {
-    top: -80px;
+    top: -60px;
 }
 #Berufsfenster
 {
@@ -423,10 +429,27 @@ height:25px;
 .HandwerksContainer
 {
     width: 90%;
+    height:450px;
 }
 .KartenContainer
 {
     height:60%;
+}
+.UmgebungsContainer input
+{
+    width:150px;
+    height:150px;
+    border-radius: 40px;
+    opacity: 0.5;
+}
+.UmgebungsContainer input:hover
+{
+    opacity: 1;
+}
+.UmgebungsContainer input
+{
+    width:150px;
+    height:150px;
 }
 
 

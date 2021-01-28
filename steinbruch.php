@@ -15,6 +15,7 @@ if (!isset($_SESSION["Spieler"])) {
     <link rel="stylesheet" type="text/css" href="rpgstyle.css" />
     <link rel="stylesheet" type="text/css" href="mobilerpgstyle.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
 <body style="background-color:burlywood">
@@ -26,8 +27,11 @@ if (!isset($_SESSION["Spieler"])) {
             <?php $newClass->RohstoffeAnzeigen($connection, "Steinmetz", 0);  ?>
         </div>
         <div class="UmgebungsContainer">
+            <div class="AktionsButtonContainer">
+                <input id="Werkzeug" type="image" onclick="ItemSammeln();" src="/Berufsbilder/Spitzhacke1.png">
+            </div>
         </div>
-        <div class="Inventar">
+        <div id="Inventar" class="Inventar">
             <?php $newClass->InventarAnzeigen($connection, NULL); ?>
         </div>
     </div>
@@ -92,6 +96,46 @@ if (!isset($_SESSION["Spieler"])) {
         xhttp.open("POST", "funktionen.php", true);
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.send("action=itemanfrage&index=" + index + "&typ=" + typ + "");
+    }
+
+    function ItemSammeln() {
+        let berufsid = 3;
+        let itemid = document.getElementById('itemid');
+        let werkzeug = document.getElementById('Werkzeug');
+        let inventar = document.getElementById('Inventar');
+        werkzeug.style.transform = "translate(+0%, +0%) scale(1.2)";
+        setTimeout(Skalieren, 200);
+
+        var audio = new Audio('/Audio/Spitzhacke.wav');
+        audio.play();
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                if (this.responseText == 1) {
+                    var audio = new Audio('/Audio/Steinbruch.wav');
+                    audio.play();
+                    inventar.style.transform = "translate(+0%, +0%) scale(1.1)";
+                    setTimeout(InventarSkalieren, 1000);
+                }
+
+            }
+        }
+        xhttp.open("POST", "funktionen.php", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("action=itemabbauen&berufsid=" + berufsid + "&itemid=" + itemid.value + "");
+        $(".Inventar").load(location.href + "/steinbruch.php .Inventar");
+
+    }
+
+    function Skalieren() {
+        let werkzeug = document.getElementById('Werkzeug');
+        werkzeug.style.transform = "translate(+0%, +0%) scale(1.0)";
+    }
+
+    function InventarSkalieren() {
+        let inventar = document.getElementById('Inventar');
+        inventar.style.transform = "translate(+0%, +0%) scale(1.0)";
     }
 </script>
 
