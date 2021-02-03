@@ -5,6 +5,9 @@ if (!isset($_SESSION["Spieler"])) {
     header('location: index.php');
 }
 
+
+if ($newClass->Berufpruefen($connection, 3) == 0)
+    header('location: rpg.php');
 ?>
 
 <html>
@@ -17,6 +20,7 @@ if (!isset($_SESSION["Spieler"])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
+<div class="Hintergrund"></div>
 
 <body style="background-color:burlywood">
     <div class="Zurückbutton">
@@ -24,7 +28,11 @@ if (!isset($_SESSION["Spieler"])) {
     </div>
     <div class="HandwerksContainer">
         <div id="ItemAnzeige">
-            <?php $newClass->RohstoffeAnzeigen($connection, "Steinmetz", 0);  ?>
+            <?php $newClass->RohstoffeAnzeigen($connection, 3, "Steinmetz", 0);  ?>
+        </div>
+        <div id="Werte">
+            <p id="XP">XP : <?php echo $newClass->BerufsfortschrittLesen($connection, 3); ?>&nbsp /&nbsp <?php echo $newClass->BerufsfortschrittLvLLesen($connection, 3) * 1000; ?></p>
+            <p id="beruf"> <?php echo $newClass->BerufsnameVonID($connection, 3); ?>&nbspLvL :&nbsp<?php echo $newClass->BerufsfortschrittLvLLesen($connection, 3); ?></p>
         </div>
         <div class="UmgebungsContainer">
             <div class="AktionsButtonContainer">
@@ -86,7 +94,8 @@ if (!isset($_SESSION["Spieler"])) {
     }
 
     function ItemAnfrage(index, typ) {
-        let divbox = document.getElementById('ItemAnzeige')
+        let divbox = document.getElementById('ItemAnzeige');
+        let berufsid = document.getElementById('berufsid');
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -95,7 +104,7 @@ if (!isset($_SESSION["Spieler"])) {
         }
         xhttp.open("POST", "funktionen.php", true);
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhttp.send("action=itemanfrage&index=" + index + "&typ=" + typ + "");
+        xhttp.send("action=itemanfrage&index=" + index + "&typ=" + typ + "&berufsid=" + berufsid.value + "");
     }
 
     function ItemSammeln() {
@@ -116,6 +125,8 @@ if (!isset($_SESSION["Spieler"])) {
                     var audio = new Audio('/Audio/Steinbruch.wav');
                     audio.play();
                     inventar.style.transform = "translate(+0%, +0%) scale(1.1)";
+                    $("#XP").load(location.href + "/steinbruch.php #XP");
+                    $("#beruf").load(location.href + "/steinbruch.php #beruf");
                     setTimeout(InventarSkalieren, 1000);
                 }
 

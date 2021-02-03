@@ -787,7 +787,7 @@ cursor: pointer;
 	width: 80px;
 	height: 80px;
 	position: relative;
-	z-index: 10;
+	z-index: 0;
 }
 .ItemLvLPlakette
 {
@@ -796,6 +796,7 @@ cursor: pointer;
 	bottom:15px;
 	left:-30px;
 	position: relative;
+	z-index: 1;
 }
 .ItemLvL
 {
@@ -807,6 +808,7 @@ cursor: pointer;
 	display:flex;
 	justify-content: center;
 	align-items: center;
+	z-index: 2;
 }
 .InventarPlakette
 {
@@ -826,6 +828,7 @@ cursor: pointer;
 	display:flex;
 	justify-content: center;
 	align-items: center;
+	z-index: 2;
 }
 .ItemName
 {
@@ -946,7 +949,7 @@ cursor: pointer;
 	display:flex;
 	align-items: center;
 	flex-direction: column;
-	background-image: url("/Orte/Steinbruch.png");		
+	background-image: url("/Orte/Steinbruch1.png");		
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: cover;
@@ -954,8 +957,15 @@ cursor: pointer;
 }
 #ItemAnzeige
 {	
-background-color: burlywood;
+	background-color: burlywood;
 border-radius: 10px;
+}
+#Werte
+{
+	width: 200px;
+	background-color: burlywood;
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
 }
 
 .HandwerkItemContainer

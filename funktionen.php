@@ -16,7 +16,7 @@ if (isset($_POST["action"]) && $_POST["action"] === "itemabbauen") {
 // ItemAnfrage
 if (isset($_POST["action"]) && $_POST["action"] === "itemanfrage") {
 
-	echo $newClass->RohstoffeAnzeigen($connection, $_POST["typ"], $_POST["index"]);
+	echo $newClass->RohstoffeAnzeigen($connection, (int)$_POST["berufsid"], $_POST["typ"], $_POST["index"]);
 }
 
 // Beruf freischalten
@@ -1663,10 +1663,11 @@ class DBAktionen
 		}
 	}
 
-	function RohstoffeAnzeigen($connection, $typ, $index)
+	function RohstoffeAnzeigen($connection, $berufsid, $typ, $index)
 	{
-		$select = $connection->prepare("SELECT id,itembildpfad, itemname, lvl FROM item WHERE typ = ? ORDER BY lvl ASC");
-		$select->bind_param("s", $typ);
+		$berufslvl = $this->BerufsfortschrittLvLLesen($connection, $berufsid);
+		$select = $connection->prepare("SELECT id,itembildpfad, itemname, lvl FROM item WHERE typ = ? AND lvl<=? ORDER BY lvl ASC");
+		$select->bind_param("si", $typ, $berufslvl);
 		$select->execute();
 		$result = $select->get_result();
 
@@ -1686,6 +1687,7 @@ class DBAktionen
 		echo '
 		<div id="HandwerkItemContainer" class="HandwerkItemContainer">
 		<input id="index" type="hidden" value="' . $index . '">
+		<input id="berufsid" type="hidden" value="' . $berufsid . '">
 		<input id="itemanzahl" type="hidden" value="' . $itemanzahl . '" >  
 		<input id="itemid" type="hidden" value="' . $itemid . '"  >
 		<input id="typ" type="hidden" value=' . $typ . '>       
@@ -1694,27 +1696,86 @@ class DBAktionen
 		<img class="Pfeil CursorPointer" src="/Bilder/Pfeil_rechts.png" onclick="ItemVor();">
 		</div>
 		<p>' . $itemname . '</p>
-		<p>LvL : ' . $lvl . '</p>	
+		<p>LvL : ' . $lvl . '</p>		
 		';
 	}
 	function SammelZaehler($connection, $id, $itemid)
 	{
-		$select = $connection->prepare("SELECT zaehler from berufsfortschritt WHERE berufsid=? AND spielerid=?");
+		$select = $connection->prepare("SELECT zaehler,lvl from berufsfortschritt WHERE berufsid=? AND spielerid=?");
 		$select->bind_param("ii", $id, $_SESSION["Spielerid"]);
 		$select->execute();
 		$result = $select->get_result();
 		$row = $result->fetch_assoc();
 		$zaehler = $row["zaehler"];
+		$lvl = $row["lvl"];
 
 		$zaehler--;
 		if ($zaehler == 0) {
 			$this->InventarItemHinzufuegen($connection, $itemid);
+
+			$erfahrung = $this->BerufsfortschrittLesen($connection, $id);
+			$erfahrung = $erfahrung + 1;
+
+			if ($erfahrung >= ($lvl * 1000)) {
+				$erfahrung = 0;
+				$lvl = $lvl + 1;
+				$this->BerufsfortschrittLvLErhoehen($connection, $id, $lvl);
+				$this->BerufsfortschrittErfahrungErhoehen($connection, $id, $erfahrung);
+			} else {
+				$this->BerufsfortschrittErfahrungErhoehen($connection, $id, $erfahrung);
+			}
 			$zaehler = 10;
 			echo 1;
 		}
 
 		$update = $connection->prepare("UPDATE berufsfortschritt SET zaehler=? WHERE berufsid=? AND spielerid=?");
 		$update->bind_param("iii", $zaehler, $id, $_SESSION["Spielerid"]);
+		$update->execute();
+		$update->close();
+	}
+
+	function Berufpruefen($connection, $berufsid)
+	{
+		$select = $connection->prepare("SELECT COUNT(berufsid)AS anzahl FROM berufsfortschritt WHERE berufsid=? AND spielerid=?");
+		$select->bind_param("ii", $berufsid, $_SESSION["Spielerid"]);
+		$select->execute();
+		$result = $select->get_result();
+		$row = $result->fetch_assoc();
+		if ($row["anzahl"] > 0) {
+			return 1;
+		} else return 0;
+	}
+
+	function BerufsfortschrittLesen($connection, $berufsid)
+	{
+		$select = $connection->prepare("SELECT erfahrung FROM berufsfortschritt WHERE berufsid = ? AND spielerid=?");
+		$select->bind_param("ii", $berufsid, $_SESSION["Spielerid"]);
+		$select->execute();
+		$result = $select->get_result();
+		$row = $result->fetch_assoc();
+		return $row["erfahrung"];
+	}
+	function BerufsfortschrittLvLLesen($connection, $berufsid)
+	{
+		$select = $connection->prepare("SELECT lvl FROM berufsfortschritt WHERE berufsid = ? AND spielerid=?");
+		$select->bind_param("ii", $berufsid, $_SESSION["Spielerid"]);
+		$select->execute();
+		$result = $select->get_result();
+		$row = $result->fetch_assoc();
+		return $row["lvl"];
+	}
+
+	function BerufsfortschrittErfahrungErhoehen($connection, $berufsid, $erfahrung)
+	{
+		$update = $connection->prepare("UPDATE berufsfortschritt SET erfahrung=? WHERE berufsid=? AND spielerid=?");
+		$update->bind_param("iii", $erfahrung, $berufsid, $_SESSION["Spielerid"]);
+		$update->execute();
+		$update->close();
+	}
+	function BerufsfortschrittLvLErhoehen($connection, $berufsid, $lvl)
+	{
+		$update = $connection->prepare("UPDATE berufsfortschritt SET lvl=? WHERE berufsid=? AND spielerid=?");
+		$update->bind_param("iii", $lvl, $berufsid, $_SESSION["Spielerid"]);
 		$update->execute();
 		$update->close();
 	}

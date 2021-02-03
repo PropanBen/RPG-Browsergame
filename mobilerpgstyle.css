@@ -118,7 +118,7 @@
 .ItemLvL
 {
     bottom: 32px;
-    left:-15px;
+    left:-5px;
     font-size: 8px;
 }
 .InventarPlakette
@@ -130,7 +130,7 @@
 }
 .ItemAnzahl
 {
-    right:-15px;
+    right:-25px;
     bottom:76px;
     font-size: 8px;  
 }
@@ -343,7 +343,7 @@ height:25px;
 .Inventar
 {
     width:280px;
-    height:180px;
+    height:120px;
 }
 #Inventarfenster
 {
@@ -429,7 +429,7 @@ height:25px;
 .HandwerksContainer
 {
     width: 90%;
-    height:450px;
+    height:550px;
 }
 .KartenContainer
 {
