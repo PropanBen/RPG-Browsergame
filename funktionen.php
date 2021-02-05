@@ -1524,6 +1524,60 @@ class DBAktionen
 		}
 	}
 
+	// Freien Slot für Item prüfen
+	function InventarFreienSlotPruefen($connection, $itemid)
+	{
+		$inventarid = $this->SpielerLesen($connection, "inventarid", $_SESSION["Spieler"]);
+
+		$select = $connection->prepare("SELECT slotanzahl from inventar WHERE id=?");
+		$select->bind_param("i", $inventarid);
+		$select->execute();
+		$result = $select->get_result();
+		$row = $result->fetch_assoc();
+		$slotanzal = $row["slotanzahl"];
+		$select->close();
+		$success = false;
+
+		if ($slotanzal > 0) {
+			for ($i = 1; $i <= $slotanzal; $i++) {
+
+				$select = $connection->prepare("SELECT slot1,slot2,slot3,slot4,slot5 from inventar WHERE id=?");
+				$select->bind_param("i", $inventarid);
+				$select->execute();
+				$result = $select->get_result();
+				$row = $result->fetch_assoc();
+
+				$slotid = $row["slot" . $i . ""];
+
+				if ($slotid === NULL) {
+					$slotid = 0;
+				}
+				if ($slotid === 0) {
+
+					$success = true;
+					return true;
+				} else {
+
+					$select = $connection->prepare("SELECT itemid,anzahl from slot WHERE id=?");
+					$select->bind_param("i", $slotid);
+					$select->execute();
+					$result = $select->get_result();
+					$row = $result->fetch_assoc();
+
+					$slotitemid = $row["itemid"];
+					$select->close();
+					if ($itemid == $slotitemid && $row["anzahl"] < 99) {
+						$success = true;
+						return true;
+					} else {
+						$success = false;
+					}
+				}
+			}
+		}
+		return $success;
+	}
+
 	// Slotnummer auslesen
 	function SlotnummerAuslesen($connection, $slotid)
 	{
@@ -1709,29 +1763,36 @@ class DBAktionen
 		$zaehler = $row["zaehler"];
 		$lvl = $row["lvl"];
 
-		$zaehler--;
-		if ($zaehler == 0) {
-			$this->InventarItemHinzufuegen($connection, $itemid);
 
-			$erfahrung = $this->BerufsfortschrittLesen($connection, $id);
-			$erfahrung = $erfahrung + 1;
+		if ($this->InventarFreienSlotPruefen($connection, $itemid)) {
+			$zaehler--;
+			if ($zaehler == 0) {
+				$zaehler = 10;
+				if ($this->InventarItemHinzufuegen($connection, $itemid)) {
 
-			if ($erfahrung >= ($lvl * 1000)) {
-				$erfahrung = 0;
-				$lvl = $lvl + 1;
-				$this->BerufsfortschrittLvLErhoehen($connection, $id, $lvl);
-				$this->BerufsfortschrittErfahrungErhoehen($connection, $id, $erfahrung);
+					$erfahrung = $this->BerufsfortschrittLesen($connection, $id);
+					$erfahrung = $erfahrung + 1;
+
+					if ($erfahrung >= ($lvl * 1000)) {
+						$erfahrung = 0;
+						$lvl = $lvl + 1;
+						$this->BerufsfortschrittLvLErhoehen($connection, $id, $lvl);
+						$this->BerufsfortschrittErfahrungErhoehen($connection, $id, $erfahrung);
+					} else {
+						$this->BerufsfortschrittErfahrungErhoehen($connection, $id, $erfahrung);
+					}
+					echo 1;
+				}
 			} else {
-				$this->BerufsfortschrittErfahrungErhoehen($connection, $id, $erfahrung);
+				echo 2;
 			}
-			$zaehler = 10;
-			echo 1;
+			$update = $connection->prepare("UPDATE berufsfortschritt SET zaehler=? WHERE berufsid=? AND spielerid=?");
+			$update->bind_param("iii", $zaehler, $id, $_SESSION["Spielerid"]);
+			$update->execute();
+			$update->close();
+		} else {
+			echo 0;
 		}
-
-		$update = $connection->prepare("UPDATE berufsfortschritt SET zaehler=? WHERE berufsid=? AND spielerid=?");
-		$update->bind_param("iii", $zaehler, $id, $_SESSION["Spielerid"]);
-		$update->execute();
-		$update->close();
 	}
 
 	function Berufpruefen($connection, $berufsid)

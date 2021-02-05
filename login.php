@@ -390,7 +390,7 @@ class DBLoginAktionen
         $anzahl = 0;
         $slot = 0;
         $insert = $connection->prepare("INSERT INTO inventar (spielerid,slot1,slot2,slot3,slot4,slot5,slotanzahl) VALUES (?,?,?,?,?,?,?)");
-        $insert->bind_param("ii", $spielerid, $slot, $slot, $slot, $slot, $slot, $anzahl);
+        $insert->bind_param("iiiiiii", $spielerid, $slot, $slot, $slot, $slot, $slot, $anzahl);
         $insert->execute();
         $insert->close();
 
@@ -401,7 +401,7 @@ class DBLoginAktionen
         $row = $result->fetch_assoc();
 
         $update = $connection->prepare("UPDATE spieler SET inventarid=? WHERE id=?");
-        $update->bind_param("id", $row["id"], $spielerid);
+        $update->bind_param("ii", $row["id"], $spielerid);
         $update->execute();
         $update->close();
         $select->close();

@@ -83,7 +83,7 @@ function Kampfende(Angreifer, Gegner) {
   erfahrungvorher = Gewinner.erfahrungdb;
   Gewinner.erfahrungdb += Verlierer.erfahrung;
 
-  if (Gewinner.erfahrungdb > Gewinner.lvl * 100) {
+  if (Gewinner.erfahrungdb >= Gewinner.lvl * 100) {
     Gewinner.erfahrungdb = erfahrungvorher + Verlierer.erfahrung - (Gewinner.lvl * 100);
     Gewinner.lvl++;
     Gewinner.maxleben += 3;

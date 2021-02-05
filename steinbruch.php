@@ -115,9 +115,6 @@ if ($newClass->Berufpruefen($connection, 3) == 0)
         werkzeug.style.transform = "translate(+0%, +0%) scale(1.2)";
         setTimeout(Skalieren, 200);
 
-        var audio = new Audio('/Audio/Spitzhacke.wav');
-        audio.play();
-
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -128,6 +125,11 @@ if ($newClass->Berufpruefen($connection, 3) == 0)
                     $("#XP").load(location.href + "/steinbruch.php #XP");
                     $("#beruf").load(location.href + "/steinbruch.php #beruf");
                     setTimeout(InventarSkalieren, 1000);
+                }
+                if (this.responseText == 2) {
+
+                    var audio = new Audio('/Audio/Spitzhacke.wav');
+                    audio.play();
                 }
 
             }
