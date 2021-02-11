@@ -158,6 +158,7 @@ include("funktionen.php");
             <div class="KartenContainer">
                 <img id="Karte" src="/Bilder/SzeneMap.png">
                 <?php $newClass->BerufeAufKarteAnzeigen($connection, 3); ?>
+                <?php $newClass->BerufeAufKarteAnzeigen($connection, 2); ?>
             </div>
         </div>
     </div>

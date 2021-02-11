@@ -948,8 +948,7 @@ cursor: pointer;
 	border-radius:10px;
 	display:flex;
 	align-items: center;
-	flex-direction: column;
-	background-image: url("/Orte/Steinbruch1.png");		
+	flex-direction: column;	
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: cover;
@@ -982,6 +981,17 @@ border-radius: 10px;
    height: 50px;
    top: 65%;
    left: 46%;
+   position: absolute;	
+   background-color:green;
+   border-radius: 50%;
+   border:3px solid black;
+}
+#wald
+{
+   width: 50px;
+   height: 50px;
+   top: 55%;
+   left: 55%;
    position: absolute;	
    background-color:green;
    border-radius: 50%;
@@ -1032,6 +1042,42 @@ border-radius: 10px;
 	width: 50px;
 	height: 50px;
 }
+.Saege {
+	-webkit-appearance: none;
+	width: 100%;
+	height: 5px;
+	border-radius: 5px;
+	background: #d3d3d3;
+	outline: none;
+	opacity: 1.0;
+	-webkit-transition: .2s;
+	transition: opacity .2s;
+}
+.SaegeContainer
+{
+	width: 400px;
+	height: 150px;
+	margin-top:100px;
+}
+.Saege::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 100px;
+	height: 100px;
+	border: 0;
+	background: url('/Berufsbilder/SägeSchieber.png');
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+.Saege::-moz-range-thumb {
+	width: 100px;
+	height: 100px;
+	border: 0;
+	background: url('/Berufsbilder/SägeSchieber.png');
+	background-repeat: no-repeat;
+	cursor: pointer;
+  }
+  
 
 
 

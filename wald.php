@@ -6,14 +6,14 @@ if (!isset($_SESSION["Spieler"])) {
 }
 
 
-if ($newClass->Berufpruefen($connection, 3) == 0)
+if ($newClass->Berufpruefen($connection, 2) == 0)
     header('location: rpg.php');
 ?>
 
 <html>
 
 <head>
-    <title>Steinbruch</title>
+    <title>Holzfäller</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" type="text/css" href="rpgstyle.css" />
     <link rel="stylesheet" type="text/css" href="mobilerpgstyle.css" />
@@ -26,17 +26,17 @@ if ($newClass->Berufpruefen($connection, 3) == 0)
     <div class="Zurückbutton">
         <a href="/karte.php" onclick="PlaySound();"><img src="Bilder/Zurückbutton.png" /></a>
     </div>
-    <div class="HandwerksContainer" style="background-image : url('/Orte/Steinbruch1.png');">
+    <div class="HandwerksContainer" style="background-image : url('/Orte/Holzfäller.png');">
         <div id="ItemAnzeige">
-            <?php $newClass->RohstoffeAnzeigen($connection, 3, "Steinmetz", 0);  ?>
+            <?php $newClass->RohstoffeAnzeigen($connection, 2, "Holzfaeller", 0);  ?>
         </div>
         <div id="Werte">
-            <p id="XP">XP : <?php echo $newClass->BerufsfortschrittLesen($connection, 3); ?>&nbsp /&nbsp <?php echo $newClass->BerufsfortschrittLvLLesen($connection, 3) * 1000; ?></p>
-            <p id="beruf"> <?php echo $newClass->BerufsnameVonID($connection, 3); ?>&nbspLvL :&nbsp<?php echo $newClass->BerufsfortschrittLvLLesen($connection, 3); ?></p>
+            <p id="XP">XP : <?php echo $newClass->BerufsfortschrittLesen($connection, 2); ?>&nbsp /&nbsp <?php echo $newClass->BerufsfortschrittLvLLesen($connection, 2) * 1000; ?></p>
+            <p id="beruf"> <?php echo $newClass->BerufsnameVonID($connection, 2); ?>&nbspLvL :&nbsp<?php echo $newClass->BerufsfortschrittLvLLesen($connection, 2); ?></p>
         </div>
         <div class="UmgebungsContainer">
-            <div class="AktionsButtonContainer">
-                <input id="Werkzeug" type="image" onclick="ItemSammeln();" src="/Berufsbilder/Spitzhacke1.png">
+            <div class="SaegeContainer">
+                <input type="range" min="1" max="100" value="50" class="Saege" id="WerkzeugSaege">
             </div>
         </div>
         <div id="Inventar" class="Inventar">
@@ -51,6 +51,16 @@ if ($newClass->Berufpruefen($connection, 3) == 0)
 <script>
     function PlaySound() {
         var audio = new Audio('/Audio/tap.wav');
+        audio.play();
+    }
+
+    function PlaySoundSaw1() {
+        var audio = new Audio('/Audio/saegen.wav');
+        audio.play();
+    }
+
+    function PlaySoundSaw2() {
+        var audio = new Audio('/Audio/saegen2.wav');
         audio.play();
     }
 
@@ -107,29 +117,31 @@ if ($newClass->Berufpruefen($connection, 3) == 0)
         xhttp.send("action=itemanfrage&index=" + index + "&typ=" + typ + "&berufsid=" + berufsid.value + "");
     }
 
-    function ItemSammeln() {
-        let berufsid = 3;
+    function ItemSammeln(index) {
+        let berufsid = 2;
         let itemid = document.getElementById('itemid');
-        let werkzeug = document.getElementById('Werkzeug');
+        let werkzeug = document.getElementById('WerkzeugSaege');
         let inventar = document.getElementById('Inventar');
         werkzeug.style.transform = "translate(+0%, +0%) scale(1.2)";
-        setTimeout(Skalieren, 200);
 
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 if (this.responseText == 1) {
-                    var audio = new Audio('/Audio/Steinbruch.wav');
+                    var audio = new Audio('/Audio/baumfaellt.wav');
                     audio.play();
                     inventar.style.transform = "translate(+0%, +0%) scale(1.1)";
-                    $("#XP").load(location.href + "/steinbruch.php #XP");
-                    $("#beruf").load(location.href + "/steinbruch.php #beruf");
+                    $("#XP").load(location.href + "/holzfaeller.php #XP");
+                    $("#beruf").load(location.href + "/holzfaeller.php #beruf");
                     setTimeout(InventarSkalieren, 1000);
                 }
                 if (this.responseText == 2) {
 
-                    var audio = new Audio('/Audio/Spitzhacke.wav');
-                    audio.play();
+                    if (index == 1)
+                        PlaySoundSaw1();
+                    if (index == 2)
+                        PlaySoundSaw2();
+
                 }
 
             }
@@ -137,18 +149,29 @@ if ($newClass->Berufpruefen($connection, 3) == 0)
         xhttp.open("POST", "funktionen.php", true);
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.send("action=itemabbauen&berufsid=" + berufsid + "&itemid=" + itemid.value + "");
-        $(".Inventar").load(location.href + "/steinbruch.php .Inventar");
+        $(".Inventar").load(location.href + "/holzfaeller.php .Inventar");
 
     }
 
-    function Skalieren() {
-        let werkzeug = document.getElementById('Werkzeug');
-        werkzeug.style.transform = "translate(+0%, +0%) scale(1.0)";
-    }
 
     function InventarSkalieren() {
         let inventar = document.getElementById('Inventar');
         inventar.style.transform = "translate(+0%, +0%) scale(1.0)";
+    }
+
+    var slider = document.getElementById("WerkzeugSaege");
+    var sperre = 0;
+
+    slider.oninput = function() {
+        if (sperre == 0 && this.value == 1) {
+            sperre = 1;
+            console.log("1");
+            ItemSammeln(1);
+        }
+        if (sperre == 1 && this.value == 100) {
+            sperre = 0;
+            ItemSammeln(2);
+        }
     }
 </script>
 

@@ -237,9 +237,9 @@
 /* Ende taverne.php */
 }
 
-/*----------------------------------------*/
+/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 @media only screen and (max-width: 500px) {
-/*----------------------------------------*/
+/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 label
 {
     font-size:10px;
@@ -450,7 +450,33 @@ height:25px;
 {
     width:150px;
     height:150px;
+    opacity: 1;
 }
+#WerkzeugSaege
+{
+    width: 280px;
+	height: 3px;
+}
+
+
+.Saege::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 100px;
+	height: 50px;
+	border: 0;
+	background: url('/Berufsbilder/SägeSchieber_50.png');
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+.Saege::-moz-range-thumb {
+	width: 100px;
+	height: 50px;
+	border: 0;
+	background: url('/Berufsbilder/SägeSchieber_50.png');
+	background-repeat: no-repeat;
+	cursor: pointer;
+  }
 
 
 
